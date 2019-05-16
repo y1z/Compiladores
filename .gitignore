@@ -11,15 +11,13 @@
 *.aux
 *.gz
 *.bak
+# solo para ignorar este directorio 
+Intermediate/
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/

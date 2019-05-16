@@ -1,14 +1,11 @@
 #include "stdafx.h"
-
 #include "Compiler.h"
-#include "ErrorsModule.h"
-#include "LexAnalyzer.h"
 
 void Compiler::Manager::LexAnalysis(String ^ srcCode)
 {
 
 	if (ptr_Lex != nullptr) {
-		ptr_Lex->ParseSourceCode(((const char *)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
+		Manager::ptr_Lex->ParseSourceCode(((const char *)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
 	}
 
 	//throw gcnew System::NotImplementedException();
@@ -17,25 +14,25 @@ void Compiler::Manager::LexAnalysis(String ^ srcCode)
 
 Compiler::Manager::Manager()
 {
-	ptr_Error = gcnew ErrorsModule();
-	ptr_Lex = new LexAnalyzer(ptr_Error);
+	Manager::ptr_Error = gcnew ErrorsModule();
+	Manager::ptr_Lex = new LexAnalyzer(ptr_Error);
 }
 
 Compiler::Manager::~Manager()
 {
-	if (ptr_Lex != nullptr) {
-		delete ptr_Lex;
+	if (Manager::ptr_Lex != nullptr) {
+		delete Manager::ptr_Lex;
 	}
 
 }
 
-// Function : return something
+//! Entry Point for the Complier 
 cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 {
 
 	cli::array<String^> ^CompiltionDetails;
 
-	//LexAnalysis(srcCode);
+	Manager::LexAnalysis(srcCode);
 
 	CompiltionDetails = gcnew cli::array<String ^>(1);
 	CompiltionDetails[0] = gcnew String("-------CompileOK--------");
