@@ -15,7 +15,11 @@ Compiler::ErrorsModule::ErrorsModule()
 
 void Compiler::ErrorsModule::clearErrors()
 {
-//	throw gcnew System::NotImplementedException();
+	for (int i = 0; i < MAX_ERRRORS; ++i)
+	{
+		m_errorArray[i] = "";
+	}
+	m_numError = 0;
 }
 
 bool Compiler::ErrorsModule::addError(ERROR_PHASE phase, int lineNumber, String ^ ErrorDesc, String ^ errorLine)

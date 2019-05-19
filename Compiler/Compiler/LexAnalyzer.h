@@ -13,7 +13,8 @@ namespace Compiler {
 #define COMMENT_NOT_CLOSED "The comment is no closed"
 #define INVALID_FLOAT "The float is not valid "
 #define INVALID_OP_LOG "Invalied use of Logical Operator "
-	/*! C++ Class*/
+	/*!
+	\brief takes care of the lexical analysis( identifying tokens)*/
 	public class LexAnalyzer
 	{
 	public:
@@ -21,16 +22,21 @@ namespace Compiler {
 		~LexAnalyzer();
 	public:// functions
 		bool ParseSourceCode(const char *src);
-		// used this every time the user compliers
+		// used this every time the user is done compiling
 		void clearToken();
-		void getTokens(std::vector<Token *> * TokensVec);
-		Token *getNextToken();
-		Token *getPrevToken();
-		Token *peckToken();
+		void getTokens(std::vector<Token> TokensVec);
+		Token getNextToken();
+		Token getPrevToken();
+		Token PickToken(std::size_t Index);
+		Token peckToken();
 	public: // variables
-		std::vector<Token *> m_tokens;
+		//ILexerState *mptr_CurrentState = nullptr;
+		std::vector<Token> m_tokens;
+		//! has all the keyword are on the left side 
 		std::map<std::string, std::string> m_Keywords;
-		msclr::gcroot<ErrorsModule ^> m_reErrrorsMod;
+		msclr::gcroot<ErrorsModule ^> m_refErrrorsMod;
+		//! for the get Token function 
+		std::size_t m_CurrentToken;
 	};
 }
 

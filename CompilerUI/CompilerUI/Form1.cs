@@ -23,8 +23,17 @@ namespace CompilerUI
     {
       InitializeComponent();
       isDllLoaded = false;
+
       // find out if the assembly is 64x or 86x 
-      isCurrentAssemblyIsX64 = Environment.Is64BitProcess;
+      if (IntPtr.Size == 4)
+      {
+        isCurrentAssemblyIsX64 = false;
+      }
+      else
+      {
+        isCurrentAssemblyIsX64 = true;
+      }
+     
       // Gos to the Assembly and Searches every attribute untli it finds a DebuggableAttribute Or Not.
       isCurrentAssemblyIsDebug = Assembly.GetEntryAssembly().GetCustomAttributes(false).OfType<DebuggableAttribute>().Any(da => da.IsJITTrackingEnabled);
     }
@@ -81,7 +90,10 @@ namespace CompilerUI
       }
 
     }// end function 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     private bool LoadCompilerDll()
     {
       // use this variable to navigate
@@ -142,14 +154,14 @@ namespace CompilerUI
       }
       else
       {
-        MessageBox.Show("Se pudo cargar la dll " + DllFullPath, "Everthing is alright");
+        MessageBox.Show("(Success)Se pudo cargar la dll " + DllFullPath, "Everthing is alright");
       }
 
       return isDllLoaded;
     }// Function end 
 
     /// <summary>
-    ///  Compile
+    ///  Compile Program
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -159,12 +171,13 @@ namespace CompilerUI
       if (isDllLoaded)
       {
         // This trasfer the Parsed text to the output Text box (The black one)
-       String[] Output = ComplierDllInstance.compileProgram(MainTextBox.Text);
+        String[] Output = ComplierDllInstance.compileProgram(MainTextBox.Text);
         OutputTextBox.Lines = Output;
+
       }
       else
       {
-        MessageBox.Show("No se pudo Cargar la dll", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show("No se pudo Cargar la dll ", "Everything failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
 
     }// function end 

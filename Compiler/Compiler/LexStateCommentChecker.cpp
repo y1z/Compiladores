@@ -6,9 +6,9 @@ LexStateCommentChecker::LexStateCommentChecker()
 LexStateCommentChecker::~LexStateCommentChecker()
 {}
 
-bool LexStateCommentChecker::StateAcction(const char * code, uint32_t &Index, std::vector<Token>& Tokens)
+bool LexStateCommentChecker::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* m_Keywords)
 {
-	// this  represent the proper manner to close a comment 
+	// this represent the proper manner to close a comment 
 	constexpr const char *ExpetedEnd = "*/";
 	// checks for a match in characters
 	uint8_t CountCharMach = 0;
@@ -19,18 +19,25 @@ bool LexStateCommentChecker::StateAcction(const char * code, uint32_t &Index, st
 		if (code[Index] == ExpetedEnd[0])
 		{
 			CountCharMach++;
+			//Console::ResetColor();
+			char copy = code[Index];
+			Console::WriteLine("Here is the char ({0}) and color ", System::Convert::ToChar(copy));
+
 		}
 		else if (code[Index] == ExpetedEnd[1])
 		{
 			CountCharMach++;
 		}
-		else if(CountCharMach == 4)
+		else if (CountCharMach == 2)
 		{
 			return true;
 		}
 		Index++;// move to next char
 	}
 
-
-	return true;
+	return false;
 }
+
+void LexStateCommentChecker::ChangeState(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords, int SelectedState)
+{}
+

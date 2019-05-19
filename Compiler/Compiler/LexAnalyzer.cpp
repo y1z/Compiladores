@@ -1,62 +1,102 @@
 #include "stdafx.h"
-
 #include "LexAnalyzer.h"
+#include "LexScannig.h"
 #include "ErrorsModule.h"
 
-Compiler::LexAnalyzer::LexAnalyzer(ErrorsModule ^ Err)
+Compiler::LexAnalyzer::LexAnalyzer(ErrorsModule ^ ErrorModule)
 {
-	this->m_reErrrorsMod = Err;
+	this->m_refErrrorsMod = ErrorModule;
+	// Here is all the keyword of the language
+	m_Keywords.insert(std::make_pair("var", ""));
+	m_Keywords.insert(std::make_pair("int", ""));
+	m_Keywords.insert(std::make_pair("float", ""));
+	m_Keywords.insert(std::make_pair("string", ""));
+	m_Keywords.insert(std::make_pair("bool", ""));
+	m_Keywords.insert(std::make_pair("void", ""));
+	m_Keywords.insert(std::make_pair("function", ""));
+	m_Keywords.insert(std::make_pair("if", ""));
+	m_Keywords.insert(std::make_pair("else", ""));
+	m_Keywords.insert(std::make_pair("switch", ""));
+	m_Keywords.insert(std::make_pair("case", ""));
+	m_Keywords.insert(std::make_pair("default", ""));
+	m_Keywords.insert(std::make_pair("true", ""));//<- this one becomes a LOGICAL_CONSTANT
+	m_Keywords.insert(std::make_pair("false", ""));//<- this one becomes a LOGICAL_CONSTANT
+	m_Keywords.insert(std::make_pair("print", ""));
+	m_Keywords.insert(std::make_pair("read", ""));
+	m_Keywords.insert(std::make_pair("return", ""));
+	m_Keywords.insert(std::make_pair("inc", ""));
+	m_Keywords.insert(std::make_pair("dec", ""));
 
-	m_Keywords.insert(std::make_pair("var",""));
-	/*m_Keywords.insert("int","");
-	m_Keywords.insert("float","");
-	m_Keywords.insert("string","");
-	m_Keywords.insert("bool","");
-	m_Keywords.insert("void","");
-	m_Keywords.insert("function","");
-	m_Keywords.insert("if","");
-	m_Keywords.insert("else","");
-	m_Keywords.insert("switch","");
-	m_Keywords.insert("case","");
-	m_Keywords.insert("default","");
-	m_Keywords.insert("true","");
-	m_Keywords.insert("false","");
-	m_Keywords.insert("print","");
-	m_Keywords.insert("read","");
-	m_Keywords.insert("return","");
-	m_Keywords.insert("inc","");
-	m_Keywords.insert("dec","");*/
+	m_CurrentToken = 0;
+
 }
 
 Compiler::LexAnalyzer::~LexAnalyzer()
-{
-}
-
+{}
+//! Heres where the Parsing starts
 bool Compiler::LexAnalyzer::ParseSourceCode(const char * srcCode)
 {
-	std::string Temp = srcCode;
+	ILexerState *ptr_ScanningState = new LexScannig();
+	uint32_t Index = 0;
+	uint32_t LineCount = 1;//start value at 1 because it easer to understand
+	ptr_ScanningState->StateAction(srcCode, Index, LineCount, m_tokens, &m_Keywords);
 
-
+	delete ptr_ScanningState;
 	return true;
 }
 
 void Compiler::LexAnalyzer::clearToken()
-{}
-
-void Compiler::LexAnalyzer::getTokens(std::vector<Token*>* TokensVec)
-{}
-
-Token * Compiler::LexAnalyzer::getNextToken()
 {
-	return nullptr;
+	if (!m_tokens.empty())
+	{
+		m_tokens.clear();
+	}
 }
 
-Token * Compiler::LexAnalyzer::getPrevToken()
+void Compiler::LexAnalyzer::getTokens(std::vector<Token> OtherTokens)
 {
-	return nullptr;
+	for (Token tokens : OtherTokens)
+	{
+		this->m_tokens.emplace_back(tokens);
+	}
+
 }
 
-Token * Compiler::LexAnalyzer::peckToken()
+Token Compiler::LexAnalyzer::getNextToken()
 {
-	return nullptr;
+	if(!((m_CurrentToken + 1) < (m_tokens.size() - 1)))
+	{
+		++m_CurrentToken;
+		return m_tokens[m_CurrentToken];
+	}
+
+	return m_tokens[m_CurrentToken];
+}
+
+Token Compiler::LexAnalyzer::getPrevToken()
+{
+	if (!(m_CurrentToken - 1) <= 0)
+	{
+		--m_CurrentToken;
+		return m_tokens[m_CurrentToken];
+	}
+	return m_tokens[m_CurrentToken];
+}
+
+Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
+{
+	if (!((m_CurrentToken + 1) < (m_tokens.size() - 1)) && m_CurrentToken > -1)
+	{
+		m_tokens[Index];
+	}
+	else
+	{
+		throw std::exception("OUT of Vector Bounds");
+	}
+	return Token();
+}
+
+Token Compiler::LexAnalyzer::peckToken()
+{
+	return Token();
 }
