@@ -17,7 +17,7 @@ namespace Compiler {
 		CODE_GENERATION
 	};
 
-	
+
 	public ref class ErrorsModule
 	{
 	public:
@@ -29,6 +29,9 @@ namespace Compiler {
 		{
 			return m_errorArray;
 		}
+		bool AddLexError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
+		bool AddSynError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
+		bool AddSemError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
 	private:
 		int m_numError;
 		cli::array<String^> ^m_errorArray;

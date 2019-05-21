@@ -22,13 +22,13 @@ Compiler::LexAnalyzer::LexAnalyzer(ErrorsModule ^ ErrorModule)
 	m_Keywords.insert(std::make_pair("true", ""));//<- this one becomes a LOGICAL_CONSTANT
 	m_Keywords.insert(std::make_pair("false", ""));//<- this one becomes a LOGICAL_CONSTANT
 	m_Keywords.insert(std::make_pair("print", ""));
+	m_Keywords.insert(std::make_pair("main", ""));
 	m_Keywords.insert(std::make_pair("read", ""));
 	m_Keywords.insert(std::make_pair("return", ""));
 	m_Keywords.insert(std::make_pair("inc", ""));
 	m_Keywords.insert(std::make_pair("dec", ""));
 
 	m_CurrentToken = 0;
-
 }
 
 Compiler::LexAnalyzer::~LexAnalyzer()
@@ -39,6 +39,7 @@ bool Compiler::LexAnalyzer::ParseSourceCode(const char * srcCode)
 	ILexerState *ptr_ScanningState = new LexScannig();
 	uint32_t Index = 0;
 	uint32_t LineCount = 1;//start value at 1 because it easer to understand
+	ptr_ScanningState->m_refErrrorsMod = this->m_refErrrorsMod;
 	ptr_ScanningState->StateAction(srcCode, Index, LineCount, m_tokens, &m_Keywords);
 
 	delete ptr_ScanningState;
@@ -64,7 +65,7 @@ void Compiler::LexAnalyzer::getTokens(std::vector<Token> OtherTokens)
 
 Token Compiler::LexAnalyzer::getNextToken()
 {
-	if(!((m_CurrentToken + 1) < (m_tokens.size() - 1)))
+	if (!((m_CurrentToken + 1) < (m_tokens.size() - 1)))
 	{
 		++m_CurrentToken;
 		return m_tokens[m_CurrentToken];
@@ -87,7 +88,7 @@ Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
 {
 	if (!((m_CurrentToken + 1) < (m_tokens.size() - 1)) && m_CurrentToken > -1)
 	{
-		m_tokens[Index];
+		return m_tokens[Index];
 	}
 	else
 	{
@@ -99,4 +100,9 @@ Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
 Token Compiler::LexAnalyzer::peckToken()
 {
 	return Token();
+}
+
+std::size_t Compiler::LexAnalyzer::GetTokenCount()
+{
+	return m_tokens.size();
 }

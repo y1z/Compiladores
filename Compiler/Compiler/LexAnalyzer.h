@@ -7,12 +7,13 @@
 #include "ErrorsModule.h"
 #include "Token.h"
 
+
 namespace Compiler {
 #define LEX_INVALID_CHAR "Invalid Character"
-#define STRING_NOT_CLOSED "The string is not closed"
-#define COMMENT_NOT_CLOSED "The comment is no closed"
-#define INVALID_FLOAT "The float is not valid "
-#define INVALID_OP_LOG "Invalied use of Logical Operator "
+#define _STRING_NOT_CLOSED "The string is not closed"
+#define _COMMENT_NOT_CLOSED "The comment is no closed"
+#define _INVALID_FLOAT "The float is not valid "
+#define _INVALID_OP_LOG "Invalied use of Logical Operator "
 	/*!
 	\brief takes care of the lexical analysis( identifying tokens)*/
 	public class LexAnalyzer
@@ -29,6 +30,7 @@ namespace Compiler {
 		Token getPrevToken();
 		Token PickToken(std::size_t Index);
 		Token peckToken();
+		std::size_t GetTokenCount();
 	public: // variables
 		//ILexerState *mptr_CurrentState = nullptr;
 		std::vector<Token> m_tokens;

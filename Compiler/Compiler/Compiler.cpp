@@ -3,9 +3,9 @@
 
 void Compiler::Manager::LexAnalysis(String ^ srcCode)
 {
-
-	if (ptr_Lex != nullptr) {
-		Manager::ptr_Lex->ParseSourceCode(((const char *)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
+	if (ptr_Lex != nullptr)
+	{
+		Manager::ptr_Lex->ParseSourceCode(((const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
 	}
 }
 
@@ -18,7 +18,8 @@ Compiler::Manager::Manager()
 
 Compiler::Manager::~Manager()
 {
-	if (Manager::ptr_Lex != nullptr) {
+	if (Manager::ptr_Lex != nullptr)
+	{
 		delete Manager::ptr_Lex;
 	}
 
@@ -31,8 +32,15 @@ cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 
 	Manager::LexAnalysis(srcCode);
 
-	CompiltionDetails = gcnew cli::array<String ^>(1);
-	CompiltionDetails[0] = gcnew String("-------CompileOK--------");
+	if (0 < Manager::ptr_Lex->GetTokenCount())
+	{
+
+	}
+	else
+	{
+		CompiltionDetails = gcnew cli::array<String ^>(1);
+		CompiltionDetails[0] = gcnew String("-------NO TOKEN GENERATED--------");
+	}
 
 	return CompiltionDetails;
 }// end function

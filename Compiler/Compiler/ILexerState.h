@@ -7,6 +7,7 @@
 #include "Token.h"
 #include "ErrorsModule.h"
 
+
 class ILexerState
 {
 public:
