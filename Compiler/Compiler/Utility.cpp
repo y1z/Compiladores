@@ -49,8 +49,61 @@ bool IsNumber(const char PossibleNumber)
 	{
 		return true;
 	}
-
-
 	return false;
 }
+/*! this exits because i was haven some issues with Traslating the string */
+const char * TranslateToken(Compiler::Token_Type token_type)
+{
+	switch (token_type)
+	{
+	case Compiler::UNDEFINED:
+		return "UNDEFINED";
+		break;
+	case Compiler::ID:
+		return "ID";
+		break;
+	case Compiler::INT_NUMBER:
+		return "INT_NUMBER";
+		break;
+	case Compiler::FLOAT_NUMBER:
+		return "FLOAT_NUMBER";
+		break;
+	case Compiler::STRING_CONSTANT:
+		return "STRING_CONSTANT";
+		break;
+	case Compiler::LOGICAL_CONSTANT:
+		return "LOGICAL_CONSTANT";
+		break;
+	case Compiler::RELATIONAL_OPERATOR:
+		return "RELATIONAL_OPERATOR";
+		break;
+	case Compiler::LOGICAL_OPERATOR:
+		return "LOGICAL_OPERATOR";
+		break;
+	case Compiler::GROUPING_OPERATOR:
+		return "GROUPING_OPERATOR";
+		break;
+	case Compiler::UNARY_LOGICAL_OPERATOR:
+		return "UNARY_LOGICAL_OPERATOR";
+		break;
+	case Compiler::ASSIGN_OPERATOR:
+		return "ASSIGN_OPERATOR";
+		break;
+	case Compiler::ARITHMETIC_OPERATOR:
+		return "ARITHMETIC_OPERATOR";
+		break;
+	case Compiler::DIMENSION_OPERATOR:
+		return "DIMENSION_OPERATOR";
+		break;
+	case Compiler::SEPARATOR:
+		return "SEPARATOR";
+		break;
+	case Compiler::KEYWORD:
+		return "KEYWORD";
+		break;
+	}
+
+	return "UNDEFINED";
+}
+
 

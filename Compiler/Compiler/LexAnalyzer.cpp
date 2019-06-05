@@ -2,6 +2,7 @@
 #include "LexAnalyzer.h"
 #include "LexScannig.h"
 #include "ErrorsModule.h"
+#include "Utility.h"
 
 Compiler::LexAnalyzer::LexAnalyzer(ErrorsModule ^ ErrorModule)
 {
@@ -27,6 +28,8 @@ Compiler::LexAnalyzer::LexAnalyzer(ErrorsModule ^ ErrorModule)
 	m_Keywords.insert(std::make_pair("return", ""));
 	m_Keywords.insert(std::make_pair("inc", ""));
 	m_Keywords.insert(std::make_pair("dec", ""));
+	m_Keywords.insert(std::make_pair("for", ""));
+	m_Keywords.insert(std::make_pair("while", ""));
 
 	m_CurrentToken = 0;
 }
@@ -40,55 +43,55 @@ bool Compiler::LexAnalyzer::ParseSourceCode(const char * srcCode)
 	uint32_t Index = 0;
 	uint32_t LineCount = 1;//start value at 1 because it easer to understand
 	ptr_ScanningState->m_refErrrorsMod = this->m_refErrrorsMod;
-	ptr_ScanningState->StateAction(srcCode, Index, LineCount, m_tokens, &m_Keywords);
+	ptr_ScanningState->StateAction(srcCode, Index, LineCount, m_LexTokens, &m_Keywords);
 
+	for (Token Toks : ptr_ScanningState->m_GeneratedTokens)
+	{
+		this->m_LexTokens.emplace_back(Toks);
+	}
 	delete ptr_ScanningState;
 	return true;
 }
 
-void Compiler::LexAnalyzer::clearToken()
+void Compiler::LexAnalyzer::ClearToken()
 {
-	if (!m_tokens.empty())
+	if (!m_LexTokens.empty())
 	{
-		m_tokens.clear();
+		m_LexTokens.clear();
 	}
 }
 
-void Compiler::LexAnalyzer::getTokens(std::vector<Token> OtherTokens)
+Token Compiler::LexAnalyzer::GetNextToken()
 {
-	for (Token tokens : OtherTokens)
-	{
-		this->m_tokens.emplace_back(tokens);
-	}
-
-}
-
-Token Compiler::LexAnalyzer::getNextToken()
-{
-	if (!((m_CurrentToken + 1) < (m_tokens.size() - 1)))
+	if (!((m_CurrentToken + 1) < (m_LexTokens.size() - 1)))
 	{
 		++m_CurrentToken;
-		return m_tokens[m_CurrentToken];
+		return m_LexTokens[m_CurrentToken];
 	}
 
-	return m_tokens[m_CurrentToken];
+	return m_LexTokens[m_CurrentToken];
 }
 
-Token Compiler::LexAnalyzer::getPrevToken()
+Token Compiler::LexAnalyzer::GetPrevToken()
 {
 	if (!(m_CurrentToken - 1) <= 0)
 	{
 		--m_CurrentToken;
-		return m_tokens[m_CurrentToken];
+		return m_LexTokens[m_CurrentToken];
 	}
-	return m_tokens[m_CurrentToken];
+	return m_LexTokens[m_CurrentToken];
+}
+
+Token Compiler::LexAnalyzer::GetPeekToken()
+{
+	return m_LexTokens[m_CurrentToken];
 }
 
 Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
 {
-	if (!((m_CurrentToken + 1) < (m_tokens.size() - 1)) && m_CurrentToken > -1)
+	if (!((m_CurrentToken + 1) < (m_LexTokens.size() - 1)) && m_CurrentToken > -1)
 	{
-		return m_tokens[Index];
+		return m_LexTokens[Index];
 	}
 	else
 	{
@@ -97,12 +100,19 @@ Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
 	return Token();
 }
 
-Token Compiler::LexAnalyzer::peckToken()
-{
-	return Token();
-}
-
 std::size_t Compiler::LexAnalyzer::GetTokenCount()
 {
-	return m_tokens.size();
+	return m_LexTokens.size();
+}
+
+std::vector<Token> &Compiler::LexAnalyzer::GetTokenContainer()
+{
+	return m_LexTokens;
+}
+
+std::string Compiler::LexAnalyzer::GetTokenCountString(std::string &Result)
+{
+	Result = std::to_string(this->m_LexTokens.size());
+
+	return Result;
 }

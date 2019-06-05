@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ErrorsModule.h"
+#include <string>
 
 Compiler::ErrorsModule::ErrorsModule()
 {
@@ -19,6 +20,7 @@ void Compiler::ErrorsModule::clearErrors()
 	{
 		m_errorArray[i] = "";
 	}
+
 	m_numError = 0;
 }
 
@@ -27,9 +29,10 @@ bool Compiler::ErrorsModule::addError(ERROR_PHASE phase, int LineNumber, String 
 {
 	if (m_numError < (MAX_ERRRORS - 1))
 	{
-		m_errorArray->SetValue(String::Format("{0} : {1} {2} {3}", phase.ToString(), LineNumber, ErrorDesc, errorLine), m_numError);
+		m_errorArray->SetValue(String::Format("{0} :\t{1} \t{2}\t{3}", phase.ToString(), LineNumber, ErrorDesc, errorLine), m_numError);
+		m_numError++;
+		return true;
 	}
-
 	return false;
 }
 
@@ -39,7 +42,7 @@ bool Compiler::ErrorsModule::AddLexError(uint32_t LineNumber, const std::string 
 
 	String^ ErrorDescConverted = gcnew String(ErrorDesc.c_str());
 	String^ ErrorLineConverted = gcnew String(OriginalErrorLine.c_str());
-  
+
 	return addError(LexError, LineNumber, ErrorDescConverted, ErrorLineConverted);
 }
 
@@ -63,3 +66,24 @@ bool Compiler::ErrorsModule::AddSemError(uint32_t LineNumber, const std::string 
 	return addError(SemError, LineNumber, ErrorDescConverted, ErrorLineConverted);
 	return false;
 }
+
+int Compiler::ErrorsModule::GetErrorCount()
+{
+	return m_numError;
+}
+
+
+std::string Compiler::ErrorsModule::GetErrorCountString(std::string &Result)
+{
+	Result = std::to_string(m_numError);
+
+	return Result;
+}
+
+//const char * Compiler::ErrorsModule::GetErrorCountString()
+//{
+//	std::string Temp;
+//	Temp = std::to_string(m_numError);
+//	const char * Result = Temp.c_str();
+//	return Result;
+//}

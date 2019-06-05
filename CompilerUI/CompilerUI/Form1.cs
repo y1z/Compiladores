@@ -33,7 +33,7 @@ namespace CompilerUI
       {
         isCurrentAssemblyIsX64 = true;
       }
-     
+
       // Gos to the Assembly and Searches every attribute untli it finds a DebuggableAttribute Or Not.
       isCurrentAssemblyIsDebug = Assembly.GetEntryAssembly().GetCustomAttributes(false).OfType<DebuggableAttribute>().Any(da => da.IsJITTrackingEnabled);
     }
@@ -65,7 +65,6 @@ namespace CompilerUI
         Result += "R";
       }
 
-
       // check platform
       if (isCurrentAssemblyIsX64)
       {
@@ -91,7 +90,7 @@ namespace CompilerUI
 
     }// end function 
     /// <summary>
-    /// 
+    ///  checks if the dll if loaded correctly
     /// </summary>
     /// <returns></returns>
     private bool LoadCompilerDll()
@@ -140,8 +139,8 @@ namespace CompilerUI
       var Dll = Assembly.UnsafeLoadFrom(DllFullPath);
 
       // Note both name "Complier" and "Manager" have to be upper case 
+      // because of how i named them 
       var DllType = Dll.GetType("Compiler.Manager");
-
 
       ComplierDllInstance = Activator.CreateInstance(DllType);
 
@@ -170,10 +169,20 @@ namespace CompilerUI
       // For when the dll is loaded
       if (isDllLoaded)
       {
-        // This trasfer the Parsed text to the output Text box (The black one)
-        String[] Output = ComplierDllInstance.compileProgram(MainTextBox.Text);
-        OutputTextBox.Lines = Output;
+        // the null termination character (aka '\0') is just for safety
+        String[] Output = ComplierDllInstance.compileProgram(MainTextBox.Text + '\0');
 
+        // This trasfer the Parsed text to the output Text box (The black one)
+        // m_TokenDataView.Columns[0].di = "dsdsf";
+
+        DataGridViewRow dataGridViewRow = new DataGridViewRow();
+       // dataGridViewRow.CreateCells(m_TokenDataView);
+
+        DataParser dataParser = new DataParser();
+
+        dataParser.ParseCompilerData(Output,ref m_TokenDataView,ref OutputTextBox);
+
+       // OutputTextBox.Lines = Output;
       }
       else
       {
@@ -190,12 +199,16 @@ namespace CompilerUI
     private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
     {
       OpenFileDialog File = new OpenFileDialog();
-      File.Filter = "Text Files | *.txt";
+      File.Filter = "Text Files |*.txt";
       if (File.ShowDialog() == DialogResult.OK)
       {
         MainTextBox.Clear();
         StreamReader Reader = new StreamReader(File.OpenFile());
         MainTextBox.Text = Reader.ReadToEnd();
+      }
+      else
+      {
+        MessageBox.Show("Error Opening file ", "unknown Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
 
     }// function end 
@@ -225,7 +238,7 @@ namespace CompilerUI
         stream.Close();
       }
 
-    }
+    }// function end
     /// <summary>
     /// (Guardar) just the regular save option
     /// </summary>
@@ -244,7 +257,7 @@ namespace CompilerUI
         stream.Write(MainTextBox.Text);
         stream.Close();
       }
-    }
+    }// end function
     /// <summary>
     /// (Sailr) Quits the application
     /// </summary>
@@ -252,16 +265,11 @@ namespace CompilerUI
     /// <param name="e"></param>
     public void salirToolStripMenuItem1_Click(object sender, EventArgs e)
     {
-      MessageBox.Show("Love is fake, pain is real: adios fucker no one cared, BAKA");
+      MessageBox.Show("Love is fake, pain is real: adios fucker no one cared about, BAKA");
       Application.Exit();
-    }
+    }// end function
 
     private void textBox2_TextChanged(object sender, EventArgs e)
-    {
-
-    }
-
-    private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
     {
 
     }
@@ -313,7 +321,7 @@ namespace CompilerUI
       {
         gradarToolStripMenuItem_Click(sender, e);
       }
-    }
+    }// end function
 
   }
 

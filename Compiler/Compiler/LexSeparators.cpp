@@ -26,7 +26,7 @@ bool LexSeparators::StateAction(const char * code, uint32_t & Index, uint32_t & 
 		{
 			break;
 		}
-
+		if (code[Index] == 0) { break; }
 		Index++;
 	}
 

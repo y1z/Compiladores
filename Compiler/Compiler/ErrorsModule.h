@@ -22,16 +22,24 @@ namespace Compiler {
 	{
 	public:
 		ErrorsModule();
+		//! use when done 
 		void clearErrors();
 		/*! \param [in] ErrorDesc tiene un string que describe el error*/
 		bool addError(ERROR_PHASE phase, int lineNumber, String^ ErrorDesc, String ^errorLine);
+		//! for lex errors 
+		bool AddLexError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
+		//! for Syntactic errors 
+		bool AddSynError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
+		//! for Semantic errors 
+		bool AddSemError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
+		int GetErrorCount();
+		//! this is for passing the amount of errors to a the System::String type 
+		std::string GetErrorCountString(std::string &result);
+		///! to return the array that contains the errors 
 		cli::array<String ^> ^getErrors()
 		{
 			return m_errorArray;
 		}
-		bool AddLexError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
-		bool AddSynError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
-		bool AddSemError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
 	private:
 		int m_numError;
 		cli::array<String^> ^m_errorArray;

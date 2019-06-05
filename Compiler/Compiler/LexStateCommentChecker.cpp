@@ -42,7 +42,7 @@ bool LexStateCommentChecker::StateAction(const char * code, uint32_t & Index, ui
 		if (code[CopyIndex] == 0) { break; }
 	}
 
-	m_ErrorContainer.emplace_back(std::make_pair(std::string(_COMMENT_NOT_CLOSED), ErrorLine));
+	m_ErrorContainer.emplace_back(std::make_pair(std::string(COMMENT_NOT_CLOSED), ErrorLine));
 
 	m_refErrrorsMod->AddLexError(CopyLine, m_ErrorContainer[0].first, m_ErrorContainer[0].second);
 	return false;

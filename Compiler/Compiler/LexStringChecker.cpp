@@ -59,11 +59,12 @@ void LexStringChecker::ReportError(uint32_t LineNumber, const char * code, uint3
 	if (CustomMessage == nullptr)
 	{
 		std::string ErrorLine = GetErrorLine(code, Index);
-		m_refErrrorsMod->AddLexError(LineNumber, _COMMENT_NOT_CLOSED, ErrorLine);
+		m_refErrrorsMod->AddLexError(LineNumber, COMMENT_NOT_CLOSED, ErrorLine);
 	}
 	else
 	{
 		std::string ErrorLine = GetErrorLine(code, Index);
+		System::String ^Converted = gcnew String(ErrorLine.c_str());
 		m_refErrrorsMod->AddLexError(LineNumber, CustomMessage, ErrorLine);
 	}
 

@@ -2,6 +2,7 @@
 #include "LexStateCommentChecker.h"
 #include "LexStateFinder.h"
 #include "LexScannig.h"
+#include "Utility.h"
 
 LexScannig::LexScannig()
 {}
@@ -29,19 +30,21 @@ bool LexScannig::StateAction(const char * code, uint32_t & Index, uint32_t & Lin
 		if (code[Index] == '\0') { break; }
 		Index++;
 	}
-	return false;
+	return true;
 }
+
+
 
 void LexScannig::ChangeState(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords, int SelectedState)
 {
 	ILexerState *NewState = new LexStateFinder();
 	NewState->m_refErrrorsMod = this->m_refErrrorsMod;
-
+	// give it's tokens directly to LexAnalyzer 
 	NewState->StateAction(code, Index, LineNumber, Tokens, Keywords);
-	
-	for (Token GeneratedTokens : NewState->m_GeneratedTokens)
+
+	for (Token tok : this->m_GeneratedTokens)
 	{
-		this->m_GeneratedTokens.emplace_back(GeneratedTokens);
+		Tokens.emplace_back(tok);
 	}
 
 	delete NewState;

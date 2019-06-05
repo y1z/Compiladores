@@ -13,7 +13,7 @@ namespace Compiler {
 	public ref class Manager
 	{
 	private:
-		void LexAnalysis(String ^srcCode);
+		cli::array<String^ > ^ LexAnalysis(String ^srcCode);
 		
 	public:
 		Manager();
@@ -23,7 +23,6 @@ namespace Compiler {
 		LexAnalyzer *ptr_Lex = nullptr;
 
 		cli::array<String^ > ^compileProgram(String^ srcCode);
-		// TODO: Add your methods for this class here.
 	};
 
 };

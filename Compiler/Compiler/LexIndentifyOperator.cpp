@@ -10,7 +10,7 @@ LexIndentifyOperator::LexIndentifyOperator()
 LexIndentifyOperator::~LexIndentifyOperator()
 {}
 
-bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
+bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& m_GeneratedTokens, std::map<std::string, std::string>* Keywords)
 {
 	/*
 	char = the operator
@@ -40,19 +40,20 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 			{
 				Token Unary(Operator, Compiler::UNARY_LOGICAL_OPERATOR, LineNumber);
 				m_GeneratedTokens.emplace_back(Unary);
+				return true;
 			}
 			// checking for '=' 
-			else if (Operator[0] == '=' &&
-				Operator.size() > 1 &&
-				Operator[1] != '=')
+			else if (Operator[0] == '=' && Operator.size() > 1 && Operator[1] != '=')
 			{
 				Token RelationToken(Operator, Compiler::ASSIGN_OPERATOR, LineNumber);
 				m_GeneratedTokens.emplace_back(RelationToken);
+				return true;
 			}
 			else
 			{
 				Token RelationToken(Operator, Compiler::RELATIONAL_OPERATOR, LineNumber);
 				m_GeneratedTokens.emplace_back(RelationToken);
+				return true;
 			}
 		}
 		else if (Result->second == 1)
@@ -63,18 +64,24 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 			{
 				Token LogicalOp(Operator, Compiler::Token_Type::LOGICAL_OPERATOR, LineNumber);
 				m_GeneratedTokens.emplace_back(LogicalOp);
+				return true;
 			}
 			else
 			{
 				std::string ErrorLine = GetErrorLine(code, Index);
-				m_refErrrorsMod->AddLexError(LineNumber, _INVALID_OP_LOG, ErrorLine);
+				m_refErrrorsMod->AddLexError(LineNumber, INVALID_OP_LOG, ErrorLine);
 				System::String^ Error = gcnew String(ErrorLine.c_str());
-				Console::WriteLine("Generated Error Logical Operator {0}",Error);
+				Console::WriteLine("Generated Error Logical Operator {0}", Error);
+				return true;
 			}
 		}
-		else if(Result->second == 2)
+		else if (Result->second == 2)
 		{
 			FiguerOutOperator(Result->first, LineNumber);
+			for (Token tok : m_GeneratedTokens)
+			{
+				m_GeneratedTokens.emplace_back(tok);
+			}
 		}
 
 		return true;
@@ -85,7 +92,6 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 
 void LexIndentifyOperator::ChangeState(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords, int SelectedState)
 {}
-
 
 std::string LexIndentifyOperator::ReciveRelationalOperator(const char * code, uint32_t & Index)
 {
@@ -123,14 +129,14 @@ bool LexIndentifyOperator::CheckOperatorValid(const char * code, uint32_t & Inde
 }
 
 
-void LexIndentifyOperator::FiguerOutOperator(char Op, uint32_t LineNum)
+bool LexIndentifyOperator::FiguerOutOperator(char Op, uint32_t LineNum)
 {
 	static std::map<char, Compiler::Token_Type> OperatorsAndDefinition = {
 		{'+', Compiler::ARITHMETIC_OPERATOR}, { '-',Compiler::ARITHMETIC_OPERATOR }, { '*',Compiler::ARITHMETIC_OPERATOR },
 		{ '/',Compiler::ARITHMETIC_OPERATOR }, { '%',Compiler::ARITHMETIC_OPERATOR }, { '^',Compiler::ARITHMETIC_OPERATOR },
 	{ '[',Compiler::DIMENSION_OPERATOR }, {']',Compiler::DIMENSION_OPERATOR },{'(',Compiler::GROUPING_OPERATOR} ,
 	{')',Compiler::GROUPING_OPERATOR} ,{'{',Compiler::GROUPING_OPERATOR},{'}',Compiler::GROUPING_OPERATOR},{'!',Compiler::UNARY_LOGICAL_OPERATOR} };
-	
+
 	auto PossibleToken = OperatorsAndDefinition.find(Op);
 
 	Console::WriteLine("Possible Operator  {0}", ConvertChar(Op));
@@ -142,7 +148,9 @@ void LexIndentifyOperator::FiguerOutOperator(char Op, uint32_t LineNum)
 		std::string Lex(&PossibleToken->first);
 		Token GenToken(Lex, PossibleToken->second, LineNum);
 		m_GeneratedTokens.emplace_back(GenToken);
+
+		return true;
 	}
 
-
+	return false;
 }
