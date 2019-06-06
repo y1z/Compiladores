@@ -20,7 +20,7 @@ bool LexSeparators::StateAction(const char * code, uint32_t & Index, uint32_t & 
 			std::string Lex (&Character);
 		
 			Token Generated(Lex, Compiler::SEPARATOR, LineNumber);
-			m_GeneratedTokens.emplace_back(Generated);
+			Tokens.emplace_back(Generated);
 		}
 		else
 		{

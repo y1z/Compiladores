@@ -29,12 +29,16 @@ bool LexInvalidChar::StateAction(const char * code, uint32_t & Index, uint32_t &
 	if (!isRecursive)
 	{
 		isRecursive = true;
-
+		auto DividedBuffer = DivideBuffer(Buffer);
+		for (int i = 0; i < DividedBuffer.size() - 1; ++i)
+		{
+			uint32_t FakeIndex = 0;
+			ChangeState(DividedBuffer[i].c_str(), FakeIndex, LineNumber, Tokens, Keywords, 0);
+		}
 
 		isRecursive = false;
+		return true;
 	}
-
-
 	return false;
 }
 
@@ -43,7 +47,7 @@ void LexInvalidChar::CheckForEachInvalidChar(const std::string & buffer, uint32_
 {
 	bool isFirstPoint = true;
 	int PrevPoint = 0;
-	for (int i = 0; i < buffer.size(); ++i)
+	for (int i = 0; i < buffer.size() - 1; ++i)
 	{
 		if (!IsLetter(buffer[i]) && !IsNumber(buffer[i]))
 		{
@@ -51,13 +55,11 @@ void LexInvalidChar::CheckForEachInvalidChar(const std::string & buffer, uint32_
 			if (isFirstPoint)
 			{
 				PrevPoint = i;
-				AddErroMessage(0, i, LineNumber, buffer);
 				isFirstPoint = false;
 				m_InvalidCharPos.emplace_back(i);
 			}
 			else
 			{
-				AddErroMessage(PrevPoint + 1, i, LineNumber, buffer);
 				PrevPoint = i;
 			}
 		}
@@ -78,6 +80,7 @@ void LexInvalidChar::AddErroMessage(int Start, int End, uint32_t LineNumber, con
 std::vector<std::string> LexInvalidChar::DivideBuffer(const std::string & Buffer)
 {
 	std::vector < std::string > Result;
+	Result.resize(1);
 	Result[0] = "";
 	std::size_t Delta = 0;
 	for (int i = 0; i < m_InvalidCharPos.size() - 1; ++i)
@@ -112,7 +115,9 @@ void LexInvalidChar::ChangeState(const char * code, uint32_t & Index, uint32_t &
 {
 	ILexerState * ptr_Finder = new LexStateFinder();
 	ptr_Finder->m_refErrrorsMod = this->m_refErrrorsMod;
-	//	ptr_Finder->StateAction(code,Index, LineNumber)
+	ptr_Finder->StateAction(code, Index, LineNumber, Tokens, Keywords);
+
+	TrasferToken(this, ptr_Finder);
 
 	delete ptr_Finder;
 }

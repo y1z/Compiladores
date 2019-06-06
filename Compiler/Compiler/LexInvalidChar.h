@@ -27,6 +27,3 @@ public:
 	//! this is guard from  recursion 
 	inline static bool isRecursive = false;
 };
-
-
-	//bool LexInvalidChar::isRecursive = false;
