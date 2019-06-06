@@ -15,6 +15,7 @@ LexIdentifyIID::~LexIdentifyIID()
 bool LexIdentifyIID::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
 {
 	std::string PossibleID = "";
+
 	while (code[Index] != ' ' && code[Index] != '\0')
 	{
 		PossibleID += code[Index];
@@ -33,7 +34,8 @@ bool LexIdentifyIID::StateAction(const char * code, uint32_t & Index, uint32_t &
 	}
 	else
 	{
-		CheckForValidSequence(PossibleID, Index);
+		ChangeState(code, Index, LineNumber, Tokens, Keywords, 0);
+		return isValidID;
 	}
 
 	return false;
@@ -42,7 +44,9 @@ bool LexIdentifyIID::StateAction(const char * code, uint32_t & Index, uint32_t &
 void LexIdentifyIID::ChangeState(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords, int SelectedState)
 {
 	LexSeparators *ptr_Separator = new LexSeparators();
+	// checks if it's a separator 
 	isValidID = ptr_Separator->IsSeparators(code[Index]);
+	// then goes ahead make the appropriate tokens
 	if (isValidID)
 	{
 		ptr_Separator->StateAction(code, Index, LineNumber, Tokens, Keywords);
@@ -63,6 +67,12 @@ void LexIdentifyIID::ChangeState(const char * code, uint32_t & Index, uint32_t &
 
 		delete ptr_Operator;
 	}
+
+	if (isValidID == false)
+	{
+
+	}
+
 
 }
 

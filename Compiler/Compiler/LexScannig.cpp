@@ -21,6 +21,8 @@ bool LexScannig::StateAction(const char * code, uint32_t & Index, uint32_t & Lin
 		if (code[Index] == '\r')
 		{
 			LineNumber++;
+			// to ignore the \n char also 
+			Index++;
 		}
 		else if (code[Index] != ' ')
 		{

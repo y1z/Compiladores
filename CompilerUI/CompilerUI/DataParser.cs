@@ -46,11 +46,11 @@ namespace CompilerUI
 
     //! to know which order to do the parse-sing
     /*---------------------------Functions---------------------------*/
-    public bool ParseCompilerData(String[] CompilerData, ref DataGridView GridView, ref TextBox ErrorText)
+    public bool ParseCompilerData(String[] CompilerData, ref DataGridViewRow GridView, ref DataGridView DataView, ref TextBox ErrorText)
     {
       ScanningForParams(CompilerData);
 
-      ExacuteParams(CompilerData, ref GridView, ref ErrorText);
+      ExacuteParams(CompilerData, ref GridView, ref DataView, ref ErrorText);
       return true;
     }// end function 
 
@@ -151,11 +151,11 @@ namespace CompilerUI
     /// <param name="CompilerData"></param>
     /// <param name="GridView"></param>
     /// <param name="ErrorText"></param>
-    private void ExacuteParams(String[] CompilerData, ref DataGridView GridView, ref TextBox ErrorText)
+    private void ExacuteParams(String[] CompilerData, ref DataGridViewRow GridView, ref DataGridView DataView, ref TextBox ErrorText)
     {
-      int InterationCount = 1;
+      int IterationCount = 1;
       /*! \todo add the syntactic and semantic parsing later */
-      for (int i = 0; i < m_OrderOfParse.Count - 1; ++i)
+      for (int i = 0; i < m_OrderOfParse.Count; ++i)
       {
 
         switch (m_OrderOfParse[i])
@@ -163,9 +163,10 @@ namespace CompilerUI
           case ParseModes.UNKNOWN:
             break;
           case ParseModes.ErrorReading:
-            InsertError(CompilerData, ref ErrorText, ref InterationCount, m_ParamArgsCount[i]);
+            InsertError(CompilerData, ref ErrorText, ref IterationCount, m_ParamArgsCount[i]);
             break;
           case ParseModes.LexReading:
+            InsertLex(CompilerData, ref GridView,ref DataView, ref IterationCount, m_ParamArgsCount[i]);
             break;
           case ParseModes.SytaxReading:
             break;
@@ -177,18 +178,84 @@ namespace CompilerUI
 
 
     }// end function 
-
-    private void InsertError(String[] CompilerData, ref TextBox ErrorText, ref int InterationCount, int ParamCount)
+    /// <summary>
+    /// This function takes care of inserting the error related with compilation
+    /// </summary>
+    /// <param name="CompilerData"></param>
+    /// <param name="ErrorText"></param>
+    /// <param name="IterationCount"></param>
+    /// <param name="ParamCount"></param>
+    private void InsertError(String[] CompilerData, ref TextBox ErrorText, ref int IterationCount, int ParamCount)
     {
-      int CompilerEndPos = InterationCount + ParamCount;
+      int CompilerEndPos = IterationCount + ParamCount;
 
       ErrorText.Text = m_ErrorInfo;
-
-      for (int i = CompilerEndPos; InterationCount < i; ++InterationCount)
+      if(ParamCount == 0)
       {
-        ErrorText.Text += CompilerData[InterationCount] + "\r\n";
+        ErrorText.Text = "=====================NO ERROR GENERATED======================\r\n";
+      }
+      else
+      {
+        for (int i = CompilerEndPos; IterationCount < i; ++IterationCount)
+        {
+          ErrorText.Text += CompilerData[IterationCount] + "\r\n";
+        }
       }
 
     }// end function
-  }
+
+    private void InsertLex(String[] CompilerData, ref DataGridViewRow GridView,ref DataGridView DataView, ref int IterationCount, int ParamCount)
+    {
+      GridView.CreateCells(DataView);
+      // here goes the respective components of lexical analysis
+      String Lexema = "";
+      String Type = "";
+      String Line = "";
+
+      Byte LexArgCount = 1;
+      int CompilerEndPos = IterationCount + ParamCount;
+
+      for (int i = CompilerEndPos; IterationCount < i; ++IterationCount)
+      {
+        foreach (char chr in CompilerData[IterationCount])
+        {
+          // addes every value from the lexema , type and 
+
+          if (chr != '~' && LexArgCount % 3 == 1)
+          {
+            Lexema += chr;
+          }
+          else if (chr != '~' && LexArgCount % 3 == 2)
+          {
+            Type += chr;
+          }
+          else if (chr != '~' && LexArgCount % 3 == 0)
+          {
+            Line += chr;
+          }
+
+          else { LexArgCount++; }
+
+
+        }// end foreach
+        LexArgCount = 1;
+        DataGridViewRow dataGridView = new DataGridViewRow();
+
+        dataGridView.CreateCells(DataView);
+
+        dataGridView.Cells[0].Value = Lexema;
+        dataGridView.Cells[1].Value = Line;
+        dataGridView.Cells[2].Value = Type;
+
+        DataView.Rows.Add(dataGridView);
+
+        Lexema = "";
+        Type = "";
+        Line = "";
+      }// end for 
+
+    }// end function 
+
+
+  }/// End class 
 }

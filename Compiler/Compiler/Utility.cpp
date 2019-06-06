@@ -7,17 +7,17 @@ wchar_t ConvertChar(char character)
 	return System::Convert::ToChar(character);
 }
 
-std::string GetErrorLine(const char * code, uint32_t IndexCopy)
+std::string GetLine(const char * code, uint32_t IndexCopy)
 {
-	std::string ErrorLine;
+	std::string Line;
 	while (code[IndexCopy] != '\0' || code[IndexCopy] != '\r\n')
 	{
-		ErrorLine += code[IndexCopy];
+		Line += code[IndexCopy];
 		IndexCopy++;
 		if (code[IndexCopy] == '\0') { break; }
 	}
 
-	return ErrorLine;
+	return Line;
 }
 
 void TrasferToken(ILexerState * Reciver, ILexerState * Giver)
@@ -51,7 +51,7 @@ bool IsNumber(const char PossibleNumber)
 	}
 	return false;
 }
-/*! this exits because i was haven some issues with Traslating the string */
+/*! this is here because i was having some issues with Translating the  enum to String*/
 const char * TranslateToken(Compiler::Token_Type token_type)
 {
 	switch (token_type)
@@ -106,4 +106,12 @@ const char * TranslateToken(Compiler::Token_Type token_type)
 	return "UNDEFINED";
 }
 
+void IgnoreSpaceChars(const char* code, uint32_t & Index, uint32_t &LineNumber)
+{
+	LineNumber++;
+	while (code[Index] == '\n' || code[Index] == '\r')
+	{
+		Index++;
+	}
 
+}

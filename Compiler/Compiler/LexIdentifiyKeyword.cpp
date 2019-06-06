@@ -15,42 +15,50 @@ LexIdentifiyKeyword::~LexIdentifiyKeyword()
 
 bool LexIdentifiyKeyword::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
 {
-	std::string PosibleKeyword = "";
-
+	std::string PossibleKeyword = "";
+	/* get the possible keyword*/
 	while (code[Index] != ' ' && code[Index] != '\0')
 	{
-		PosibleKeyword += code[Index];
-		String^ ConvertedString = gcnew String(PosibleKeyword.c_str());
-
-		Console::WriteLine("PosibleKeyWord  [{0}] ", ConvertedString);
+		if (code[Index] != '\n' && code[Index] != '\r')
+		{
+			PossibleKeyword += code[Index];
+		}
+		else
+		{
+			break;
+		}
 
 		if (code[Index] == 0) { break; }
 		Index++;
 	}
+	// check if the string is a keyword
+	auto Match = Keywords->find(PossibleKeyword);
 
-	auto Match = Keywords->find(PosibleKeyword);
-
+	// check if in the keyword map 
 	if (Match != Keywords->end())
 	{
-		if (!CheckKeywordExecptions(PosibleKeyword, LineNumber))
+		if (!CheckKeywordExecptions(PossibleKeyword, LineNumber))
 		{
-			Token tok(PosibleKeyword, Compiler::KEYWORD, LineNumber);
-			String^  ConvertedKeyword = gcnew String(PosibleKeyword.c_str());
+			Token tok(PossibleKeyword, Compiler::KEYWORD, LineNumber);
+			String^  ConvertedKeyword = gcnew String(PossibleKeyword.c_str());
 			Console::WriteLine("KeyWord is : {0} ", ConvertedKeyword);
-			m_GeneratedTokens.emplace_back(tok);
-			for (Token tok : this->m_GeneratedTokens)
-			{
-				Tokens.emplace_back(tok);
-			}
 
-
+			Tokens.emplace_back(tok);
+			return true;
+		}
+		else
+		{
+			Token tok(PossibleKeyword, Compiler::LOGICAL_CONSTANT, LineNumber);
+			String^  ConvertedLogicalConstant = gcnew String(PossibleKeyword.c_str());
+			Console::WriteLine("KeyWord is : {0} ", ConvertedLogicalConstant);
+			Tokens.emplace_back(tok);
 			return true;
 		}
 
 	}
-	else	// confirmed that's not a keyword 
+	else	// confirmed that's not a keyword or logical constant
 	{
-		Index -= PosibleKeyword.size();
+		Index -= PossibleKeyword.size();
 	}
 
 	return false;

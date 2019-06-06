@@ -7,6 +7,7 @@
 #include "LexSeparators.h"
 #include "LexIdentifiyKeyword.h"
 #include "LexStateNumber.h"
+#include "LexInvalidChar.h"
 #include "LexIdentifyIID.h"
 
 
@@ -27,8 +28,7 @@ bool LexStateFinder::StateAction(const char * code, uint32_t & Index, uint32_t &
 	*/
 	static std::map<char, int> StateIdentifiers = { {'/',0}, {'\"',1} ,
 	{'<',2},{'>',2},{'=',2},{'!',2} ,{'+',2},{'-',2},{'^',2} ,{'*',2} ,{'[',2} ,
-	{']',2} ,{'&',2},{'|',2} ,{'{',2},{'}',2},{'!',2},{';',3 },{',',3},{':',3} ,{'.',4} };
-
+	{']',2} ,{'&',2},{'|',2} ,{'(',2} ,{')',2},{'%',2},{'{',2},{'}',2},{'!',2},{';',3 },{',',3},{':',3} ,{'.',4} };
 
 	while (code[Index] != ' ' || code[Index] != '\0')
 	{/*This is to skip the chars '\r\n' */
@@ -46,10 +46,11 @@ bool LexStateFinder::StateAction(const char * code, uint32_t & Index, uint32_t &
 			ChangeState(code, Index, LineNumber, Tokens, Keywords, 4);
 		}
 
-		else// checks for Keyword and IDs 
+		else// checks for Keyword and IDs plus invalid chars 
 		{
 			if (ChangeStateKeyword(code, Index, LineNumber, Tokens, Keywords)) { return true; }
 			else	if (ChangeStateID(code, Index, LineNumber, Tokens, Keywords)) { return true; }
+			else if (ChangeStateInvalidChar(code, Index, LineNumber, Tokens, Keywords)) { return true; }
 		}
 	}
 
@@ -170,7 +171,7 @@ bool LexStateFinder::ChangeStateID(const char * code, uint32_t & Index, uint32_t
 	LexIDs->m_refErrrorsMod = this->m_refErrrorsMod;
 	bool isIdValied = LexIDs->StateAction(code, CopyIndex, LineNumber, Tokens, Keywords);
 	TrasferToken(this, LexIDs);
-	
+
 	if (isIdValied)
 	{
 		//move advance the index 
@@ -179,4 +180,25 @@ bool LexStateFinder::ChangeStateID(const char * code, uint32_t & Index, uint32_t
 
 	delete LexIDs;
 	return isIdValied;
+}
+
+bool LexStateFinder::ChangeStateInvalidChar(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
+{
+	uint32_t CopyIndex = Index;
+
+	ILexerState * ptr_LexInvalidChar = new LexInvalidChar();
+
+	ptr_LexInvalidChar->m_refErrrorsMod = this->m_refErrrorsMod;
+	bool isIdValied = ptr_LexInvalidChar->StateAction(code, CopyIndex, LineNumber, Tokens, Keywords);
+	TrasferToken(this, ptr_LexInvalidChar);
+
+	if (isIdValied)
+	{
+		//move advance the index 
+		Index = CopyIndex;
+	}
+
+	delete ptr_LexInvalidChar;
+	return isIdValied;
+	return false;
 }

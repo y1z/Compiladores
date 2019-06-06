@@ -176,13 +176,12 @@ namespace CompilerUI
         // m_TokenDataView.Columns[0].di = "dsdsf";
 
         DataGridViewRow dataGridViewRow = new DataGridViewRow();
-       // dataGridViewRow.CreateCells(m_TokenDataView);
-
+      
         DataParser dataParser = new DataParser();
 
-        dataParser.ParseCompilerData(Output,ref m_TokenDataView,ref OutputTextBox);
+        dataParser.ParseCompilerData(Output, ref dataGridViewRow, ref m_TokenDataView, ref OutputTextBox);
 
-       // OutputTextBox.Lines = Output;
+        // OutputTextBox.Lines = Output;
       }
       else
       {

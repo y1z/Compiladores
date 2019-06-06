@@ -46,17 +46,19 @@ cli::array<String^ > ^ Compiler::Manager::LexAnalysis(String ^ srcCode)
 			for (int i = 0; i < ptr_Lex->GetTokenCount(); ++i)
 			{
 				CurrentPos++;
-				// converts std::string to System::String(Lexema) 
-				CompilationDetails[CurrentPos] = "~";
-				CompilationDetails[CurrentPos] += gcnew String(ptr_Lex->GetTokenContainer()[i].getLex().c_str());
+				// initialize the String 
+				CompilationDetails[CurrentPos] = "";
+				// converts std::string to System::String(Lexema)
+				CompilationDetails[CurrentPos] = gcnew String(ptr_Lex->GetTokenContainer()[i].getLex().c_str());
+				CompilationDetails[CurrentPos] += "~";
 				// converts int to System::String (LineNumber )
-				CompilationDetails[CurrentPos] += "~";
 				CompilationDetails[CurrentPos] += gcnew String(std::to_string(ptr_Lex->GetTokenContainer()[i].getLineNum()).c_str());
-				// converts enum to System::String (Type) 
 				CompilationDetails[CurrentPos] += "~";
+				// converts enum to System::String (Type) 
 				CompilationDetails[CurrentPos] += gcnew String(TranslateToken(ptr_Lex->GetTokenContainer()[i].getType()));
+				CompilationDetails[CurrentPos] += "~";
 
-				Console::WriteLine("Here are the compilation details <| {0} |>", CompilationDetails[i]);
+				Console::WriteLine("Here are the compilation details <| {0} |>", CompilationDetails[CurrentPos]);
 			}
 		}
 		else

@@ -22,7 +22,7 @@ public:
 	\param [in] Op The operator 
 	\param [in] LineNum is for the token .
 	*/
-	bool FiguerOutOperator(char Op, uint32_t LineNum);
+	bool FiguerOutOperator(char Op, uint32_t LineNum,std::vector<Token> &Tokens);
 
 	/*! checks if the operator has an equal sign next to it returns with or without the equals-sign
 	\param [in] the code in question

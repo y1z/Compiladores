@@ -18,28 +18,33 @@ bool LexStringChecker::StateAction(const char * code, uint32_t & Index, uint32_t
 	int8_t DoubleQuoteCount = 0;
 
 	std::string Lexema = "";
-	while (true)
+	while (code[Index] != '\0')
 	{
+
+		String ^ Converted = gcnew String(Lexema.c_str());
+		Console::WriteLine(" String constant {0} ", Converted);
 		if (code[Index] == '\"')
 		{
 			DoubleQuoteCount++;
 		}
 		if (code[Index] == '\n' || code[Index] == '\r')
 		{
-			GetErrorLine(code, CopyIndex);
-			ReportError(LineNumber, code, Index, "Invalid use of newline in string");
+			GetLine(code, CopyIndex);
+			ReportError(LineNumber, code, Index);
+			CopyIndex = Index;
+			DoubleQuoteCount = 0;
+			IgnoreSpaceChars(code, Index, LineNumber);
+			Lexema.clear();
 		}
 		if (DoubleQuoteCount == 2)
 		{
 			Lexema += code[Index];
-			String^ Temp = gcnew String(Lexema.c_str());
-			Console::WriteLine("Here is  the lexema for string constant : {0} ", Temp);
 
-			m_GeneratedTokens.emplace_back(Token(Lexema, Compiler::STRING_CONSTANT, LineNumber));
+			Tokens.emplace_back(Token(Lexema, Compiler::STRING_CONSTANT, LineNumber));
 
 			return true;
 		}
-		else if (code[Index] == '\0')
+		if (code[Index] == '\0')
 		{
 			ReportError(CopyLineNumber, code, Index);
 		}
@@ -58,12 +63,12 @@ void LexStringChecker::ReportError(uint32_t LineNumber, const char * code, uint3
 {
 	if (CustomMessage == nullptr)
 	{
-		std::string ErrorLine = GetErrorLine(code, Index);
-		m_refErrrorsMod->AddLexError(LineNumber, COMMENT_NOT_CLOSED, ErrorLine);
+		std::string ErrorLine = GetLine(code, Index);
+		m_refErrrorsMod->AddLexError(LineNumber, STRING_NOT_CLOSED, ErrorLine);
 	}
 	else
 	{
-		std::string ErrorLine = GetErrorLine(code, Index);
+		std::string ErrorLine = GetLine(code, Index);
 		System::String ^Converted = gcnew String(ErrorLine.c_str());
 		m_refErrrorsMod->AddLexError(LineNumber, CustomMessage, ErrorLine);
 	}

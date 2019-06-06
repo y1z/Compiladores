@@ -5,7 +5,7 @@
 /*! return an ascii representation */
 wchar_t ConvertChar(char character);
 /*! does not Advance the Index */
-std::string GetErrorLine(const char* code, uint32_t IndexCopy);
+std::string GetLine(const char* code, uint32_t IndexCopy);
 
 void TrasferToken(ILexerState *Reciver, ILexerState *Giver);
 
@@ -14,3 +14,5 @@ bool IsLetter(const char PossibleLetter);
 bool IsNumber(const char PossibleNumber);
 /*! make a const char * depending on the token  */
 const char *TranslateToken(Compiler::Token_Type Token);
+
+void IgnoreSpaceChars(const char* code, uint32_t & Index, uint32_t &LineNumber);

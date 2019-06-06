@@ -38,15 +38,12 @@ void LexSeparators::ChangeState(const char * code, uint32_t & Index, uint32_t & 
 
 bool LexSeparators::IsSeparators(char PosibleSeparator)
 {
-	Console::WriteLine("here is the PosibleSeparator {0}", ConvertChar(PosibleSeparator));
 	for (char separators : Sparators)
 	{
 		if (PosibleSeparator == separators)
 		{
-			Console::WriteLine("Confirmed Separator {0}", ConvertChar(PosibleSeparator));
 			return true;
 		}
 	}
-	Console::WriteLine("Confirmed Not Separator {0} ", ConvertChar(PosibleSeparator));
 	return false;
 }
