@@ -157,7 +157,6 @@ bool LexStateFinder::ChangeStateKeyword(const char * code, uint32_t & Index, uin
 		Index = copyIndex;
 	}
 
-
 	delete LexKeyword;
 	return isKeyword;
 }
@@ -185,10 +184,9 @@ bool LexStateFinder::ChangeStateID(const char * code, uint32_t & Index, uint32_t
 bool LexStateFinder::ChangeStateInvalidChar(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
 {
 	uint32_t CopyIndex = Index;
-
 	ILexerState * ptr_LexInvalidChar = new LexInvalidChar();
-
 	ptr_LexInvalidChar->m_refErrrorsMod = this->m_refErrrorsMod;
+
 	bool isIdValied = ptr_LexInvalidChar->StateAction(code, CopyIndex, LineNumber, Tokens, Keywords);
 	TrasferToken(this, ptr_LexInvalidChar);
 

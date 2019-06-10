@@ -4,13 +4,11 @@
 
 cli::array<String^ > ^ Compiler::Manager::LexAnalysis(String ^ srcCode)
 {
-
 	cli::array<String^> ^CompilationDetails;
 	if (ptr_Lex != nullptr)
 	{
 		// here starts the parsing 
 		Manager::ptr_Lex->ParseSourceCode(((const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
-
 		// checks to see if there are any tokes or errors was generated 
 		if (0 < (Manager::ptr_Lex->GetTokenCount() + ptr_Lex->m_refErrrorsMod->GetErrorCount()))
 		{

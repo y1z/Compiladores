@@ -8,6 +8,7 @@
 #include "Token.h"
 
 namespace Compiler {
+	// here are all error that the LexAnalyzer can create.
 #define LEX_INVALID_CHAR "\tInvalid Character"
 #define STRING_NOT_CLOSED "\tThe string is not closed"
 #define COMMENT_NOT_CLOSED "\tThe comment is no closed"

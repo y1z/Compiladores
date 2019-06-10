@@ -33,7 +33,7 @@ bool LexStringChecker::StateAction(const char * code, uint32_t & Index, uint32_t
 			ReportError(LineNumber, code, Index);
 			CopyIndex = Index;
 			DoubleQuoteCount = 0;
-			IgnoreSpaceChars(code, Index, LineNumber);
+			IgnoreNewLineChar(code, Index, LineNumber);
 			Lexema.clear();
 		}
 		if (DoubleQuoteCount == 2)

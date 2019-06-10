@@ -7,7 +7,6 @@
 LexInvalidChar::LexInvalidChar()
 {}
 
-
 LexInvalidChar::~LexInvalidChar()
 {}
 
@@ -19,17 +18,19 @@ bool LexInvalidChar::StateAction(const char * code, uint32_t & Index, uint32_t &
 	{
 		if (code[Index] == ' ' || code[Index] == '\0')
 		{
-			CheckForEachInvalidChar(Buffer, LineNumber);
 			break;
 		}
 		Buffer += code[Index];
 		Index++;
 	}
+
+	CheckForEachInvalidChar(Buffer, LineNumber);
 	// avoids getting in a station where it call it self hundreds of times
 	if (!isRecursive)
 	{
 		isRecursive = true;
-		auto DividedBuffer = DivideBuffer(Buffer);
+		std::vector<std::string> DividedBuffer = GenerateErrorStrings(Buffer);
+
 		for (int i = 0; i < DividedBuffer.size() - 1; ++i)
 		{
 			uint32_t FakeIndex = 0;
@@ -42,26 +43,14 @@ bool LexInvalidChar::StateAction(const char * code, uint32_t & Index, uint32_t &
 	return false;
 }
 
-/// TODO  ADD ERROR MESSAGE 
+//
 void LexInvalidChar::CheckForEachInvalidChar(const std::string & buffer, uint32_t LineNumber)
 {
-	bool isFirstPoint = true;
-	int PrevPoint = 0;
-	for (int i = 0; i < buffer.size() - 1; ++i)
+	for (int i = 0; i < buffer.size(); ++i)
 	{
 		if (!IsLetter(buffer[i]) && !IsNumber(buffer[i]))
 		{
-			m_InvalidCharPos.emplace_back(i);
-			if (isFirstPoint)
-			{
-				PrevPoint = i;
-				isFirstPoint = false;
-				m_InvalidCharPos.emplace_back(i);
-			}
-			else
-			{
-				PrevPoint = i;
-			}
+			m_InvalidCharAndPositions.emplace_back(std::make_pair(i, buffer[i]));
 		}
 	}
 
@@ -77,38 +66,22 @@ void LexInvalidChar::AddErroMessage(int Start, int End, uint32_t LineNumber, con
 	m_refErrrorsMod->AddLexError(LineNumber, LEX_INVALID_CHAR, ErrorDesc);
 }
 
-std::vector<std::string> LexInvalidChar::DivideBuffer(const std::string & Buffer)
+std::vector<std::string> LexInvalidChar::GenerateErrorStrings(const std::string & Buffer)
 {
 	std::vector < std::string > Result;
-	Result.resize(1);
-	Result[0] = "";
-	std::size_t Delta = 0;
-	for (int i = 0; i < m_InvalidCharPos.size() - 1; ++i)
+
+	for (std::pair<int, char> Pair : m_InvalidCharAndPositions)
 	{
-		Delta = GetDelta(m_InvalidCharPos[i], m_InvalidCharPos[i + 1]);
-
-		int InvalidCharPos = m_InvalidCharPos[i];
-		if (Delta == 1)
-		{
-			Result[Result.size() - 1] += Buffer[InvalidCharPos];
-		}
-		else
-		{
-			std::string AddedString;
-			AddedString += Buffer[InvalidCharPos];
-			Result.emplace_back(AddedString);
-		}
-
+		std::string SeparatedStr = Buffer.substr(0, Pair.first + 1);
+		Result.emplace_back(SeparatedStr);
+		PrintToConsole("Here is the Separated String {0}", SeparatedStr);
 	}
-
 	return Result;
 }
 
 std::size_t LexInvalidChar::GetDelta(std::size_t PrevIndex, std::size_t NextIndex)
 {
-	std::size_t Delta = NextIndex - PrevIndex;
-
-	return Delta;
+	return NextIndex - PrevIndex;
 }
 
 void LexInvalidChar::ChangeState(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords, int SelectedState)

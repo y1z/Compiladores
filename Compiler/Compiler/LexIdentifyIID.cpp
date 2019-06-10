@@ -16,18 +16,17 @@ bool LexIdentifyIID::StateAction(const char * code, uint32_t & Index, uint32_t &
 {
 	std::string PossibleID = "";
 
-	while (code[Index] != ' ' && code[Index] != '\0')
+	while (code[Index] != ' ' && code[Index] != '\0' && code[Index] != '\t')
 	{
 		PossibleID += code[Index];
 		if (code[Index] == '\0') { break; }
 		Index++;
 	}
 
-	if (CheckForValidSequence(PossibleID, Index))
+  if (CheckForValidSequence(PossibleID, Index))
 	{
 		Token tok(PossibleID, Compiler::ID, LineNumber);
-		String^ Converted = gcnew String(PossibleID.c_str());
-		Console::WriteLine("ID = {0}", Converted);
+		PrintToConsole("Confirmed ID = {0}", PossibleID);
 
 		Tokens.emplace_back(tok);
 		return true;
@@ -67,13 +66,6 @@ void LexIdentifyIID::ChangeState(const char * code, uint32_t & Index, uint32_t &
 
 		delete ptr_Operator;
 	}
-
-	if (isValidID == false)
-	{
-
-	}
-
-
 }
 
 bool LexIdentifyIID::CheckForValidSequence(std::string & PossibleIDs, uint32_t &Index)

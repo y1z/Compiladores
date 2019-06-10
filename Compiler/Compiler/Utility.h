@@ -12,7 +12,11 @@ void TrasferToken(ILexerState *Reciver, ILexerState *Giver);
 bool IsLetter(const char PossibleLetter);
 /*! takes a char then tell me if it's a number or not*/
 bool IsNumber(const char PossibleNumber);
-/*! make a const char * depending on the token  */
+/*! makes a const char * depending on the token  */
 const char *TranslateToken(Compiler::Token_Type Token);
-
-void IgnoreSpaceChars(const char* code, uint32_t & Index, uint32_t &LineNumber);
+/*! Keeps moving the index until it find a char that not '\n' or '\r'*/
+void IgnoreNewLineChar(const char* code, uint32_t & Index, uint32_t &LineNumber);
+/*! sends the message to the console */
+void PrintToConsole(const std::string &Message);
+/*! sends a formated message to the console (can only have one {0}) inside the format)*/
+void PrintToConsole(const char Format[], const std::string &Message);

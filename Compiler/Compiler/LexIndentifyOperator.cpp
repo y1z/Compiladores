@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Utility.h"
+#include <array>
 #include "LexIndentifyOperator.h"
 
 
@@ -109,18 +110,33 @@ std::string LexIndentifyOperator::ReciveRelationalOperator(const char * code, ui
 	return Result;
 }
 
-bool LexIndentifyOperator::CheckOperatorValid(const char * code, uint32_t & Index, std::string & PosibleOperator)
+bool LexIndentifyOperator::CheckOperatorValid(const char * code, uint32_t & Index, std::string & PossibleOperator)
 {
+	bool isValidOperator = false;
+	std::array<char, 2> ValidOperators = { '|','&' };
+
+	int StringPos = 0;
+	for (char Operator : ValidOperators)
+	{
+		if (Operator == PossibleOperator[StringPos]) { isValidOperator = true; }
+		StringPos++;
+	}
+
+
+	if (isValidOperator == false)
+	{
+		return false;
+	}
 
 	// check if the operator repeats
-	if (code[Index + 1] != '\0' &&code[Index] == code[Index + 1])
+	if (code[Index + 1] != '\0' && code[Index] == code[Index + 1])
 	{
-		PosibleOperator = (code[Index] + code[Index + 1]);
+		PossibleOperator = (code[Index] + code[Index + 1]);
 		return true;
 	}
 	else// return error
 	{
-		PosibleOperator = (code[Index]);
+		PossibleOperator = (code[Index]);
 		return false;
 	}
 	return true;

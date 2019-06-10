@@ -2,6 +2,7 @@
 #include <string>
 #include "Utility.h"
 
+
 wchar_t ConvertChar(char character)
 {
 	return System::Convert::ToChar(character);
@@ -106,12 +107,25 @@ const char * TranslateToken(Compiler::Token_Type token_type)
 	return "UNDEFINED";
 }
 
-void IgnoreSpaceChars(const char* code, uint32_t & Index, uint32_t &LineNumber)
+void IgnoreNewLineChar(const char* code, uint32_t & Index, uint32_t &LineNumber)
 {
 	LineNumber++;
-	while (code[Index] == '\n' || code[Index] == '\r')
+	while (code[Index] == '\n' || code[Index] == '\r' )
 	{
 		Index++;
 	}
 
+}
+
+void PrintToConsole(const std::string & Message)
+{
+	System::String ^MessageString = gcnew String(Message.c_str());
+	Console::WriteLine(" {0} ", MessageString);
+}
+
+void PrintToConsole(const char Format[], const std::string & Message)
+{
+	System::String ^MessageString = gcnew String(Message.c_str());
+	System::String ^FormatString = gcnew String(Format);
+	Console::WriteLine(FormatString, MessageString);
 }
