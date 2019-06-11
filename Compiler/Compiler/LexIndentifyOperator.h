@@ -36,8 +36,6 @@ public:
 	\param [out] the resulting operator*/
 	bool  CheckOperatorValid(const char *code, uint32_t& Index, std::string &PosibleOperator);
 public: // variables 
-	inline static std::map<char, int> Operators = { {'<',0},{'>',0},{'!',0},{'=',0},
-	{'|',1}, {'&',1} ,{'[',2} ,{']',2} ,
-	{'+',2} ,{'-',2},{'*',2},{'%',2},{'/',2} ,{'^',2} ,
-	{'{',2},{'}',2} , {'(',2} , {')',2} };
+
+	static std::map<char, int> Operators;
 };

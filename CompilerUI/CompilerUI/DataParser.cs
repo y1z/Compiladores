@@ -46,17 +46,18 @@ namespace CompilerUI
 
     //! to know which order to do the parse-sing
     /*---------------------------Functions---------------------------*/
-    public bool ParseCompilerData(String[] CompilerData, ref DataGridViewRow GridView, ref DataGridView DataView, ref TextBox ErrorText,bool isAlreadyCompiled)
+    public bool ParseCompilerData(String[] CompilerData, ref DataGridView DataView, ref TextBox ErrorText, bool isAlreadyCompiled)
     {
+      ScanningForParams(CompilerData);
+      // check to see if it's a good idea to clear the DataGridView 
       if (isAlreadyCompiled)
       {
         DataView.Rows.Clear();
+        DataView.Refresh();
       }
 
+      ExacuteParams(CompilerData, ref DataView, ref ErrorText);
 
-      ScanningForParams(CompilerData);
-
-      ExacuteParams(CompilerData, ref GridView, ref DataView, ref ErrorText);
       return true;
     }// end function 
 
@@ -155,9 +156,8 @@ namespace CompilerUI
     /// this is where we put the data from the compiler to the screen(or DataGrid depending one the case) 
     /// </summary>
     /// <param name="CompilerData"></param>
-    /// <param name="GridView"></param>
     /// <param name="ErrorText"></param>
-    private void ExacuteParams(String[] CompilerData, ref DataGridViewRow GridView, ref DataGridView DataView, ref TextBox ErrorText)
+    private void ExacuteParams(String[] CompilerData, ref DataGridView DataView, ref TextBox ErrorText)
     {
       int IterationCount = 1;
       /*! \todo add the syntactic and semantic parsing later */
@@ -172,7 +172,7 @@ namespace CompilerUI
             InsertError(CompilerData, ref ErrorText, ref IterationCount, m_ParamArgsCount[i]);
             break;
           case ParseModes.LexReading:
-            InsertLex(CompilerData, ref GridView,ref DataView, ref IterationCount, m_ParamArgsCount[i]);
+            InsertLex(CompilerData, ref DataView, ref IterationCount, m_ParamArgsCount[i]);
             break;
           case ParseModes.SytaxReading:
             break;
@@ -196,7 +196,7 @@ namespace CompilerUI
       int CompilerEndPos = IterationCount + ParamCount;
 
       ErrorText.Text = m_ErrorInfo;
-      if(ParamCount == 0)
+      if (ParamCount == 0)
       {
         ErrorText.Text = "=====================NO ERROR GENERATED======================\r\n";
       }
@@ -210,9 +210,8 @@ namespace CompilerUI
 
     }// end function
 
-    private void InsertLex(String[] CompilerData, ref DataGridViewRow GridView,ref DataGridView DataView, ref int IterationCount, int ParamCount)
+    private void InsertLex(String[] CompilerData, ref DataGridView DataView, ref int IterationCount, int ParamCount)
     {
-      GridView.CreateCells(DataView);
       // here goes the respective components of lexical analysis
       String Lexema = "";
       String Type = "";
@@ -241,6 +240,7 @@ namespace CompilerUI
 
           else { LexArgCount++; }
         }// end foreach
+
         LexArgCount = 1;
         DataGridViewRow dataGridView = new DataGridViewRow();
 
@@ -259,6 +259,22 @@ namespace CompilerUI
 
     }// end function 
 
+    private void InitializeComponent()
+    {
+      this.SuspendLayout();
+      // 
+      // DataParser
+      // 
+      this.ClientSize = new System.Drawing.Size(292, 212);
+      this.Name = "DataParser";
+      this.Load += new System.EventHandler(this.DataParser_Load);
+      this.ResumeLayout(false);
 
+    }
+
+    private void DataParser_Load(object sender, EventArgs e)
+    {
+
+    }
   }/// End class 
 }

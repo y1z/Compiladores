@@ -2,9 +2,10 @@
 #include "Compiler.h"
 #include "Utility.h"
 
-cli::array<String^ > ^ Compiler::Manager::LexAnalysis(String ^ srcCode)
+cli::array<String^ > ^ Compiler::Manager::StartLexAnalysis(String ^ srcCode)
 {
 	cli::array<String^> ^CompilationDetails;
+
 	if (ptr_Lex != nullptr)
 	{
 		// here starts the parsing 
@@ -66,8 +67,6 @@ cli::array<String^ > ^ Compiler::Manager::LexAnalysis(String ^ srcCode)
 		}
 	}
 
-	ptr_Lex->ClearToken();
-
 	return CompilationDetails;
 }
 
@@ -81,6 +80,7 @@ Compiler::Manager::~Manager()
 {
 	if (Manager::ptr_Lex != nullptr)
 	{
+			ptr_Lex->ClearToken();
 		delete Manager::ptr_Lex;
 	}
 
@@ -89,11 +89,15 @@ Compiler::Manager::~Manager()
 //! Entry Point for the Complier 
 cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 {
+	// clear all error messages 
 	ptr_Lex->m_refErrrorsMod->clearErrors();
+	// clear all tokens 
+	Manager::ptr_Lex->ClearToken();
 
 	System::Console::WriteLine("Here is the Source Code {0} ", srcCode);
 
-	cli::array<String^> ^CompiltionDetails = Manager::LexAnalysis(srcCode);
+	cli::array<String^> ^CompiltionDetails = Manager::StartLexAnalysis(srcCode);
+
 
 
 	return CompiltionDetails;

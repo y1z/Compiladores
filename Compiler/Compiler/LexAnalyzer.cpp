@@ -35,7 +35,10 @@ Compiler::LexAnalyzer::LexAnalyzer(ErrorsModule ^ ErrorModule)
 }
 
 Compiler::LexAnalyzer::~LexAnalyzer()
-{}
+{
+
+
+}
 //! Heres where the Parsing starts
 bool Compiler::LexAnalyzer::ParseSourceCode(const char * srcCode)
 {
@@ -43,13 +46,11 @@ bool Compiler::LexAnalyzer::ParseSourceCode(const char * srcCode)
 	uint32_t Index = 0;
 	uint32_t LineCount = 1;//start value at 1 because it easer to understand
 	ptr_ScanningState->m_refErrrorsMod = this->m_refErrrorsMod;
+	// directly transfers all tokens to the LexAnalyzer 
 	ptr_ScanningState->StateAction(srcCode, Index, LineCount, m_LexTokens, &m_Keywords);
 
-	for (Token Toks : ptr_ScanningState->m_GeneratedTokens)
-	{
-		this->m_LexTokens.emplace_back(Toks);
-	}
 	delete ptr_ScanningState;
+	ptr_ScanningState = nullptr;
 	return true;
 }
 

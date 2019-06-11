@@ -37,7 +37,7 @@ bool LexIdentifiyKeyword::StateAction(const char * code, uint32_t & Index, uint3
 	// check if in the keyword map 
 	if (Match != Keywords->end())
 	{
-		if (!CheckKeywordExecptions(PossibleKeyword, LineNumber))
+		if (!CheckKeywordExecptions(PossibleKeyword, LineNumber,Tokens))
 		{
 			Token tok(PossibleKeyword, Compiler::KEYWORD, LineNumber);
 			String^  ConvertedKeyword = gcnew String(PossibleKeyword.c_str());
@@ -64,14 +64,14 @@ bool LexIdentifiyKeyword::StateAction(const char * code, uint32_t & Index, uint3
 	return false;
 }
 
-bool LexIdentifiyKeyword::CheckKeywordExecptions(std::string &Keyword, uint32_t LineNumber)
+bool LexIdentifiyKeyword::CheckKeywordExecptions(std::string &Keyword, uint32_t LineNumber, std::vector<Token> &Tokens)
 {
 	if (Keyword == "true" || Keyword == "false")
 	{
 		Token tok(Keyword, Compiler::LOGICAL_CONSTANT, LineNumber);
 		String^  ConvertedKeyword = gcnew String(Keyword.c_str());
 		Console::WriteLine("KeyWord is : {0} ", ConvertedKeyword);
-		m_GeneratedTokens.emplace_back(tok);
+		Tokens.emplace_back(tok);
 		return true;
 	}
 

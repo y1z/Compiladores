@@ -21,14 +21,6 @@ std::string GetLine(const char * code, uint32_t IndexCopy)
 	return Line;
 }
 
-void TrasferToken(ILexerState * Reciver, ILexerState * Giver)
-{
-	for (Token tok : Giver->m_GeneratedTokens)
-	{
-		Reciver->m_GeneratedTokens.emplace_back(tok);
-	}
-}
-
 bool IsLetter(const char PossibleLetter)
 {
 	// check for uppercase

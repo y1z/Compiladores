@@ -83,11 +83,11 @@
             this.Type,
             this.Line});
       this.m_TokenDataView.GridColor = System.Drawing.SystemColors.Desktop;
-      this.m_TokenDataView.Location = new System.Drawing.Point(1706, 63);
+      this.m_TokenDataView.Location = new System.Drawing.Point(1691, 63);
       this.m_TokenDataView.Name = "m_TokenDataView";
       this.m_TokenDataView.ReadOnly = true;
       this.m_TokenDataView.RowTemplate.Height = 40;
-      this.m_TokenDataView.Size = new System.Drawing.Size(445, 559);
+      this.m_TokenDataView.Size = new System.Drawing.Size(992, 559);
       this.m_TokenDataView.TabIndex = 1;
       this.m_TokenDataView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
       // 
@@ -100,7 +100,7 @@
       this.OutputTextBox.Name = "OutputTextBox";
       this.OutputTextBox.ReadOnly = true;
       this.OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.OutputTextBox.Size = new System.Drawing.Size(2128, 182);
+      this.OutputTextBox.Size = new System.Drawing.Size(2692, 300);
       this.OutputTextBox.TabIndex = 2;
       this.OutputTextBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
       // 
@@ -114,11 +114,11 @@
             this.Length,
             this.In_Function});
       this.dataGridView2.GridColor = System.Drawing.SystemColors.Desktop;
-      this.dataGridView2.Location = new System.Drawing.Point(23, 848);
+      this.dataGridView2.Location = new System.Drawing.Point(12, 943);
       this.dataGridView2.Name = "dataGridView2";
       this.dataGridView2.ReadOnly = true;
       this.dataGridView2.RowTemplate.Height = 40;
-      this.dataGridView2.Size = new System.Drawing.Size(2119, 163);
+      this.dataGridView2.Size = new System.Drawing.Size(2617, 236);
       this.dataGridView2.TabIndex = 3;
       this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
       // 
@@ -167,7 +167,7 @@
             this.opcionesToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(2163, 49);
+      this.menuStrip1.Size = new System.Drawing.Size(2695, 49);
       this.menuStrip1.TabIndex = 4;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -289,29 +289,35 @@
       // 
       // Lexim
       // 
+      this.Lexim.Frozen = true;
       this.Lexim.HeaderText = "Lexema";
+      this.Lexim.MinimumWidth = 20;
       this.Lexim.Name = "Lexim";
       this.Lexim.ReadOnly = true;
-      this.Lexim.Width = 200;
       // 
       // Type
       // 
+      this.Type.Frozen = true;
       this.Type.HeaderText = "Type";
+      this.Type.MinimumWidth = 20;
       this.Type.Name = "Type";
       this.Type.ReadOnly = true;
+      this.Type.Width = 150;
       // 
       // Line
       // 
       this.Line.HeaderText = "Line";
+      this.Line.MinimumWidth = 20;
       this.Line.Name = "Line";
       this.Line.ReadOnly = true;
+      this.Line.Width = 50;
       // 
       // CompilerWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoSize = true;
-      this.ClientSize = new System.Drawing.Size(2163, 1037);
+      this.ClientSize = new System.Drawing.Size(2695, 1179);
       this.Controls.Add(this.dataGridView2);
       this.Controls.Add(this.OutputTextBox);
       this.Controls.Add(this.m_TokenDataView);

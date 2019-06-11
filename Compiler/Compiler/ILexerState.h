@@ -24,6 +24,6 @@ public:
 	//! For sending error messages to the ErrorsModule class  
 	msclr::gcroot<Compiler::ErrorsModule ^> m_refErrrorsMod;
 	//! the token generated
-	std::vector<Token> m_GeneratedTokens;
+	//std::vector<Token> m_GeneratedTokens;
 };
 

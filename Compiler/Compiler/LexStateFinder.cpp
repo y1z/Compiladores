@@ -30,7 +30,7 @@ bool LexStateFinder::StateAction(const char * code, uint32_t & Index, uint32_t &
 	{'<',2},{'>',2},{'=',2},{'!',2} ,{'+',2},{'-',2},{'^',2} ,{'*',2} ,{'[',2} ,
 	{']',2} ,{'&',2},{'|',2} ,{'(',2} ,{')',2},{'%',2},{'{',2},{'}',2},{'!',2},{';',3 },{',',3},{':',3} ,{'.',4} };
 
-	while (code[Index] != ' ' || code[Index] != '\0')
+	while (code[Index] != ' ' && code[Index] != '\0')
 	{/*This is to skip the chars '\r\n' */
 		if (code[Index] == '\r' || code[Index] == '\n') 
 		{ IgnoreNewLineChar(code, Index, LineNumber); }
@@ -70,26 +70,19 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 			CommentChecker->m_refErrrorsMod = this->m_refErrrorsMod;
 			CommentChecker->StateAction(code, Index, LineNumber, Tokens, Keywords);
 
-			for (auto Tok : CommentChecker->m_GeneratedTokens)
-			{
-				Tokens.emplace_back(Tok);
-			}
-
 			delete CommentChecker;
+			CommentChecker = nullptr;
 		}
 
 		else
 		{
 			ILexerState * OperatorState = new LexIndentifyOperator();
 			OperatorState->m_refErrrorsMod = this->m_refErrrorsMod;
+
 			OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords);
 
-			for (Token Generated : OperatorState->m_GeneratedTokens)
-			{
-				Tokens.emplace_back(Generated);
-			}
-
 			delete OperatorState;
+			OperatorState = nullptr;
 		}
 
 	}//----------
@@ -99,12 +92,8 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 		StringChecker->m_refErrrorsMod = this->m_refErrrorsMod;
 		StringChecker->StateAction(code, Index, LineNumber, Tokens, Keywords);
 
-		for (Token OtherTokens : StringChecker->m_GeneratedTokens)
-		{
-			Tokens.emplace_back(OtherTokens);
-		}
-
 		delete StringChecker;
+		StringChecker = nullptr;
 	}//----------------
 	else if (SelectedState == 2)
 	{
@@ -112,32 +101,27 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 		OperatorState->m_refErrrorsMod = this->m_refErrrorsMod;
 		OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords);
 
-		for (Token Generated : OperatorState->m_GeneratedTokens)
-		{
-			Tokens.emplace_back(Generated);
-		}
-
 		delete OperatorState;
+		OperatorState = nullptr;
 	}//--------------
 	else if (SelectedState == 3)
 	{
 		ILexerState * SeparatorState = new  LexSeparators();
 		SeparatorState->m_refErrrorsMod = this->m_refErrrorsMod;
+
 		SeparatorState->StateAction(code, Index, LineNumber, Tokens, Keywords);
-		for (Token Generated : SeparatorState->m_GeneratedTokens)
-		{
-			Tokens.emplace_back(Generated);
-		}
+
 		delete SeparatorState;
+		SeparatorState = nullptr;
 	}//--------------
 	else if (SelectedState == 4)
 	{
 		ILexerState * NumbersState = new LexStateNumber();
 		NumbersState->m_refErrrorsMod = this->m_refErrrorsMod;
 		NumbersState->StateAction(code, Index, LineNumber, Tokens, Keywords);
-		TrasferToken(this, NumbersState);
 
 		delete NumbersState;
+		NumbersState = nullptr;
 	}
 }
 
@@ -149,10 +133,6 @@ bool LexStateFinder::ChangeStateKeyword(const char * code, uint32_t & Index, uin
 	uint32_t copyIndex = Index;
 
 	bool isKeyword = LexKeyword->StateAction(code, copyIndex, LineNumber, Tokens, Keywords);
-	for (Token tok : this->m_GeneratedTokens)
-	{
-		Tokens.emplace_back(tok);
-	}
 
 	if (isKeyword)
 	{
@@ -160,6 +140,7 @@ bool LexStateFinder::ChangeStateKeyword(const char * code, uint32_t & Index, uin
 	}
 
 	delete LexKeyword;
+	LexKeyword = nullptr;
 	return isKeyword;
 }
 
@@ -171,7 +152,6 @@ bool LexStateFinder::ChangeStateID(const char * code, uint32_t & Index, uint32_t
 
 	LexIDs->m_refErrrorsMod = this->m_refErrrorsMod;
 	bool isIdValied = LexIDs->StateAction(code, CopyIndex, LineNumber, Tokens, Keywords);
-	TrasferToken(this, LexIDs);
 
 	if (isIdValied)
 	{
@@ -180,6 +160,7 @@ bool LexStateFinder::ChangeStateID(const char * code, uint32_t & Index, uint32_t
 	}
 
 	delete LexIDs;
+	LexIDs = nullptr;
 	return isIdValied;
 }
 
@@ -190,7 +171,6 @@ bool LexStateFinder::ChangeStateInvalidChar(const char * code, uint32_t & Index,
 	ptr_LexInvalidChar->m_refErrrorsMod = this->m_refErrrorsMod;
 
 	bool isIdValied = ptr_LexInvalidChar->StateAction(code, CopyIndex, LineNumber, Tokens, Keywords);
-	TrasferToken(this, ptr_LexInvalidChar);
 
 	if (isIdValied)
 	{
@@ -199,6 +179,7 @@ bool LexStateFinder::ChangeStateInvalidChar(const char * code, uint32_t & Index,
 	}
 
 	delete ptr_LexInvalidChar;
+	ptr_LexInvalidChar = nullptr;
 	return isIdValied;
 	return false;
 }

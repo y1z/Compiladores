@@ -52,7 +52,7 @@ bool LexStateNumber::StateAction(const char * code, uint32_t & Index, uint32_t &
 	else
 	{
 		Token tok(Numbuffer, Compiler::INT_NUMBER, LineNumber);
-		m_GeneratedTokens.emplace_back(tok);
+		Tokens.emplace_back(tok);
 		return true;
 	}
 	return false;

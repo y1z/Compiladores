@@ -47,11 +47,6 @@ void LexScannig::ChangeState(const char * code, uint32_t & Index, uint32_t & Lin
 	// give it's tokens directly to LexAnalyzer 
 	NewState->StateAction(code, Index, LineNumber, Tokens, Keywords);
 
-	for (Token tok : this->m_GeneratedTokens)
-	{
-		Tokens.emplace_back(tok);
-	}
-
 	delete NewState;
 }
 

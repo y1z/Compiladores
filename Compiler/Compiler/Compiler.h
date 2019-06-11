@@ -13,8 +13,8 @@ namespace Compiler {
 	public ref class Manager
 	{
 	private:
-		cli::array<String^ > ^ LexAnalysis(String ^srcCode);
-		
+		cli::array<String^ > ^ StartLexAnalysis(String ^srcCode);
+
 	public:
 		Manager();
 		~Manager();

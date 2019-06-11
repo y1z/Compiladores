@@ -158,9 +158,8 @@ void LexInvalidChar::ChangeState(const char * code, uint32_t & Index, uint32_t &
 {
 	ILexerState * ptr_Finder = new LexStateFinder();
 	ptr_Finder->m_refErrrorsMod = this->m_refErrrorsMod;
-	ptr_Finder->StateAction(code, Index, LineNumber, Tokens, Keywords);
 
-	TrasferToken(this, ptr_Finder);
+	ptr_Finder->StateAction(code, Index, LineNumber, Tokens, Keywords);
 
 	delete ptr_Finder;
 }

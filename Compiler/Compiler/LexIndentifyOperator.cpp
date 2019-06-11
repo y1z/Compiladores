@@ -183,3 +183,8 @@ bool LexIndentifyOperator::isOperator(char PossibleOperator)
 
 	return false;
 }
+
+std::map<char, int> LexIndentifyOperator::Operators = { {'<',0},{'>',0},{'!',0},{'=',0},
+	{'|',1}, {'&',1} ,{'[',2} ,{']',2} ,
+	{'+',2} ,{'-',2},{'*',2},{'%',2},{'/',2} ,{'^',2} ,
+	{'{',2},{'}',2} , {'(',2} , {')',2} };
