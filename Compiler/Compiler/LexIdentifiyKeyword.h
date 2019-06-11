@@ -6,6 +6,7 @@ class LexIdentifiyKeyword :
 public:
 	LexIdentifiyKeyword();
 	~LexIdentifiyKeyword();
+public: // functions 
 	bool StateAction(const char * code, uint32_t &Index, uint32_t &LineNumber, std::vector<Token> &Tokens, std::map<std::string, std::string> *Keywords)override;
 	// basically check for 'true' and 'false'
 	bool CheckKeywordExecptions(std::string &Keyword, uint32_t LineNumber);

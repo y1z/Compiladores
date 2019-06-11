@@ -20,10 +20,10 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 	1 = check for repeat
 	2 = alone
 	*/
-	static std::map<char, int> Operators = { {'<',0},{'>',0},{'!',0},{'=',0},
-	{'|',1}, {'&',1} ,{'[',2} ,{']',2} ,
-	{'+',2} ,{'-',2},{'*',2},{'%',2},{'/',2} ,{'^',2} ,
-	{'{',2},{'}',2} , {'(',2} , {')',2} };
+	//static std::map<char, int> Operators = { {'<',0},{'>',0},{'!',0},{'=',0},
+	//{'|',1}, {'&',1} ,{'[',2} ,{']',2} ,
+	//{'+',2} ,{'-',2},{'*',2},{'%',2},{'/',2} ,{'^',2} ,
+	//{'{',2},{'}',2} , {'(',2} , {')',2} };
 
 	auto Result = Operators.find(code[Index]);
 
@@ -80,7 +80,10 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 		}
 		else if (Result->second == 2)
 		{
-			FiguerOutOperator(Result->first, LineNumber, Tokens);
+			if (FiguerOutOperator(Result->first, LineNumber, Tokens))
+			{
+				Index++;
+			}
 		}
 
 		return true;
@@ -142,7 +145,6 @@ bool LexIndentifyOperator::CheckOperatorValid(const char * code, uint32_t & Inde
 	return true;
 }
 
-
 bool LexIndentifyOperator::FiguerOutOperator(char Op, uint32_t LineNum, std::vector<Token>& Tokens)
 {
 	static std::map<char, Compiler::Token_Type> OperatorsAndDefinition = {
@@ -164,6 +166,18 @@ bool LexIndentifyOperator::FiguerOutOperator(char Op, uint32_t LineNum, std::vec
 		Token GenToken(Lex, PossibleToken->second, LineNum);
 		Tokens.emplace_back(GenToken);
 
+		return true;
+	}
+
+	return false;
+}
+
+bool LexIndentifyOperator::isOperator(char PossibleOperator)
+{
+	auto Result = Operators.find(PossibleOperator);
+	
+	if (Result != Operators.end())
+	{
 		return true;
 	}
 

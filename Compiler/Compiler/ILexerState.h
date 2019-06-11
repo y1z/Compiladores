@@ -23,7 +23,7 @@ public:
 	virtual void ChangeState(const char * code, uint32_t &Index, uint32_t &LineNumber, std::vector<Token> &Tokens, std::map<std::string, std::string> *Keywords,int SelectedState) = 0;
 	//! For sending error messages to the ErrorsModule class  
 	msclr::gcroot<Compiler::ErrorsModule ^> m_refErrrorsMod;
-	//! the token generated be this class
+	//! the token generated
 	std::vector<Token> m_GeneratedTokens;
 };
 

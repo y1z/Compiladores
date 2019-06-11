@@ -15,5 +15,7 @@ public:
 	bool CheckForValidSequence(std::string &PossibleIDs, uint32_t &Index);
 	// check if the non English char is still valid to use
 	bool CheckForValidChar(char PossiblyValidChar,std::string &PossibleID,uint32_t Index);
+	// check if char usable in ID 
+	bool UsableChar(const char PossiblyUsableChar);
 };
 

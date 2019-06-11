@@ -32,7 +32,9 @@ bool LexStateFinder::StateAction(const char * code, uint32_t & Index, uint32_t &
 
 	while (code[Index] != ' ' || code[Index] != '\0')
 	{/*This is to skip the chars '\r\n' */
-		if (code[Index] == '\r') { LineNumber++; Index++; Index++; }
+		if (code[Index] == '\r' || code[Index] == '\n') 
+		{ IgnoreNewLineChar(code, Index, LineNumber); }
+
 		auto Iter = StateIdentifiers.find(code[Index]);
 		// check if char is valid
 

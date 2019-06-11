@@ -33,6 +33,7 @@ namespace CompilerUI
       {
         isCurrentAssemblyIsX64 = true;
       }
+      isCompiled = false;
 
       // Gos to the Assembly and Searches every attribute untli it finds a DebuggableAttribute Or Not.
       isCurrentAssemblyIsDebug = Assembly.GetEntryAssembly().GetCustomAttributes(false).OfType<DebuggableAttribute>().Any(da => da.IsJITTrackingEnabled);
@@ -49,6 +50,7 @@ namespace CompilerUI
     bool isDllLoaded;
     bool isCurrentAssemblyIsDebug;
     bool isCurrentAssemblyIsX64;
+    bool isCompiled;
     /*---------------------------Functions---------------------------*/
 
     private String GetCorrectDllName()
@@ -179,9 +181,9 @@ namespace CompilerUI
       
         DataParser dataParser = new DataParser();
 
-        dataParser.ParseCompilerData(Output, ref dataGridViewRow, ref m_TokenDataView, ref OutputTextBox);
+        dataParser.ParseCompilerData(Output, ref dataGridViewRow, ref m_TokenDataView, ref OutputTextBox,isCompiled);
 
-        // OutputTextBox.Lines = Output;
+        isCompiled = true;
       }
       else
       {

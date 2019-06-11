@@ -47,6 +47,8 @@ bool LexStringChecker::StateAction(const char * code, uint32_t & Index, uint32_t
 		if (code[Index] == '\0')
 		{
 			ReportError(CopyLineNumber, code, Index);
+			Index++;
+			return false;
 		}
 		Lexema += code[Index];
 

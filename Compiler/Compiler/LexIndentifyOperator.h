@@ -18,11 +18,13 @@ public:
 	void ChangeState(const char * code, uint32_t &Index,
 		uint32_t &LineNumber, std::vector<Token> &Tokens,
 		std::map<std::string, std::string> *Keywords, int SelectedState) override;
-	/*! Here goes all operator who's consistence is of one char
+	/*! Here goes all operator who's consistence is of one char and find where it belongs 
 	\param [in] Op The operator 
 	\param [in] LineNum is for the token .
 	*/
 	bool FiguerOutOperator(char Op, uint32_t LineNum,std::vector<Token> &Tokens);
+	/*! used to figure out if a char is an operator */
+	bool isOperator(char PossibleOperator);
 
 	/*! checks if the operator has an equal sign next to it returns with or without the equals-sign
 	\param [in] the code in question
@@ -33,4 +35,9 @@ public:
 	\param [in][out] to know where we are
 	\param [out] the resulting operator*/
 	bool  CheckOperatorValid(const char *code, uint32_t& Index, std::string &PosibleOperator);
+public: // variables 
+	inline static std::map<char, int> Operators = { {'<',0},{'>',0},{'!',0},{'=',0},
+	{'|',1}, {'&',1} ,{'[',2} ,{']',2} ,
+	{'+',2} ,{'-',2},{'*',2},{'%',2},{'/',2} ,{'^',2} ,
+	{'{',2},{'}',2} , {'(',2} , {')',2} };
 };

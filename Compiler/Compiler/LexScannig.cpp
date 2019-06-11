@@ -20,9 +20,7 @@ bool LexScannig::StateAction(const char * code, uint32_t & Index, uint32_t & Lin
 		// checking for enter presses
 		if (code[Index] == '\r' || code[Index] == '\n')
 		{
-			LineNumber++;
-			// to ignore the \n char also 
-			Index++;
+			IgnoreNewLineChar(code, Index, LineNumber);
 		}
 		else if (code[Index] != ' ')
 		{
@@ -30,7 +28,12 @@ bool LexScannig::StateAction(const char * code, uint32_t & Index, uint32_t & Lin
 		}
 		// just in case 
 		if (code[Index] == '\0') { break; }
-		Index++;
+
+		if (code[Index] == ' ' || code[Index] == '\t')
+		{
+			Index++;
+		}
+
 	}
 	return true;
 }

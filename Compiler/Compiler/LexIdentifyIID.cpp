@@ -4,21 +4,28 @@
 #include "LexIndentifyOperator.h"
 #include "LexSeparators.h"
 
-
 LexIdentifyIID::LexIdentifyIID()
 {}
 
 
-LexIdentifyIID::~LexIdentifyIID()
+LexIdentifyIID::~LexIdentifyIID()//
 {}
 
 bool LexIdentifyIID::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
 {
 	std::string PossibleID = "";
 
-	while (code[Index] != ' ' && code[Index] != '\0' && code[Index] != '\t')
+	while (code[Index] != ' ' && code[Index] != '\0' && code[Index] != '\t' && code[Index] != '\n')
 	{
-		PossibleID += code[Index];
+		if (UsableChar(code[Index]))
+		{
+			PossibleID += code[Index];
+		}
+		else
+		{
+			break;
+		}
+
 		if (code[Index] == '\0') { break; }
 		Index++;
 	}
@@ -102,6 +109,17 @@ bool LexIdentifyIID::CheckForValidChar(char PossiblyValidChar, std::string &Poss
 	else if (PossiblyValidChar == '_' && InternalIndex >= PossibleID.size() - 1)
 	{
 		return false;
+	}
+
+	return false;
+}
+
+bool LexIdentifyIID::UsableChar(const char PossiblyUsableChar)
+{
+
+	if (IsLetter(PossiblyUsableChar) || IsNumber(PossiblyUsableChar) || PossiblyUsableChar == '_')
+	{
+		return true;
 	}
 
 	return false;

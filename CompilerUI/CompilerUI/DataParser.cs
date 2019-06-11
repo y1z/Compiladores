@@ -46,8 +46,14 @@ namespace CompilerUI
 
     //! to know which order to do the parse-sing
     /*---------------------------Functions---------------------------*/
-    public bool ParseCompilerData(String[] CompilerData, ref DataGridViewRow GridView, ref DataGridView DataView, ref TextBox ErrorText)
+    public bool ParseCompilerData(String[] CompilerData, ref DataGridViewRow GridView, ref DataGridView DataView, ref TextBox ErrorText,bool isAlreadyCompiled)
     {
+      if (isAlreadyCompiled)
+      {
+        DataView.Rows.Clear();
+      }
+
+
       ScanningForParams(CompilerData);
 
       ExacuteParams(CompilerData, ref GridView, ref DataView, ref ErrorText);
@@ -219,7 +225,6 @@ namespace CompilerUI
       {
         foreach (char chr in CompilerData[IterationCount])
         {
-          // addes every value from the lexema , type and 
 
           if (chr != '~' && LexArgCount % 3 == 1)
           {
@@ -235,8 +240,6 @@ namespace CompilerUI
           }
 
           else { LexArgCount++; }
-
-
         }// end foreach
         LexArgCount = 1;
         DataGridViewRow dataGridView = new DataGridViewRow();

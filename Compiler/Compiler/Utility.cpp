@@ -110,9 +110,14 @@ const char * TranslateToken(Compiler::Token_Type token_type)
 void IgnoreNewLineChar(const char* code, uint32_t & Index, uint32_t &LineNumber)
 {
 	LineNumber++;
-	while (code[Index] == '\n' || code[Index] == '\r' )
+	const char PossiblyReapeatingChar = code[Index];
+
+	while (code[Index] == '\n' || code[Index] == '\r')
 	{
 		Index++;
+		// in the case there are multiple newlines 
+		if (code[Index] == PossiblyReapeatingChar)
+		{ LineNumber++; }
 	}
 
 }

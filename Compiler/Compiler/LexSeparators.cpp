@@ -18,7 +18,7 @@ bool LexSeparators::StateAction(const char * code, uint32_t & Index, uint32_t & 
 		{
 			char Character = code[Index];
 			std::string Lex (&Character);
-		
+			PrintToConsole("Confirmed Separator : {0}", Lex);
 			Token Generated(Lex, Compiler::SEPARATOR, LineNumber);
 			Tokens.emplace_back(Generated);
 		}

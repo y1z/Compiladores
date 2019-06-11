@@ -65,6 +65,9 @@ cli::array<String^ > ^ Compiler::Manager::LexAnalysis(String ^ srcCode)
 			CompilationDetails[0] = gcnew String("-------NO TOKEN GENERATED--------");
 		}
 	}
+
+	ptr_Lex->ClearToken();
+
 	return CompilationDetails;
 }
 
@@ -87,7 +90,11 @@ Compiler::Manager::~Manager()
 cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 {
 	ptr_Lex->m_refErrrorsMod->clearErrors();
+
+	System::Console::WriteLine("Here is the Source Code {0} ", srcCode);
+
 	cli::array<String^> ^CompiltionDetails = Manager::LexAnalysis(srcCode);
+
 
 	return CompiltionDetails;
 }// end function
