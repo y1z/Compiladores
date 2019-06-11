@@ -8,6 +8,8 @@ public:
 	LexStateFinder();
 	~LexStateFinder();
 
+	bool isKeepGoing = true;
+
 	bool StateAction(const char * code, uint32_t &Index, 
 		uint32_t &LineNumber, std::vector<Token> &Tokens, 
 		std::map<std::string, std::string> *Keywords) override;

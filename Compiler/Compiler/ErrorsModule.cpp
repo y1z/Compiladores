@@ -72,6 +72,16 @@ int Compiler::ErrorsModule::GetErrorCount()
 	return m_numError;
 }
 
+bool Compiler::ErrorsModule::IsMaxErrorReached()
+{
+	if (m_numError < MAX_ERRRORS - 1)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 
 std::string Compiler::ErrorsModule::GetErrorCountString(std::string &Result)
 {

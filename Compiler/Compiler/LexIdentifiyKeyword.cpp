@@ -17,7 +17,7 @@ bool LexIdentifiyKeyword::StateAction(const char * code, uint32_t & Index, uint3
 {
 	std::string PossibleKeyword = "";
 	/* get the possible keyword*/
-	while (code[Index] != ' ' && code[Index] != '\0')
+	while (code[Index] != ' ' && code[Index] != '\0' && !m_refErrrorsMod->IsMaxErrorReached())
 	{
 		if (IsLetter(code[Index]))
 		{

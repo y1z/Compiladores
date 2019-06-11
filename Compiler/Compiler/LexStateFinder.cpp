@@ -30,29 +30,33 @@ bool LexStateFinder::StateAction(const char * code, uint32_t & Index, uint32_t &
 	{'<',2},{'>',2},{'=',2},{'!',2} ,{'+',2},{'-',2},{'^',2} ,{'*',2} ,{'[',2} ,
 	{']',2} ,{'&',2},{'|',2} ,{'(',2} ,{')',2},{'%',2},{'{',2},{'}',2},{'!',2},{';',3 },{',',3},{':',3} ,{'.',4} };
 
-	while (code[Index] != ' ' && code[Index] != '\0')
-	{/*This is to skip the chars '\r\n' */
-		if (code[Index] == '\r' || code[Index] == '\n') 
-		{ IgnoreNewLineChar(code, Index, LineNumber); }
+	if (!m_refErrrorsMod->IsMaxErrorReached() && isKeepGoing == true)
+	{
 
-		auto Iter = StateIdentifiers.find(code[Index]);
-		// check if char is valid
+		while (code[Index] != ' ' && code[Index] != '\0')
+		{/*This is to skip the chars '\r\n' */
+			if (code[Index] == '\r' || code[Index] == '\n')
+			{ IgnoreNewLineChar(code, Index, LineNumber); }
 
-		if (Iter != StateIdentifiers.end())
-		{
-			ChangeState(code, Index, LineNumber, Tokens, Keywords, Iter->second);
-			return true;
-		}
-		else if (IsNumber(code[Index]))
-		{
-			ChangeState(code, Index, LineNumber, Tokens, Keywords, 4);
-		}
+			auto Iter = StateIdentifiers.find(code[Index]);
+			// check if char is valid
 
-		else// checks for Keyword and IDs plus invalid chars 
-		{
-			if (ChangeStateKeyword(code, Index, LineNumber, Tokens, Keywords)) { return true; }
-			else	if (ChangeStateID(code, Index, LineNumber, Tokens, Keywords)) { return true; }
-			else if (ChangeStateInvalidChar(code, Index, LineNumber, Tokens, Keywords)) { return true; }
+			if (Iter != StateIdentifiers.end())
+			{
+				ChangeState(code, Index, LineNumber, Tokens, Keywords, Iter->second);
+				return true;
+			}
+			else if (IsNumber(code[Index]))
+			{
+				ChangeState(code, Index, LineNumber, Tokens, Keywords, 4);
+			}
+
+			else// checks for Keyword and IDs plus invalid chars 
+			{
+				if (ChangeStateKeyword(code, Index, LineNumber, Tokens, Keywords)) { return true; }
+				else	if (ChangeStateID(code, Index, LineNumber, Tokens, Keywords)) { return true; }
+				else if (ChangeStateInvalidChar(code, Index, LineNumber, Tokens, Keywords)) { return true; }
+			}
 		}
 	}
 
@@ -68,7 +72,10 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 			ILexerState * CommentChecker = new LexStateCommentChecker();
 			// for when error occur
 			CommentChecker->m_refErrrorsMod = this->m_refErrrorsMod;
-			CommentChecker->StateAction(code, Index, LineNumber, Tokens, Keywords);
+			if (!CommentChecker->StateAction(code, Index, LineNumber, Tokens, Keywords));
+			{
+				isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+			}
 
 			delete CommentChecker;
 			CommentChecker = nullptr;
@@ -79,7 +86,10 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 			ILexerState * OperatorState = new LexIndentifyOperator();
 			OperatorState->m_refErrrorsMod = this->m_refErrrorsMod;
 
-			OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords);
+			if (OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+			{
+				isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+			}
 
 			delete OperatorState;
 			OperatorState = nullptr;
@@ -90,7 +100,10 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 	{
 		ILexerState * StringChecker = new LexStringChecker();
 		StringChecker->m_refErrrorsMod = this->m_refErrrorsMod;
-		StringChecker->StateAction(code, Index, LineNumber, Tokens, Keywords);
+		if (StringChecker->StateAction(code, Index, LineNumber, Tokens, Keywords))
+		{
+			isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+		}
 
 		delete StringChecker;
 		StringChecker = nullptr;
@@ -99,7 +112,10 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 	{
 		ILexerState * OperatorState = new LexIndentifyOperator();
 		OperatorState->m_refErrrorsMod = this->m_refErrrorsMod;
-		OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords);
+		if (OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+		{
+			isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+		}
 
 		delete OperatorState;
 		OperatorState = nullptr;
@@ -109,7 +125,11 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 		ILexerState * SeparatorState = new  LexSeparators();
 		SeparatorState->m_refErrrorsMod = this->m_refErrrorsMod;
 
-		SeparatorState->StateAction(code, Index, LineNumber, Tokens, Keywords);
+		if (SeparatorState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+		{
+			isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+		}
+
 
 		delete SeparatorState;
 		SeparatorState = nullptr;
@@ -118,7 +138,10 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 	{
 		ILexerState * NumbersState = new LexStateNumber();
 		NumbersState->m_refErrrorsMod = this->m_refErrrorsMod;
-		NumbersState->StateAction(code, Index, LineNumber, Tokens, Keywords);
+		if (NumbersState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+		{
+			isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+		}
 
 		delete NumbersState;
 		NumbersState = nullptr;

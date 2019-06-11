@@ -14,36 +14,40 @@ LexIdentifyIID::~LexIdentifyIID()//
 bool LexIdentifyIID::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
 {
 	std::string PossibleID = "";
-
-	while (code[Index] != ' ' && code[Index] != '\0' && code[Index] != '\t' && code[Index] != '\n')
+	if (!m_refErrrorsMod->IsMaxErrorReached())
 	{
-		if (UsableChar(code[Index]))
+
+		while (code[Index] != ' ' && code[Index] != '\0' && code[Index] != '\t' && code[Index] != '\n')
 		{
-			PossibleID += code[Index];
+			if (UsableChar(code[Index]))
+			{
+				PossibleID += code[Index];
+			}
+			else
+			{
+				break;
+			}
+
+			if (code[Index] == '\0') { break; }
+			Index++;
+		}
+
+		if (CheckForValidSequence(PossibleID, Index) && !PossibleID.empty())
+		{
+			Token tok(PossibleID, Compiler::ID, LineNumber);
+			PrintToConsole("Confirmed ID = {0}", PossibleID);
+
+			Tokens.emplace_back(tok);
+			return true;
 		}
 		else
 		{
-			break;
+			ChangeState(code, Index, LineNumber, Tokens, Keywords, 0);
+			return isValidID;
 		}
 
-		if (code[Index] == '\0') { break; }
-		Index++;
+		return false;
 	}
-
-  if (CheckForValidSequence(PossibleID, Index))
-	{
-		Token tok(PossibleID, Compiler::ID, LineNumber);
-		PrintToConsole("Confirmed ID = {0}", PossibleID);
-
-		Tokens.emplace_back(tok);
-		return true;
-	}
-	else
-	{
-		ChangeState(code, Index, LineNumber, Tokens, Keywords, 0);
-		return isValidID;
-	}
-
 	return false;
 }
 

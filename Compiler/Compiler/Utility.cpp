@@ -11,7 +11,7 @@ wchar_t ConvertChar(char character)
 std::string GetLine(const char * code, uint32_t IndexCopy)
 {
 	std::string Line;
-	while (code[IndexCopy] != '\0' || code[IndexCopy] != '\r\n')
+	while (code[IndexCopy] != '\0' && code[IndexCopy] != '\r' && code[IndexCopy] != '\n')
 	{
 		Line += code[IndexCopy];
 		IndexCopy++;
@@ -125,4 +125,14 @@ void PrintToConsole(const char Format[], const std::string & Message)
 	System::String ^MessageString = gcnew String(Message.c_str());
 	System::String ^FormatString = gcnew String(Format);
 	Console::WriteLine(FormatString, MessageString);
+}
+
+bool CheckToStopLexAnalisis(msclr::gcroot<Compiler::ErrorsModule^> m_refErrrorsMod)
+{
+	if (!m_refErrrorsMod->IsMaxErrorReached())
+	{
+		return true;
+	}
+
+	return false;
 }

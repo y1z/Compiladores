@@ -15,7 +15,7 @@ bool LexScannig::StateAction(const char * code, uint32_t & Index, uint32_t & Lin
 	uint32_t CopyIndex = Index;
 	uint32_t CopyLine = LineNumber;
 
-	while (code[Index] != '\0')
+	while (code[Index] != '\0' && !m_refErrrorsMod->IsMaxErrorReached())
 	{
 		// checking for enter presses
 		if (code[Index] == '\r' || code[Index] == '\n')

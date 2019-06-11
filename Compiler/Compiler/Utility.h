@@ -18,3 +18,5 @@ void IgnoreNewLineChar(const char* code, uint32_t & Index, uint32_t &LineNumber)
 void PrintToConsole(const std::string &Message);
 /*! sends a formated message to the console (can only have one {0}) inside the format)*/
 void PrintToConsole(const char Format[], const std::string &Message);
+/*! how im going to stop the lex analiser*/
+bool CheckToStopLexAnalisis(msclr::gcroot<Compiler::ErrorsModule ^> m_refErrrorsMod);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ErrorsModule.h"
 #include "LexStateCommentChecker.h"
+#include "Utility.h"
 LexStateCommentChecker::LexStateCommentChecker()
 {}
 
@@ -13,6 +14,7 @@ bool LexStateCommentChecker::StateAction(const char * code, uint32_t & Index, ui
 	uint32_t CopyIndex = Index;
 	uint32_t CopyLine = LineNumber;
 
+	Index++;
 	// while we are not at the end of the file 
 	while (code[Index] != 0)
 	{
@@ -25,12 +27,17 @@ bool LexStateCommentChecker::StateAction(const char * code, uint32_t & Index, ui
 				Index += 2;
 				return true;
 			}
+			else { Index++; }
 		}
-		else if (code[Index] == '\r')
+		else if (code[Index] == '\r' || code[Index] == '\n')
 		{
-			++LineNumber;
+			IgnoreNewLineChar(code, Index, LineNumber);
 		}
-		Index++;// move to next char
+		else
+		{
+			Index++;// move to next char
+		}
+
 	}
 	/*For the case the comment is located at the end of the file*/
 

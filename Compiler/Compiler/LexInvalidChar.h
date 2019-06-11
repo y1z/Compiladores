@@ -17,7 +17,7 @@ public:
 	/*! find all char that are invalid (basically, there not id's or keywords) */
 	void CheckForEachInvalidChar(const std::string &buffer, uint32_t LineNumber);
 	/*! add error I found a invalid char */
-	void AddErroMessage(std::string &ErrorLine, uint32_t LineNumber);
+	bool AddErroMessage(std::string &ErrorLine, uint32_t LineNumber);
 	/*! starts a LexFinder state to determinate if there ID's,keywords, etc...*/
 	std::vector<std::string> CheckAllValidChars(const std::vector<bool> &ValidCharIndexes,const std::string &buffer);
 	/*! Create all the string that will be used in the error message */

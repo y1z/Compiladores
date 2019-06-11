@@ -16,7 +16,7 @@ bool LexInvalidChar::StateAction(const char * code, uint32_t & Index, uint32_t &
 {
 	std::string Buffer = "";
 	// recollecting data 
-	while (code[Index] != 0 && code[Index] != '\0' && code[Index] != '\t')
+	while (code[Index] != '\0' && code[Index] != '\t' && code[Index] != '\n' && !m_refErrrorsMod->IsMaxErrorReached())
 	{
 		if (code[Index] == ' ' || code[Index] == '\0')
 		{
@@ -36,9 +36,12 @@ bool LexInvalidChar::StateAction(const char * code, uint32_t & Index, uint32_t &
 		// Creates all the related error massages 
 		for (std::string Str : ErrorLines)
 		{
-			AddErroMessage(Str, LineNumber);
+			if (!AddErroMessage(Str, LineNumber))
+			{
+				break;
+			}
 		}
-		
+
 		// get every char that does NOT create an error.
 		std::vector<std::string> ValidLines = CheckAllValidChars(ValidCharIndexes, Buffer);
 		// find which state does every valid char belong to 
@@ -63,8 +66,8 @@ void LexInvalidChar::CheckForEachInvalidChar(const std::string & buffer, uint32_
 
 	for (int i = 0; i < buffer.size(); ++i)
 	{
-		if (!IsLetter(buffer[i]) && !IsNumber(buffer[i]) 
-			&& !ptr_Separator->IsSeparators(buffer[i]) 	&& !ptr_Operator->isOperator(buffer[i])  )
+		if (!IsLetter(buffer[i]) && !IsNumber(buffer[i])
+			&& !ptr_Separator->IsSeparators(buffer[i]) && !ptr_Operator->isOperator(buffer[i]))
 		{
 			m_InvalidCharAndPositions.emplace_back(std::make_pair(i, buffer[i]));
 		}
@@ -76,10 +79,10 @@ void LexInvalidChar::CheckForEachInvalidChar(const std::string & buffer, uint32_
 	isAlreadyChecked = true;
 }
 
-void LexInvalidChar::AddErroMessage(std::string &ErrorLine, uint32_t LineNumber)
+bool LexInvalidChar::AddErroMessage(std::string &ErrorLine, uint32_t LineNumber)
 {
 	ErrorLine += " <=== ";
-	m_refErrrorsMod->AddLexError(LineNumber, LEX_INVALID_CHAR, ErrorLine);
+	return m_refErrrorsMod->AddLexError(LineNumber, LEX_INVALID_CHAR, ErrorLine);
 }
 
 std::vector<std::string> LexInvalidChar::CheckAllValidChars(const std::vector<bool> &ValidCharIndexes, const std::string &buffer)

@@ -16,6 +16,6 @@ public:
 	//in other word check for this '.' 
 	bool CheckForPoint(const char PossiblePoint);
 
-	bool CheckForValidFloat( std::string &PossibleFloat,uint32_t LineNumber);
+	bool CheckForValidFloat( std::string &PossibleFloat,uint32_t LineNumber,uint32_t &Index);
 };
 

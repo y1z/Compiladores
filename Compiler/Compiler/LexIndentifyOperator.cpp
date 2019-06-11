@@ -25,68 +25,77 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 	//{'+',2} ,{'-',2},{'*',2},{'%',2},{'/',2} ,{'^',2} ,
 	//{'{',2},{'}',2} , {'(',2} , {')',2} };
 
+
 	auto Result = Operators.find(code[Index]);
-
-	if (Operators.end() != Result)
+	if (!m_refErrrorsMod->IsMaxErrorReached())
 	{
-		std::string Operator;
-		// creates Relational operators
-		if (Result->second == 0)
+		if (Operators.end() != Result)
 		{
+			std::string Operator;
+			// creates Relational operators
+			std::string CountOfError;
+			PrintToConsole("Error Count {0} ", m_refErrrorsMod->GetErrorCountString(CountOfError));
+			if (Result->second == 0)
+			{
 
-			Operator = ReciveRelationalOperator(code, Index);
-			String^ MassagesConsole = gcnew String(Operator.c_str());
-			Console::WriteLine("Here is an Operator {0}", MassagesConsole);
-			// checking for spacial case 
-			if (Operator[0] == '!' && Operator.size() == 1)
-			{
-				Token Unary(Operator, Compiler::UNARY_LOGICAL_OPERATOR, LineNumber);
-				Tokens.emplace_back(Unary);
-				return true;
+				Operator = ReciveRelationalOperator(code, Index);
+				String^ MassagesConsole = gcnew String(Operator.c_str());
+				Console::WriteLine("Here is an Operator {0}", MassagesConsole);
+				// checking for spacial case 
+				if (Operator[0] == '!' && Operator.size() == 1)
+				{
+					Token Unary(Operator, Compiler::UNARY_LOGICAL_OPERATOR, LineNumber);
+					Tokens.emplace_back(Unary);
+					return true;
+				}
+				// checking for '=' 
+				else if (Operator[0] == '=' && Operator.size() > 1 && Operator[1] != '=')
+				{
+					Token RelationToken(Operator, Compiler::ASSIGN_OPERATOR, LineNumber);
+					Tokens.emplace_back(RelationToken);
+					return true;
+				}
+				else
+				{
+					Token RelationToken(Operator, Compiler::RELATIONAL_OPERATOR, LineNumber);
+					Tokens.emplace_back(RelationToken);
+					return true;
+				}
 			}
-			// checking for '=' 
-			else if (Operator[0] == '=' && Operator.size() > 1 && Operator[1] != '=')
+			else if (Result->second == 1)
 			{
-				Token RelationToken(Operator, Compiler::ASSIGN_OPERATOR, LineNumber);
-				Tokens.emplace_back(RelationToken);
-				return true;
+				// creates logical operators
+				bool isValid = CheckOperatorValid(code, Index, Operator);
+				if (isValid)
+				{
+					Token LogicalOp(Operator, Compiler::Token_Type::LOGICAL_OPERATOR, LineNumber);
+					Tokens.emplace_back(LogicalOp);
+					Index += 2;
+					return true;
+				}
+				else
+				{
+					std::string ErrorLine = GetLine(code, Index);
+					if (!m_refErrrorsMod->AddLexError(LineNumber, INVALID_OP_LOG, ErrorLine))
+					{
+						return false;
+					}
+					System::String^ Error = gcnew String(ErrorLine.c_str());
+					Console::WriteLine("Generated Error Logical Operator {0}", Error);
+					Index++;
+					return true;
+				}
 			}
-			else
+			else if (Result->second == 2)
 			{
-				Token RelationToken(Operator, Compiler::RELATIONAL_OPERATOR, LineNumber);
-				Tokens.emplace_back(RelationToken);
-				return true;
+				if (FiguerOutOperator(Result->first, LineNumber, Tokens))
+				{
+					Index++;
+				}
 			}
-		}
-		else if (Result->second == 1)
-		{
-			// creates logical operators
-			bool isValid = CheckOperatorValid(code, Index, Operator);
-			if (isValid)
-			{
-				Token LogicalOp(Operator, Compiler::Token_Type::LOGICAL_OPERATOR, LineNumber);
-				Tokens.emplace_back(LogicalOp);
-				Index++;
-				return true;
-			}
-			else
-			{
-				std::string ErrorLine = GetLine(code, Index);
-				m_refErrrorsMod->AddLexError(LineNumber, INVALID_OP_LOG, ErrorLine);
-				System::String^ Error = gcnew String(ErrorLine.c_str());
-				Console::WriteLine("Generated Error Logical Operator {0}", Error);
-				return true;
-			}
-		}
-		else if (Result->second == 2)
-		{
-			if (FiguerOutOperator(Result->first, LineNumber, Tokens))
-			{
-				Index++;
-			}
-		}
 
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -113,18 +122,13 @@ std::string LexIndentifyOperator::ReciveRelationalOperator(const char * code, ui
 	return Result;
 }
 
-bool LexIndentifyOperator::CheckOperatorValid(const char * code, uint32_t & Index, std::string & PossibleOperator)
+bool LexIndentifyOperator::CheckOperatorValid(const char * code, uint32_t & Index, std::string & ResultingOperator)
 {
 	bool isValidOperator = false;
 	std::array<char, 2> ValidOperators = { '|','&' };
 
-	int StringPos = 0;
-	for (char Operator : ValidOperators)
-	{
-		if (Operator == PossibleOperator[StringPos]) { isValidOperator = true; }
-		StringPos++;
-	}
-
+	if (code[Index] == ValidOperators[0]) { isValidOperator = true; }
+	if (code[Index] == ValidOperators[1]) { isValidOperator = true; }
 
 	if (isValidOperator == false)
 	{
@@ -132,14 +136,17 @@ bool LexIndentifyOperator::CheckOperatorValid(const char * code, uint32_t & Inde
 	}
 
 	// check if the operator repeats
-	if (code[Index + 1] != '\0' && code[Index] == code[Index + 1])
+	if ((code[Index] != '\0' || code[Index + 1] != '\0') && code[Index] == code[Index + 1])
 	{
-		PossibleOperator = (code[Index] + code[Index + 1]);
+		ResultingOperator = code[Index];
+		ResultingOperator += code[Index + 1];
+		PrintToConsole("Logical operator [{0}] ", ResultingOperator);
 		return true;
 	}
 	else// return error
 	{
-		PossibleOperator = (code[Index]);
+		ResultingOperator = (code[Index]);
+		PrintToConsole("NON-Logicla operator {0} ", ResultingOperator);
 		return false;
 	}
 	return true;
@@ -175,7 +182,7 @@ bool LexIndentifyOperator::FiguerOutOperator(char Op, uint32_t LineNum, std::vec
 bool LexIndentifyOperator::isOperator(char PossibleOperator)
 {
 	auto Result = Operators.find(PossibleOperator);
-	
+
 	if (Result != Operators.end())
 	{
 		return true;

@@ -33,6 +33,8 @@ namespace Compiler {
 		//! for Semantic errors 
 		bool AddSemError(uint32_t LineNumber, const std::string &ErrorDesc, const std::string &OriginalErrorLine);
 		int GetErrorCount();
+		//! to know when we reach the amount of error the compiler can take 
+		bool IsMaxErrorReached();
 		//! this is for passing the amount of errors to a the System::String type 
 		std::string GetErrorCountString(std::string &result);
 		///! to return the array that contains the errors 
