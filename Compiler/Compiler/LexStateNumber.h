@@ -6,7 +6,7 @@ class LexStateNumber :
 {
 public:
 	LexStateNumber();
-	~LexStateNumber();
+	~LexStateNumber();//
 
 	bool isFloat = false;
 
@@ -17,5 +17,6 @@ public:
 	bool CheckForPoint(const char PossiblePoint);
 
 	bool CheckForValidFloat( std::string &PossibleFloat,uint32_t LineNumber,uint32_t &Index);
+
 };
 
