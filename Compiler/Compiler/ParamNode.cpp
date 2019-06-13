@@ -1,0 +1,21 @@
+#include "stdafx.h"
+#include "ParamNode.h"
+
+namespace Compiler {
+
+	ParamNode::ParamNode()
+	{
+		this->m_nodeType = NodeType::param;
+	}
+
+	ParamNode::ParamNode(uint32_t Dem, Token_Type T_type, Node * ptr_Prev)
+		:Node(Dem, T_type, ptr_Prev)
+	{
+		this->m_nodeType = NodeType::param;
+	}
+
+
+	ParamNode::~ParamNode()
+	{}
+
+}

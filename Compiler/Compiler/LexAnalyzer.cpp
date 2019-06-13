@@ -36,7 +36,8 @@ Compiler::LexAnalyzer::LexAnalyzer(ErrorsModule ^ ErrorModule)
 
 Compiler::LexAnalyzer::~LexAnalyzer()
 {
-
+	this->ClearToken();
+	this->m_refErrrorsMod = nullptr;
 
 }
 //! Heres where the Parsing starts
@@ -62,7 +63,7 @@ void Compiler::LexAnalyzer::ClearToken()
 	}
 }
 
-Token Compiler::LexAnalyzer::GetNextToken()
+Token& Compiler::LexAnalyzer::GetNextToken()
 {
 	if (!((m_CurrentToken + 1) < (m_LexTokens.size() - 1)))
 	{
@@ -73,7 +74,7 @@ Token Compiler::LexAnalyzer::GetNextToken()
 	return m_LexTokens[m_CurrentToken];
 }
 
-Token Compiler::LexAnalyzer::GetPrevToken()
+Token& Compiler::LexAnalyzer::GetPrevToken()
 {
 	if (!(m_CurrentToken - 1) <= 0)
 	{
@@ -83,7 +84,7 @@ Token Compiler::LexAnalyzer::GetPrevToken()
 	return m_LexTokens[m_CurrentToken];
 }
 
-Token Compiler::LexAnalyzer::GetPeekToken()
+Token& Compiler::LexAnalyzer::GetPeekToken()
 {
 	return m_LexTokens[m_CurrentToken];
 }

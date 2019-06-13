@@ -17,9 +17,9 @@ bool LexStateNumber::StateAction(const char * code, uint32_t & Index, uint32_t &
 
 		while (code[Index] != '\0' && code[Index] != ' ')
 		{
-			if (code[Index] == '\r')
+			if (code[Index] == '\r' || code[Index] == '\n')
 			{
-				LineNumber++;
+				break;
 			}
 			/*check for char related to int and floats*/
 			if (!IsNumber(code[Index]))

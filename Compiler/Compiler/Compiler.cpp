@@ -2,14 +2,19 @@
 #include "Compiler.h"
 #include "Utility.h"
 
-cli::array<String^ > ^ Compiler::Manager::StartLexAnalysis(String ^ srcCode)
+void Compiler::Manager::StartLexAnalysis(String ^ srcCode)
+{
+	// here starts the parsing 
+	Manager::ptr_Lex->ParseSourceCode(((const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
+}
+
+// TODO add parsing for Syntactic and semantic stages 
+cli::array<String^>^ Compiler::Manager::StartDataParsing()
 {
 	cli::array<String^> ^CompilationDetails;
 
 	if (ptr_Lex != nullptr)
 	{
-		// here starts the parsing 
-		Manager::ptr_Lex->ParseSourceCode(((const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
 		// checks to see if there are any tokes or errors was generated 
 		if (0 < (Manager::ptr_Lex->GetTokenCount() + ptr_Lex->m_refErrrorsMod->GetErrorCount()))
 		{
@@ -74,15 +79,20 @@ Compiler::Manager::Manager()
 {
 	Manager::ptr_Error = gcnew ErrorsModule();
 	Manager::ptr_Lex = new LexAnalyzer(ptr_Error);
+	Manager::ptr_Semantic = new SemanticAnalysis();
+	Manager::ptr_Table = new SymblosTable();
+	Manager::ptr_Syntax = new SyntaxAnalysis(ptr_Lex, ptr_Error, ptr_Table);
 }
 
 Compiler::Manager::~Manager()
 {
 	if (Manager::ptr_Lex != nullptr)
 	{
-			ptr_Lex->ClearToken();
+		ptr_Lex->ClearToken();
 		delete Manager::ptr_Lex;
 	}
+	if (Manager::ptr_Syntax != nullptr) { delete ptr_Syntax; }
+	if (Manager::ptr_Semantic != nullptr) { delete ptr_Semantic; }
 
 }
 
@@ -96,9 +106,12 @@ cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 
 	System::Console::WriteLine("Here is the Source Code {0} ", srcCode);
 
-	cli::array<String^> ^CompiltionDetails = Manager::StartLexAnalysis(srcCode);
+	// here starts the parsing 
+	Manager::ptr_Lex->ParseSourceCode(((const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(srcCode).ToPointer()));
+	// HERE GOES SYNTAX ANALYSIS 
+	ptr_Syntax->checkSyntax();
 
-
+	cli::array<String^> ^CompiltionDetails = Manager::StartDataParsing();
 
 	return CompiltionDetails;
 }// end function

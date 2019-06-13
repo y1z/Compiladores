@@ -1,5 +1,6 @@
 #pragma once
 #include "ILexerState.h"
+
 #include <map>
 /*!
 \brief check every single char to make sure there valid and generate an error per each invalid char
@@ -11,7 +12,7 @@ class LexInvalidChar :
 public:
 	LexInvalidChar();
 	~LexInvalidChar();
-
+public:// functions
 	bool StateAction(const char * code, uint32_t &Index, uint32_t &LineNumber, std::vector<Token> &Tokens, std::map<std::string, std::string> *Keywords);
 	void ChangeState(const char * code, uint32_t &Index, uint32_t &LineNumber, std::vector<Token> &Tokens, std::map<std::string, std::string> *Keywords, int SelectedState);
 	/*! find all char that are invalid (basically, there not id's or keywords) */

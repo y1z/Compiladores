@@ -30,11 +30,11 @@ namespace Compiler {
 		void ClearToken();
 		//void getTokens(std::vector<Token> TokensVec);
 		//move one spot forward THEN returns a token 
-		Token GetNextToken();
+		Token &GetNextToken();
 		// move one spot back THEN returns a token 
-		Token GetPrevToken();
+		Token &GetPrevToken();
 		// get the Current token 
-		Token GetPeekToken();
+		Token &GetPeekToken();
 		// picks the token from a selected index 
 		Token PickToken(std::size_t Index);
 		// gets the total size of the container of tokens 
