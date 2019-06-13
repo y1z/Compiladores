@@ -12,7 +12,7 @@ namespace Compiler {
 		SyntaxAnalysis(LexAnalyzer* ptr_Lex, ErrorsModule ^Error, SymblosTable *ptr_Table);
 		~SyntaxAnalysis();
 	public:// functions 
-		void checkSyntax();
+		void checkSyntax();//
 
 	private:// variables 
 		LexAnalyzer* mptr_Lex = nullptr;
