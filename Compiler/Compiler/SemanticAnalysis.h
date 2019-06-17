@@ -1,7 +1,7 @@
 #pragma once
 #include "LexAnalyzer.h"
 #include  "ErrorsModule.h"
-#include "SymblosTable.h"
+#include "SymbolsTable.h"
 
 namespace Compiler {
 

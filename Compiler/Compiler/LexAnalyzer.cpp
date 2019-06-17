@@ -63,35 +63,36 @@ void Compiler::LexAnalyzer::ClearToken()
 	}
 }
 
-Token& Compiler::LexAnalyzer::GetNextToken()
+bool Compiler::LexAnalyzer::GetNextToken()
 {
 	if (!((m_CurrentToken + 1) < (m_LexTokens.size() - 1)))
 	{
 		++m_CurrentToken;
-		return m_LexTokens[m_CurrentToken];
+		return true;
 	}
-
-	return m_LexTokens[m_CurrentToken];
+	return false;
 }
 
-Token& Compiler::LexAnalyzer::GetPrevToken()
+bool Compiler::LexAnalyzer::GetPrevToken()
 {
-	if (!(m_CurrentToken - 1) <= 0)
+
+	if (!(m_CurrentToken - 1) < 0)
 	{
 		--m_CurrentToken;
-		return m_LexTokens[m_CurrentToken];
+		return true;
 	}
-	return m_LexTokens[m_CurrentToken];
+	return false;
 }
 
-Token& Compiler::LexAnalyzer::GetPeekToken()
+Token *Compiler::LexAnalyzer::GetPeekToken()
 {
-	return m_LexTokens[m_CurrentToken];
+	// get a pointer to the variable in the vector 
+	return &m_LexTokens[m_CurrentToken];
 }
 
 Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
 {
-	if (!((m_CurrentToken + 1) < (m_LexTokens.size() - 1)) && m_CurrentToken > -1)
+	if (Index <= m_LexTokens.size() -1 && Index > -1)
 	{
 		return m_LexTokens[Index];
 	}

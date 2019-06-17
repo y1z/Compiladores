@@ -1,24 +1,31 @@
 #pragma once
+#include <vcclr.h>
+class SymbolsTable;
 #include "LexAnalyzer.h"
 #include "ErrorsModule.h"
-#include "SymblosTable.h"
-#include "ISyntaxState.h"
+#include "SymbolsTable.h"
 
+//ref class ErrorsModule;
+//class LexAnalyzer;
+//class SyntaxState_Function;
+//
 namespace Compiler {
 
-	public class SyntaxAnalysis
+	class SyntaxAnalysis
 	{
 	public:// constructor 
-		SyntaxAnalysis(LexAnalyzer* ptr_Lex, ErrorsModule ^Error, SymblosTable *ptr_Table);
+		SyntaxAnalysis();
+		SyntaxAnalysis(LexAnalyzer* ptr_Lex, ErrorsModule ^Error, SymbolsTable *ptr_Table);
 		~SyntaxAnalysis();
 	public:// functions 
-		void checkSyntax();//
+		void checkSyntax();
 
 	private:// variables 
+
 		LexAnalyzer* mptr_Lex = nullptr;
 		msclr::gcroot<ErrorsModule ^> mref_ErrorMod;
-		SymblosTable *mptr_Table = nullptr;
-//		ISyntaxState *mptr_InitState = nullptr;
+		SymbolsTable *mptr_Table = nullptr;
+
 	};
 
 }

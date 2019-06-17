@@ -80,7 +80,7 @@ Compiler::Manager::Manager()
 	Manager::ptr_Error = gcnew ErrorsModule();
 	Manager::ptr_Lex = new LexAnalyzer(ptr_Error);
 	Manager::ptr_Semantic = new SemanticAnalysis();
-	Manager::ptr_Table = new SymblosTable();
+	Manager::ptr_Table = new SymbolsTable();
 	Manager::ptr_Syntax = new SyntaxAnalysis(ptr_Lex, ptr_Error, ptr_Table);
 }
 
@@ -93,6 +93,7 @@ Compiler::Manager::~Manager()
 	}
 	if (Manager::ptr_Syntax != nullptr) { delete ptr_Syntax; }
 	if (Manager::ptr_Semantic != nullptr) { delete ptr_Semantic; }
+	if (Manager::ptr_Table != nullptr) { delete ptr_Table; }
 
 }
 
