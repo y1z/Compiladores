@@ -28,9 +28,9 @@ namespace Compiler {
 		// used this every time the user is done compiling
 		void ClearToken();
 		/*! return a pointer to a Token dictated by the variable m_CurrentToken - 1 if possible*/
-		bool GetNextToken();
+		bool AdvanceTokenIndex();
 		/*! return a pointer to a Token dictated by the variable m_CurrentToken + 1 if possible*/
-		bool GetPrevToken();
+		bool DecreaseTokenIndex();
 		/*! return a pointer to a Token dictated by the variable m_CurrentToken*/
 		Token* GetPeekToken();
 		// picks the token from a selected index 
@@ -41,8 +41,8 @@ namespace Compiler {
 		std::string GetTokenCountString(std::string& Result);
 		//! reruns the container of tokens 
 		std::vector<Token>& GetTokenContainer();
-
-		//! ILexerState *mptr_CurrentState = nullptr;
+	public:// variables 
+		//! Where all the tokens are kept
 		std::vector<Token> m_LexTokens;
 		//! has all the keyword are on the left side 
 		std::map<std::string, std::string> m_Keywords;
@@ -50,6 +50,11 @@ namespace Compiler {
 		msclr::gcroot<Compiler::ErrorsModule^> m_refErrrorsMod;
 		//! for the get Token function 
 		std::size_t m_CurrentToken;
+		//! advances the token index 
+		bool operator++ ();
+		//! decreases the token index 
+		bool operator--();
+
 	};
 
 };

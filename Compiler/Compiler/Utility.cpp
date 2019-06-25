@@ -35,7 +35,7 @@ bool IsLetter(const char PossibleLetter)
 
 	return false;
 }
-
+//! check if a char represent a number 
 bool IsNumber(const char PossibleNumber)
 {
 	if (PossibleNumber >= '0' && PossibleNumber <= '9')
@@ -135,4 +135,15 @@ bool CheckToStopLexAnalisis(msclr::gcroot<Compiler::ErrorsModule^> m_refErrrorsM
 	}
 
 	return false;
+}
+
+bool IsNumberSequence(const std::string & Str)
+{
+	for (const char PossibleNum : Str)
+	{
+		 if(!IsNumber(PossibleNum))
+		 { return false; }
+	}
+
+	return true;
 }

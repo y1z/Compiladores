@@ -1,9 +1,11 @@
 #pragma once
+#include "stdafx.h"
 #include <vcclr.h>
 class SymbolsTable;
 #include "LexAnalyzer.h"
 #include "ErrorsModule.h"
 #include "SymbolsTable.h"
+
 
 //ref class ErrorsModule;
 //class LexAnalyzer;

@@ -1,4 +1,8 @@
 #pragma once
+#include "Token.h"
+#include "SymbolsTable.h"
+
+using ReadOnlyToken = const Token *;
 
 namespace Compiler {
 
@@ -27,6 +31,7 @@ namespace Compiler {
 		SymbolsTable * mptr_SymbolsTable = nullptr;
 
 		std::string m_StateName;
+		SymbolCategory m_CategorySym = SymbolCategory::global_var;
 	};
 
 }

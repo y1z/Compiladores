@@ -28,8 +28,5 @@ void Compiler::SyntaxAnalysis::checkSyntax()
 	//ptr_Program->InitState(mptr_Lex, this, nullptr, mptr_Table);
 	//ptr_Program->CheckSyntax();
 	delete ptr_Program;
-	//delete ptr_Program;
 }
-
-
 

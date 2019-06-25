@@ -63,7 +63,7 @@ void Compiler::LexAnalyzer::ClearToken()
 	}
 }
 
-bool Compiler::LexAnalyzer::GetNextToken()
+bool Compiler::LexAnalyzer::AdvanceTokenIndex()
 {
 	if (!((m_CurrentToken + 1) < (m_LexTokens.size() - 1)))
 	{
@@ -73,7 +73,7 @@ bool Compiler::LexAnalyzer::GetNextToken()
 	return false;
 }
 
-bool Compiler::LexAnalyzer::GetPrevToken()
+bool Compiler::LexAnalyzer::DecreaseTokenIndex()
 {
 
 	if (!(m_CurrentToken - 1) < 0)
@@ -92,7 +92,7 @@ Token *Compiler::LexAnalyzer::GetPeekToken()
 
 Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
 {
-	if (Index <= m_LexTokens.size() -1 && Index > -1)
+	if (Index <= m_LexTokens.size() - 1 && Index > -1)
 	{
 		return m_LexTokens[Index];
 	}
@@ -112,6 +112,17 @@ std::vector<Token> &Compiler::LexAnalyzer::GetTokenContainer()
 {
 	return m_LexTokens;
 }
+
+bool Compiler::LexAnalyzer::operator++()
+{
+	return AdvanceTokenIndex();
+}
+
+bool Compiler::LexAnalyzer::operator--()
+{
+	return DecreaseTokenIndex();
+}
+
 
 std::string Compiler::LexAnalyzer::GetTokenCountString(std::string &Result)
 {

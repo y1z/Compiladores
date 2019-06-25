@@ -20,6 +20,7 @@ namespace Compiler {
 		//std::string getSymbolScope();// needs more param's
 
 	private: // variables 
+		/// el string contiene el nombre del simbolo 
 		std::map<std::string, Compiler::GlobalNode*> m_Symbols;
 	};
 

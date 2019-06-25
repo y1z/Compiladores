@@ -9,8 +9,6 @@ using std::string;
 
 #include "Utility.h"
 
-
-
 namespace Compiler {
 	/*! this is used to determinate which
 	value, function the node will hold */

@@ -2,6 +2,11 @@
 #include "LocalNode.h"
 namespace Compiler {
 
+	/*!
+		contains 
+		functions and global vars 
+	*/
+
 	class GlobalNode
 	{
 	public:// constructors 

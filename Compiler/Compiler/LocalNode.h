@@ -1,9 +1,14 @@
 
 namespace Compiler {
+
+	/*!
+	local_vars
+	parameters
+	*/
+
 	class LocalNode
 	{
-	public:
-
+	public:// functions 
 		std::string GetSymblo();
 		std::string GetType();
 		SymbolCategory GetSymbolCategory();
