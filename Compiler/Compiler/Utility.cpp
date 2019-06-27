@@ -166,21 +166,25 @@ bool SkipUntil(Compiler::LexAnalyzer * ptr_lex, const std::string & Delimiter)
 	return false;
 }
 // TODO : fix positions of the 'if's 
-string DataTypeFromToken(const Token * ptr_Tok)
+string GetDataTypeFromToken(const Token * ptr_Tok)
 {
 	if (!ptr_Tok->getLex().compare("int"))
 	{
 		return string("int");
-	}if (!ptr_Tok->getLex().compare("float"))
+	}
+	if (!ptr_Tok->getLex().compare("float"))
 	{
 		return string("float");
-	}if (!ptr_Tok->getLex().compare("string"))
+	}
+	if (!ptr_Tok->getLex().compare("string"))
 	{
 		return string("string");
-	}if (!ptr_Tok->getLex().compare("bool"))
+	}
+	if (!ptr_Tok->getLex().compare("bool"))
 	{
 		return string("bool");
-	}if (!ptr_Tok->getLex().compare("void"))
+	}
+	if (!ptr_Tok->getLex().compare("void"))
 	{
 		return string("void");
 	}

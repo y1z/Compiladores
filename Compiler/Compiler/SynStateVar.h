@@ -10,7 +10,7 @@ namespace Compiler {
 	class SynStateVar : public ISynState
 	{
 	public: 
-		SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos);
+		SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic);
 		~SynStateVar();
 	public: // functions 
 		bool CheckSyntax() override;
@@ -18,6 +18,8 @@ namespace Compiler {
 		uint32_t FindDimension();
 		//! checks if the type of the variables is valid(int,float etc..) 
 		bool CheckForValidType();
+		//! Checks if recursion is necessary
+		bool CheckRecursionOrLineEnding();
 	private:
 		bool isValid = true;
 		//! this is for keeping track of the terminal of the var and it's dimension
@@ -26,6 +28,8 @@ namespace Compiler {
 		ReadOnlyToken mptr_Token = nullptr;
 
 		string m_FunctionName = "";
+
+		string m_VarType = "unknown";
 	};
 
 }

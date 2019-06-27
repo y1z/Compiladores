@@ -9,12 +9,13 @@ Compiler::ISynState::ISynState()
 	this->m_StateName = "Unknown";
 }
 
-Compiler::ISynState::ISynState(LexAnalyzer * ptr_Lex, SyntaxAnalysis * ptr_Syn, ISynState * ptr_PrevState, SymbolsTable * ptr_Symblos)
+Compiler::ISynState::ISynState(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
 {
 	this->mptr_Lex = ptr_Lex;
 	this->mptr_Syn = ptr_Syn;
 	this->mptr_PrevState = ptr_PrevState;
 	this->mptr_SymbolsTable = ptr_Symblos;
+	this->mptr_Semantic = ptr_Semantic;
 }
 
 Compiler::ISynState::~ISynState()

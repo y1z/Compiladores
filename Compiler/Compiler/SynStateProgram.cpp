@@ -5,9 +5,11 @@
 #include "GlobolNames.h"
 
 
-Compiler::SynStateProgram::SynStateProgram(LexAnalyzer * ptr_Lex, SyntaxAnalysis * ptr_Syn, ISynState * ptr_PrevState, SymbolsTable * ptr_Symblos)
-	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos)
-{}
+Compiler::SynStateProgram::SynStateProgram(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
+	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos,ptr_Semantic)
+{
+	m_StateName = "Syn State : Program";
+}
 
 Compiler::SynStateProgram::~SynStateProgram()
 {
@@ -23,7 +25,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 		// check if the token is correct
 		if (!ptr_Tok->getLex().compare("var"))
 		{
-			ISynState * VarState = new SynStateVar(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable);
+			ISynState * VarState = new SynStateVar(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable,mptr_Semantic);
 			// if not in a function the var is global 
 			VarState->m_CategorySym = SymbolCategory::global_var;
 			VarState->CheckSyntax();
@@ -32,7 +34,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 		// this is the function state 
 		else if (!ptr_Tok->getLex().compare(g_Names::k_Func))
 		{
-			ISynState * FunctionState = new SynStateFunction(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable);
+			ISynState * FunctionState = new SynStateFunction(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable,mptr_Semantic);
 
 
 

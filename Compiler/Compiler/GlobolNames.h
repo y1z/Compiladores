@@ -12,16 +12,16 @@ namespace g_Names {
 	static constexpr const char * k_Func = "function";
 
 	/// Common Error messages 
-	static string e_GlobalScope = "<GLOBAL SCOPE>";
+	static string GlobalScope = "<GLOBAL SCOPE>";
 
 	///Valid Var endings 
-	// all the spellings of the keyword that can come after 'var' 
-	static constexpr const char * Var_I = "int";
-	static constexpr const char * Var_f = "float";
-	static constexpr const char * Var_s = "string";
-	static constexpr const char * Var_b = "bool";
-	/*! a vector that contains all the possible spelling's  */
-	static std::vector<string> AllVarAfter = { Var_I,Var_f,Var_s,Var_b };
+	// all the spellings of the keyword that can come after 'Value' 
+	static constexpr const char * Value_i = "int";
+	static constexpr const char * Value_f = "float";
+	static constexpr const char * Value_s = "string";
+	static constexpr const char * Value_b = "bool";
+	/*! a vector that contains all the correct values a var can be */
+	static std::vector<string> AllVarAfter = { Value_i,Value_f,Value_s,Value_b };
 
 	/// Delimiters 
 	 static constexpr const char * d_LineEnd = ";";

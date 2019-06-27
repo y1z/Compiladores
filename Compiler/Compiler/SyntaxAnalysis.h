@@ -23,7 +23,7 @@ namespace Compiler {
 		LexAnalyzer* mptr_Lex = nullptr;
 		msclr::gcroot<ErrorsModule ^> mref_ErrorMod;
 		SymbolsTable *mptr_Table = nullptr;
-
+		SemanticAnalysis *mptr_Semantic = nullptr;
 	};
 
 }

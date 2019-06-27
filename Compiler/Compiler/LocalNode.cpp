@@ -4,7 +4,14 @@
 namespace Compiler {
 
 	LocalNode::LocalNode()
-	{}
+	{
+		mptr_NextNode = nullptr;
+		mptr_Val = nullptr;
+		m_Function = "unknown Function";
+		m_Type = "unknown Type";
+		m_Dimension = 0;
+		m_SymbolCategory = SymbolCategory::unknown;
+	}
 
 	LocalNode::~LocalNode()
 	{
@@ -45,7 +52,7 @@ namespace Compiler {
 		return mptr_NextNode;
 	}
 
-	void LocalNode::SetSymbol(const char * Symblo)
+	void LocalNode::SetFunctionName(const char * Symblo)
 	{
 		m_Function = Symblo;
 	}

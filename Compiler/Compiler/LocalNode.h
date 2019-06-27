@@ -1,6 +1,7 @@
 namespace Compiler {
 
 	/*!
+	\brief this class contains the following values 
 	local_vars
 	parameters
 	*/
@@ -19,7 +20,7 @@ namespace Compiler {
 		void * GetVal();
 		LocalNode *GetLocalNode();
 		// all setters 
-		void	SetSymbol(const char *Symblo);
+		void	SetFunctionName(const char *Symblo);
 		void	SetType(const char *TypeName);
 		void	SetSymbolCategory(SymbolCategory SymbolCategory);
 		void	SetDimension(uint32_t Dim);

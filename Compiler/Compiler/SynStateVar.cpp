@@ -5,8 +5,8 @@
 #include "ErrorFunctions.h"
 #include <tuple>
 
-Compiler::SynStateVar::SynStateVar(LexAnalyzer * ptr_Lex, SyntaxAnalysis * ptr_Syn, ISynState * ptr_PrevState, SymbolsTable * ptr_Symblos)
-	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos)
+Compiler::SynStateVar::SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
+	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos,ptr_Semantic)
 {
 	m_StateName = "State Var";
 }
@@ -51,52 +51,28 @@ bool Compiler::SynStateVar::CheckSyntax()
 	}
 	//mptr_Lex->AdvanceTokenIndex();
 	mptr_Token = mptr_Lex->GetCurrentToken();
+	// --- check if the line was ended properly aka with a ';'
+	CheckRecursionOrLineEnding();
 
-	// recursion
-	if (!mptr_Token->getLex().compare(","))
-	{
-		return this->CheckSyntax();
-	}
-	// making sure that the ending is valid 
-	else if (!mptr_Token->getLex().compare(":"))
-	{
-		isValid = this->CheckForValidType();
-		if (isValid)
-		{
-			mptr_Lex->AdvanceTokenIndex();
-			mptr_Token = mptr_Lex->GetCurrentToken();
-			// check for when the ';' char is not there
-			if (mptr_Token->getLex().compare(g_Names::d_LineEnd))
-			{
-				ErrorFuncs::SYN_UNEXPECTED_SYM(g_Names::d_LineEnd, mptr_Token->getLex().c_str());
-				isValid = false;
-			}
-		}
-	}
 	// will be used for paramas and other things 
 	if (isValid)
 	{
-	//string keyWord = "KEYWORD";
-	//
-	//auto FindVarType = [&](LexAnalyzer *Lex, string keyWord) ->bool
-	//{
-	//
-	//
-	//};
-
 
 		if (m_CategorySym != SymbolCategory::global_var)
 		{
-			string Temp = "";
 			mptr_Lex->DecreaseTokenIndex();
-			
+			m_VarType = mptr_Lex->GetCurrentToken()->getLex();
+			mptr_Lex->AdvanceTokenIndex();
 
-			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, this->m_FunctionName, Temp);
+			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, this->m_FunctionName, m_VarType);
 		}
 		else
 		{
-			string Temp = "";
-			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, g_Names::e_GlobalScope, Temp);
+			mptr_Lex->DecreaseTokenIndex();
+			m_VarType = mptr_Lex->GetCurrentToken()->getLex();
+			mptr_Lex->AdvanceTokenIndex();
+
+			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, g_Names::GlobalScope, m_VarType);
 		}
 	}
 
@@ -119,11 +95,23 @@ uint32_t Compiler::SynStateVar::FindDimension()
 	{
 		this->mptr_Token = mptr_Lex->GetCurrentToken();
 		// find out what the number is 
-		if (ExpectedSequnce[SequencePos] == 'n' && IsNumberSequence(mptr_Token->getLex()))
+		if (ExpectedSequnce[SequencePos] == 'n')
 		{
-			SequencePos++;
-			Result = std::stoi(mptr_Token->getLex());
-			mptr_Lex->AdvanceTokenIndex();
+			if (!mptr_Lex->GetCurrentToken()->getLex().compare("-"))
+			{
+				mptr_Lex->AdvanceTokenIndex();
+				Result = std::stoi(mptr_Token->getLex());
+				Result = Result * -1;
+				mptr_Lex->AdvanceTokenIndex();
+				SequencePos++;
+			}
+			else
+			{
+				Result = std::stoi(mptr_Token->getLex());
+				mptr_Lex->AdvanceTokenIndex();
+				SequencePos++;
+			}
+
 		}
 		else if (ExpectedSequnce[SequencePos] != 'n')// check if the other parts are correct 
 		{
@@ -157,9 +145,35 @@ bool Compiler::SynStateVar::CheckForValidType()
 			return true;
 		}
 	}
-
 	string ErrorDecs = ErrorFuncs::SYN_UNEXPECTED_SYM("'<int>|<float>|<string>|<bool>'", mptr_Token->getLex().c_str());
 	mptr_Lex->m_refErrrorsMod->AddSynError(mptr_Token->getLineNum(), ErrorDecs, "");
 
 	return false;
+}
+
+bool Compiler::SynStateVar::CheckRecursionOrLineEnding()
+{
+	// recursion
+	if (!mptr_Token->getLex().compare(","))
+	{
+		this->CheckSyntax();
+	}
+	// making sure that the ending is valid 
+	else if (!mptr_Token->getLex().compare(":"))
+	{
+		isValid = this->CheckForValidType();
+		if (isValid)
+		{
+			mptr_Lex->AdvanceTokenIndex();
+			mptr_Token = mptr_Lex->GetCurrentToken();
+			// check for when the ';' char is not there
+			if (mptr_Token->getLex().compare(g_Names::d_LineEnd))
+			{
+				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(g_Names::d_LineEnd, mptr_Token->getLex().c_str());
+				this->mptr_Lex->m_refErrrorsMod->AddSynError(mptr_Token->getLineNum(), ErrorDesc, "");
+				isValid = false;
+			}
+		}
+	}
+	return isValid;
 }

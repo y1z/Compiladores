@@ -26,7 +26,7 @@ namespace Compiler {
 
 	bool SymbolsTable::SymbolExists(const std::string & Sym, SymbolCategory Cat, std::string & Function)
 	{
-		// Fin the symbol
+		// find the symbol
 		if (m_Symbols.find(Sym) != m_Symbols.end())
 		{
 			auto IsInserted = m_Symbols.find(Sym);
@@ -37,11 +37,12 @@ namespace Compiler {
 			{
 				return true;
 			}
-			else
+			else// keep searching for the value 
 			{
 				auto it = m_Symbols.find(Sym);
 				GlobalNode *gNode = it->second;
 				LocalNode *lNode = gNode->GetLocalNode();
+				// keep going until you cant anymore 
 				while (lNode != nullptr)
 				{
 					if (lNode->GetSymbolCategory() == Cat && !(lNode->GetFunctionName().compare(Function)))
@@ -55,50 +56,53 @@ namespace Compiler {
 
 
 		// check to see if the symblo 
-		if (Cat == SymbolCategory::global_var)
-		{
-			auto IsInserted = m_Symbols.find(Sym);
-			GlobalNode * gNode = IsInserted->second;
-			if (gNode->GetSymbolCategory() == Cat)
-			{
-				return true;
-			}
-			else
-			{
-
-			}
-
-			if (IsInserted != m_Symbols.end())
-			{
-				return true;
-			}
-			return false;
-		}
-		else if (Cat == SymbolCategory::function)
-		{
-			auto IsInserted = m_Symbols.find(Sym);
-			if (IsInserted != m_Symbols.end())
-			{
-				return true;
-			}
-			return false;
-		}
-		else
-		{
-			//search all local node's 
-			for (auto Node : m_Symbols)
-			{
-				if (Node.second->Search(Sym))
-				{
-					return true;
-				}
-				return false;
-			}
-		}
+	//if (Cat == SymbolCategory::global_var)
+	//{
+	//	auto IsInserted = m_Symbols.find(Sym);
+	//
+	//	GlobalNode * gNode = IsInserted->second;
+	//
+	//	if (gNode->GetSymbolCategory() == Cat)
+	//	{
+	//		return true;
+	//	}
+	//	else
+	//	{
+	//
+	//	}
+	//
+	//	if (IsInserted != m_Symbols.end())
+	//	{
+	//		return true;
+	//	}
+	//	return false;
+	//}
+	//else if (Cat == SymbolCategory::function)
+	//{
+	//	auto IsInserted = m_Symbols.find(Sym);
+	//
+	//	if (IsInserted != m_Symbols.end())
+	//	{
+	//		return true;
+	//	}
+	//	return false;
+	//}
+	//else
+	//{
+	//	//search all local node's 
+	//	for (auto Node : m_Symbols)
+	//	{
+	//		if (Node.second->Search(Sym))
+	//		{
+	//			return true;
+	//		}
+	//		return false;
+	//	}
+	//}
 
 
 		return false;
-	}
+	}// end function
 
 	bool SymbolsTable::AddSymbol(std::string &Symbol, int dim, SymbolCategory Cat, std::string &function, std::string &Tp)
 	{
@@ -112,6 +116,7 @@ namespace Compiler {
 				m_Symbols[Symbol]->SetDimension(dim);
 				m_Symbols[Symbol]->SetSymbolCategory(SymbolCategory::global_var);
 				m_Symbols[Symbol]->SetType(Symbol.c_str());
+				return true;
 			}
 
 			if (Cat == SymbolCategory::function)
@@ -136,7 +141,9 @@ namespace Compiler {
 		{
 			// Add error (Symbol Already defined)
 		}
+
 		return false;
 	}
+
 
 }// end namespace

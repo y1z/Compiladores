@@ -25,8 +25,8 @@ bool CheckToStopLexAnalisis(msclr::gcroot<Compiler::ErrorsModule ^> m_refErrrors
 bool IsNumberSequence(const std::string &Str);
 
 bool SkipUntil(Compiler::LexAnalyzer *ptr_lex, const std::string &Delimiter);
-
-string DataTypeFromToken(const Token * ptr_Tok);
+//! this will help me identify what type is the current token 
+string GetDataTypeFromToken(const Token * ptr_Tok);
 
 bool MoveLexWithLambda(Compiler::LexAnalyzer *ptr_lex, const string &Delimter, bool(*Pred)(Compiler::LexAnalyzer *lex,const string &Delimiter));
 
