@@ -5,19 +5,15 @@ class SymbolsTable;
 #include "LexAnalyzer.h"
 #include "ErrorsModule.h"
 #include "SymbolsTable.h"
+#include "SemanticAnalysis.h"
 
-
-//ref class ErrorsModule;
-//class LexAnalyzer;
-//class SyntaxState_Function;
-//
 namespace Compiler {
 
 	class SyntaxAnalysis
 	{
 	public:// constructor 
 		SyntaxAnalysis();
-		SyntaxAnalysis(LexAnalyzer* ptr_Lex, ErrorsModule ^Error, SymbolsTable *ptr_Table);
+		SyntaxAnalysis(LexAnalyzer* ptr_Lex, ErrorsModule ^Error, SymbolsTable *ptr_Table,SemanticAnalysis *ptr_Sematico);
 		~SyntaxAnalysis();
 	public:// functions 
 		void checkSyntax();

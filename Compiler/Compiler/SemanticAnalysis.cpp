@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "SemanticAnalysis.h"
 
-namespace Compiler {
+Compiler::SemanticAnalysis::SemanticAnalysis()
+{}
 
-	SemanticAnalysis::SemanticAnalysis()
-	{}
+Compiler::SemanticAnalysis::~SemanticAnalysis()
+{}
 
+void Compiler::SemanticAnalysis::AddExplog(std::vector<Token*> Expression, std::string FunctionName)
+{}
 
-	SemanticAnalysis::~SemanticAnalysis()
-	{}
-}
+void Compiler::SemanticAnalysis::CheckExpressions()
+{}

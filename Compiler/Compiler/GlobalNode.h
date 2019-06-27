@@ -20,6 +20,8 @@ namespace Compiler {
 		uint32_t GetDimension();
 		void * GetVal();
 		LocalNode *GetLocalNode();
+		//! to see if a symbol already exist 
+		bool Search(const string &Ref);
 		// all setters 
 		void	SetSymbol(const char *Symblo);
 		void	SetType(const char *TypeName);

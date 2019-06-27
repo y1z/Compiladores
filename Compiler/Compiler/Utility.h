@@ -1,5 +1,6 @@
 #pragma once
 #include "ILexerState.h"
+#include <functional>
 #include <string>
 #include "Token.h"
 /*! return an ascii representation */
@@ -23,5 +24,10 @@ bool CheckToStopLexAnalisis(msclr::gcroot<Compiler::ErrorsModule ^> m_refErrrors
 //! this is to check a bunch of numbers 
 bool IsNumberSequence(const std::string &Str);
 
+bool SkipUntil(Compiler::LexAnalyzer *ptr_lex, const std::string &Delimiter);
+
+string DataTypeFromToken(const Token * ptr_Tok);
+
+bool MoveLexWithLambda(Compiler::LexAnalyzer *ptr_lex, const string &Delimter, bool(*Pred)(Compiler::LexAnalyzer *lex,const string &Delimiter));
 
 

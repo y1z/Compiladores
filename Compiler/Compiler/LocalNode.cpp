@@ -3,9 +3,21 @@
 
 namespace Compiler {
 
-	std::string LocalNode::GetSymblo()
+	LocalNode::LocalNode()
+	{}
+
+	LocalNode::~LocalNode()
 	{
-		return m_Symbol;
+		if (mptr_NextNode != nullptr)
+		{
+			delete mptr_NextNode;
+		}
+
+	}
+
+	std::string LocalNode::GetFunctionName()
+	{
+		return m_Function;
 	}
 
 	std::string LocalNode::GetType()
@@ -35,7 +47,7 @@ namespace Compiler {
 
 	void LocalNode::SetSymbol(const char * Symblo)
 	{
-		m_Symbol = Symblo;
+		m_Function = Symblo;
 	}
 
 	void LocalNode::SetType(const char * TypeName)

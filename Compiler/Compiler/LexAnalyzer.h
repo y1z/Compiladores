@@ -13,6 +13,7 @@ namespace Compiler {
 #define COMMENT_NOT_CLOSED "\tThe comment is no closed"
 #define INVALID_FLOAT "\tThe float is not valid "
 #define INVALID_OP_LOG "\tInvalied use of Logical Operator "
+#define INVALID_ID_ENDING "\tInvalid ID. An ID cannot end with an underscore character. "
 	/*!
 	\brief takes care of the lexical analysis( identifying tokens)
 	*/
@@ -32,15 +33,19 @@ namespace Compiler {
 		/*! return a pointer to a Token dictated by the variable m_CurrentToken + 1 if possible*/
 		bool DecreaseTokenIndex();
 		/*! return a pointer to a Token dictated by the variable m_CurrentToken*/
-		Token* GetPeekToken();
+		Token* GetCurrentToken();
 		// picks the token from a selected index 
 		Token PickToken(std::size_t Index);
+
+		std::size_t GetTokenIndex();
 		// gets the total size of the container of tokens 
 		std::size_t GetTokenCount();
 		// converts the total number of tokens to a string 
 		std::string GetTokenCountString(std::string& Result);
 		//! reruns the container of tokens 
 		std::vector<Token>& GetTokenContainer();
+
+		void SetTokenIndex(std::size_t Index);
 	public:// variables 
 		//! Where all the tokens are kept
 		std::vector<Token> m_LexTokens;
@@ -50,11 +55,6 @@ namespace Compiler {
 		msclr::gcroot<Compiler::ErrorsModule^> m_refErrrorsMod;
 		//! for the get Token function 
 		std::size_t m_CurrentToken;
-		//! advances the token index 
-		bool operator++ ();
-		//! decreases the token index 
-		bool operator--();
-
 	};
 
 };

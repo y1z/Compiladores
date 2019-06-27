@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include "GlobalNode.h"
+#include "Token.h"
 
 namespace Compiler {
 
@@ -14,7 +15,7 @@ namespace Compiler {
 	//	bool UpdateSymbol();
 		void Reset();
 
-		bool AddSymbol(std::string &Symbol,int dim,SymbolCategory Cat,std::string &function,std::string &Tp);
+		bool AddSymbol(std::string &Symbol,int dim,SymbolCategory Cat,std::string &function,std::string &Type);
 		bool SymbolExists(const std::string &Sym,SymbolCategory Cat,std::string &Function);
 		//std::string getSymbolType();// needs more param's
 		//std::string getSymbolScope();// needs more param's

@@ -81,7 +81,7 @@ Compiler::Manager::Manager()
 	Manager::ptr_Lex = new LexAnalyzer(ptr_Error);
 	Manager::ptr_Semantic = new SemanticAnalysis();
 	Manager::ptr_Table = new SymbolsTable();
-	Manager::ptr_Syntax = new SyntaxAnalysis(ptr_Lex, ptr_Error, ptr_Table);
+	Manager::ptr_Syntax = new SyntaxAnalysis(ptr_Lex, ptr_Error, ptr_Table, ptr_Semantic);
 }
 
 Compiler::Manager::~Manager()

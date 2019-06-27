@@ -8,7 +8,7 @@ Compiler::SyntaxAnalysis::SyntaxAnalysis()
 
 }
 
-Compiler::SyntaxAnalysis::SyntaxAnalysis(LexAnalyzer * ptr_Lex, ErrorsModule ^ Error, SymbolsTable * ptr_Table)
+Compiler::SyntaxAnalysis::SyntaxAnalysis(LexAnalyzer * ptr_Lex, ErrorsModule ^ Error, SymbolsTable * ptr_Table, SemanticAnalysis *ptr_Sematico)
 {
 	this->mptr_Lex = ptr_Lex;
 	this->mref_ErrorMod = Error;

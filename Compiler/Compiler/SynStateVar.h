@@ -14,12 +14,18 @@ namespace Compiler {
 		~SynStateVar();
 	public: // functions 
 		bool CheckSyntax() override;
+		//! check to see how big the array is 
 		uint32_t FindDimension();
+		//! checks if the type of the variables is valid(int,float etc..) 
+		bool CheckForValidType();
 	private:
+		bool isValid = true;
 		//! this is for keeping track of the terminal of the var and it's dimension
-		std::vector<std::map<std::string, int>> m_VarsList;
+		std::vector<std::pair<std::string, int>> m_VarsList;
 		//! this is used to read all input from the tokens 
 		ReadOnlyToken mptr_Token = nullptr;
+
+		string m_FunctionName = "";
 	};
 
 }

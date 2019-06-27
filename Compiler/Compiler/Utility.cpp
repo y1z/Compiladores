@@ -147,3 +147,48 @@ bool IsNumberSequence(const std::string & Str)
 
 	return true;
 }
+
+bool SkipUntil(Compiler::LexAnalyzer * ptr_lex, const std::string & Delimiter)
+{
+	// to indicate that we check all the tokens
+	bool IsFinish = false;
+	
+	while (!IsFinish)
+	{
+		if (!ptr_lex->GetCurrentToken()->getLex().compare(Delimiter))
+		{
+			return true;
+		}
+		// check if we reached the end 
+		IsFinish = ptr_lex->AdvanceTokenIndex();
+	}
+	
+	return false;
+}
+// TODO : fix positions of the 'if's 
+string DataTypeFromToken(const Token * ptr_Tok)
+{
+	if (!ptr_Tok->getLex().compare("int"))
+	{
+		return string("int");
+	}if (!ptr_Tok->getLex().compare("float"))
+	{
+		return string("float");
+	}if (!ptr_Tok->getLex().compare("string"))
+	{
+		return string("string");
+	}if (!ptr_Tok->getLex().compare("bool"))
+	{
+		return string("bool");
+	}if (!ptr_Tok->getLex().compare("void"))
+	{
+		return string("void");
+	}
+	
+	return string("ERRRRORRRORRROROR");
+}
+
+bool MoveLexWithLambda(Compiler::LexAnalyzer * ptr_lex, const string &Delimter,  bool(*Pred)(Compiler::LexAnalyzer *lex,const string &Delimiter))
+{
+	return Pred(ptr_lex,Delimter);
+}

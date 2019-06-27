@@ -65,7 +65,7 @@ void Compiler::LexAnalyzer::ClearToken()
 
 bool Compiler::LexAnalyzer::AdvanceTokenIndex()
 {
-	if (!((m_CurrentToken + 1) < (m_LexTokens.size() - 1)))
+	if ((m_LexTokens.size() - 1) > m_CurrentToken )
 	{
 		++m_CurrentToken;
 		return true;
@@ -76,7 +76,7 @@ bool Compiler::LexAnalyzer::AdvanceTokenIndex()
 bool Compiler::LexAnalyzer::DecreaseTokenIndex()
 {
 
-	if (!(m_CurrentToken - 1) < 0)
+	if ((m_CurrentToken - 1) >= 0)
 	{
 		--m_CurrentToken;
 		return true;
@@ -84,7 +84,7 @@ bool Compiler::LexAnalyzer::DecreaseTokenIndex()
 	return false;
 }
 
-Token *Compiler::LexAnalyzer::GetPeekToken()
+Token *Compiler::LexAnalyzer::GetCurrentToken()
 {
 	// get a pointer to the variable in the vector 
 	return &m_LexTokens[m_CurrentToken];
@@ -103,6 +103,11 @@ Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
 	return Token();
 }
 
+std::size_t Compiler::LexAnalyzer::GetTokenIndex()
+{
+	return m_CurrentToken;
+}
+
 std::size_t Compiler::LexAnalyzer::GetTokenCount()
 {
 	return m_LexTokens.size();
@@ -113,14 +118,9 @@ std::vector<Token> &Compiler::LexAnalyzer::GetTokenContainer()
 	return m_LexTokens;
 }
 
-bool Compiler::LexAnalyzer::operator++()
+void Compiler::LexAnalyzer::SetTokenIndex(std::size_t Index)
 {
-	return AdvanceTokenIndex();
-}
-
-bool Compiler::LexAnalyzer::operator--()
-{
-	return DecreaseTokenIndex();
+	m_CurrentToken = Index;
 }
 
 

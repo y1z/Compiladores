@@ -7,7 +7,9 @@ namespace Compiler {
 	{}
 
 	GlobalNode::~GlobalNode()
-	{}
+	{
+		if (mptr_LocalNode != nullptr) { delete mptr_LocalNode; }
+	}
 
 	std::string GlobalNode::GetSymblo()
 	{
@@ -38,7 +40,21 @@ namespace Compiler {
 	{
 		return mptr_LocalNode;
 	}
-	
+
+	bool GlobalNode::Search(const string &Ref)
+	{
+		LocalNode * ptr_NextNode = this->GetLocalNode();
+		while (ptr_NextNode != nullptr)
+		{
+			if (!Ref.compare(ptr_NextNode->GetFunctionName()))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	//--------------------- SETTERS--------------
 	void GlobalNode::SetSymbol(const char * Symblo)
 	{ m_Symbol = Symblo; }

@@ -1,4 +1,3 @@
-
 namespace Compiler {
 
 	/*!
@@ -8,8 +7,12 @@ namespace Compiler {
 
 	class LocalNode
 	{
+	public:
+		LocalNode();
+		~LocalNode();
+
 	public:// functions 
-		std::string GetSymblo();
+		std::string GetFunctionName();
 		std::string GetType();
 		SymbolCategory GetSymbolCategory();
 		uint32_t GetDimension();
@@ -24,7 +27,7 @@ namespace Compiler {
 		void	SetLocalNode(LocalNode *ptr);
 	private:// variables 
 		//! holds the symbol
-		string m_Symbol;
+		string m_Function;
 		//! to know the type of var/function that being held  
 		string m_Type;
 		//! to know which symbol
