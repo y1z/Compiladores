@@ -141,8 +141,8 @@ bool IsNumberSequence(const std::string & Str)
 {
 	for (const char PossibleNum : Str)
 	{
-		 if(!IsNumber(PossibleNum))
-		 { return false; }
+		if (!IsNumber(PossibleNum))
+		{ return false; }
 	}
 
 	return true;
@@ -152,7 +152,7 @@ bool SkipUntil(Compiler::LexAnalyzer * ptr_lex, const std::string & Delimiter)
 {
 	// to indicate that we check all the tokens
 	bool IsFinish = false;
-	
+
 	while (!IsFinish)
 	{
 		if (!ptr_lex->GetCurrentToken()->getLex().compare(Delimiter))
@@ -162,7 +162,7 @@ bool SkipUntil(Compiler::LexAnalyzer * ptr_lex, const std::string & Delimiter)
 		// check if we reached the end 
 		IsFinish = ptr_lex->AdvanceTokenIndex();
 	}
-	
+
 	return false;
 }
 // TODO : fix positions of the 'if's 
@@ -188,11 +188,33 @@ string GetDataTypeFromToken(const Token * ptr_Tok)
 	{
 		return string("void");
 	}
-	
+
 	return string("ERRRRORRRORRROROR");
 }
 
-bool MoveLexWithLambda(Compiler::LexAnalyzer * ptr_lex, const string &Delimter,  bool(*Pred)(Compiler::LexAnalyzer *lex,const string &Delimiter))
+bool MoveLexWithLambda(Compiler::LexAnalyzer * ptr_lex, const string &Delimter, bool(*Pred)(Compiler::LexAnalyzer *lex, const string &Delimiter))
 {
-	return Pred(ptr_lex,Delimter);
+	return Pred(ptr_lex, Delimter);
+}
+
+bool MoveAndAssignTokenIndex(Compiler::LexAnalyzer * ptr_Lex, const Token *& ptr_token)
+{
+	if (ptr_Lex->AdvanceTokenIndex())
+	{
+		ptr_token = ptr_Lex->GetCurrentToken();
+		return true;
+	}
+
+	return false;
+}
+
+bool CompareTokenTypes(const Token * ptr_token, const char * Expected)
+{
+	string TokenType = TranslateToken(ptr_token->getType());
+	if (!TokenType.compare(Expected))
+	{
+		return true;
+	}
+
+	return false;
 }

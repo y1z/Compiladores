@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Token.h"
+#include "LexAnalyzer.h"
 
 Token::Token(const std::string &Lex, Compiler::Token_Type Token, int LineNum)
 	:m_Lex(Lex),m_token(Token),m_lineNumber(LineNum)
@@ -25,3 +26,5 @@ int Token::getLineNum() const
 {
 	return m_lineNumber;
 }
+
+

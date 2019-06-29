@@ -6,7 +6,7 @@
 #include <tuple>
 
 Compiler::SynStateVar::SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
-	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos,ptr_Semantic)
+	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic)
 {
 	m_StateName = "State Var";
 }
@@ -80,7 +80,7 @@ bool Compiler::SynStateVar::CheckSyntax()
 	return isValid;
 }
 
-uint32_t Compiler::SynStateVar::FindDimension()
+int32_t Compiler::SynStateVar::FindDimension()
 {
 	/// we already know that we found an id
 	mptr_Lex->AdvanceTokenIndex();
@@ -89,18 +89,21 @@ uint32_t Compiler::SynStateVar::FindDimension()
 	// where we are 
 	uint8_t SequencePos = 0;
 	// the return value
-	uint32_t Result = 0;
+	int32_t Result = 0;
 
 	while (SequencePos < ExpectedSequnce.size())
 	{
-		this->mptr_Token = mptr_Lex->GetCurrentToken();
+		this->mptr_Token = this->mptr_Lex->GetCurrentToken();
 		// find out what the number is 
 		if (ExpectedSequnce[SequencePos] == 'n')
 		{
 			if (!mptr_Lex->GetCurrentToken()->getLex().compare("-"))
 			{
 				mptr_Lex->AdvanceTokenIndex();
+				mptr_Token = mptr_Lex->GetCurrentToken();
+
 				Result = std::stoi(mptr_Token->getLex());
+
 				Result = Result * -1;
 				mptr_Lex->AdvanceTokenIndex();
 				SequencePos++;
@@ -122,14 +125,50 @@ uint32_t Compiler::SynStateVar::FindDimension()
 			}
 			else
 			{
-				ErrorFuncs::SYN_UNEXPECTED_SYM(&ExpectedSequnce[SequencePos], mptr_Token->getLex().c_str());
+				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(&ExpectedSequnce[SequencePos], mptr_Token->getLex().c_str());
+				this->mptr_Lex->m_refErrrorsMod->AddSynError(mptr_Token->getLineNum(), ErrorDesc, "");
 				break;
 			}
 		}
 
 	}
+	return Result;
+}
+
+int Compiler::SynStateVar::ParseSingle()
+{
+	int Result = -1337;
+	ReadOnlyToken token = nullptr;
+
+	string	TokenType;
+
+	MoveAndAssignTokenIndex(mptr_Lex, token);
 
 
+	if (!mptr_Lex->GetCurrentToken()->getLex().compare("-"))
+	{
+		MoveAndAssignTokenIndex(mptr_Lex, token);
+
+		TokenType  = TranslateToken(token->getType());
+
+		if (IsNumberSequence(token->getLex()) && !TokenType.compare(g_Names::t_Int))
+		{
+			Result = std::stoi(token->getLex());
+			Result * -1;
+		}
+
+	}
+	else
+	{
+		MoveAndAssignTokenIndex(mptr_Lex, token);
+		TokenType = TranslateToken(token->getType());
+		//! make sure the value is an int 
+		if (!TokenType.compare(g_Names::t_Int))
+		{
+			Result = std::stoi(token->getLex());
+		}
+
+	}
 	return Result;
 }
 
@@ -175,5 +214,10 @@ bool Compiler::SynStateVar::CheckRecursionOrLineEnding()
 			}
 		}
 	}
+	return isValid;
+}
+
+bool Compiler::SynStateVar::GetIsValid()
+{
 	return isValid;
 }

@@ -15,17 +15,21 @@ namespace Compiler {
 	public: // functions 
 		bool CheckSyntax() override;
 		//! check to see how big the array is 
-		uint32_t FindDimension();
+		int32_t FindDimension();
+		//! this is used parse single variables
+		int ParseSingle();
 		//! checks if the type of the variables is valid(int,float etc..) 
 		bool CheckForValidType();
 		//! Checks if recursion is necessary
 		bool CheckRecursionOrLineEnding();
+		//! returns the is valid member
+		bool GetIsValid();
 	private:
 		bool isValid = true;
 		//! this is for keeping track of the terminal of the var and it's dimension
 		std::vector<std::pair<std::string, int>> m_VarsList;
 		//! this is used to read all input from the tokens 
-		ReadOnlyToken mptr_Token = nullptr;
+		const Token* mptr_Token = nullptr;
 
 		string m_FunctionName = "";
 

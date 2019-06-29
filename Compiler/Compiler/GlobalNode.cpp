@@ -26,9 +26,14 @@ namespace Compiler {
 		return m_SymbolCategory;
 	}
 
-	uint32_t GlobalNode::GetDimension()
+	int32_t GlobalNode::GetDimension()
 	{
 		return m_Dimension;
+	}
+
+	uint32_t GlobalNode::GetLineNum()
+	{
+		return this->m_LineNum;
 	}
 
 	void * GlobalNode::GetVal()
@@ -50,6 +55,7 @@ namespace Compiler {
 			{
 				return true;
 			}
+			ptr_NextNode = this->GetLocalNode();
 		}
 
 		return false;
@@ -65,7 +71,7 @@ namespace Compiler {
 	void GlobalNode::SetSymbolCategory(SymbolCategory SymbolCategory)
 	{ m_SymbolCategory = SymbolCategory; }
 
-	void GlobalNode::SetDimension(uint32_t Dim)
+	void GlobalNode::SetDimension(int32_t Dim)
 	{ m_Dimension = Dim; }
 
 	void GlobalNode::SetValPtr(void * ptr)
@@ -73,4 +79,9 @@ namespace Compiler {
 
 	void GlobalNode::SetLocalNode(LocalNode * ptr)
 	{ mptr_LocalNode = ptr; }
+
+	void GlobalNode::SetLineNum(uint32_t Num)
+	{
+		this->m_LineNum = Num;
+	}
 }

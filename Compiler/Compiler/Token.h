@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+
 using namespace System;
 
 
@@ -31,7 +32,7 @@ class Token
 public:
 	Token(const std::string &Lex, Compiler::Token_Type Token, int lineNum);
 	Token();
-  ~Token();
+	~Token();
 public:// functions 
 	std::string getLex() const;
 	Compiler::Token_Type getType() const;

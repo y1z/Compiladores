@@ -37,9 +37,14 @@ namespace Compiler {
 		return m_SymbolCategory;
 	}
 
-	uint32_t LocalNode::GetDimension()
+	int32_t LocalNode::GetDimension()
 	{
 		return m_Dimension;
+	}
+
+	uint32_t LocalNode::GetLineNum()
+	{
+		return this->m_LineNum;
 	}
 
 	void * LocalNode::GetVal()
@@ -67,7 +72,7 @@ namespace Compiler {
 		m_SymbolCategory = SymbolCategory;
 	}
 
-	void LocalNode::SetDimension(uint32_t Dim)
+	void LocalNode::SetDimension(int32_t Dim)
 	{
 		m_Dimension = Dim;
 	}
@@ -80,6 +85,11 @@ namespace Compiler {
 	void LocalNode::SetLocalNode(LocalNode * ptr)
 	{
 		mptr_NextNode = ptr;
+	}
+
+	void LocalNode::SetLineNum(uint32_t Num)
+	{
+		this->m_LineNum = Num;
 	}
 
 }

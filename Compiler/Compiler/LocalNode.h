@@ -14,16 +14,18 @@ namespace Compiler {
 
 	public:// functions 
 		std::string GetFunctionName();
-		std::string GetType();
+		std::string GetType(); 
 		SymbolCategory GetSymbolCategory();
-		uint32_t GetDimension();
+		int32_t GetDimension();
+		uint32_t GetLineNum();
 		void * GetVal();
 		LocalNode *GetLocalNode();
 		// all setters 
 		void	SetFunctionName(const char *Symblo);
 		void	SetType(const char *TypeName);
 		void	SetSymbolCategory(SymbolCategory SymbolCategory);
-		void	SetDimension(uint32_t Dim);
+		void	SetDimension(int32_t Dim);
+		void	SetLineNum(uint32_t Num);
 		void	SetValPtr(void *ptr);
 		void	SetLocalNode(LocalNode *ptr);
 	private:// variables 
@@ -33,12 +35,15 @@ namespace Compiler {
 		string m_Type;
 		//! to know which symbol
 		SymbolCategory m_SymbolCategory;
-		//! Dimension
-		uint32_t m_Dimension = 0;
+		//! how many elements an array has.
+		int32_t m_Dimension = 0;
+		//! where the symbol is found 
+		uint32_t m_LineNum = 0;
 		//! will be used to hold the value 
 		void * mptr_Val;
 		//! used to for keeping track of var in a function or thing not the global scope
 		LocalNode *mptr_NextNode = nullptr;
+
 	};
 
 }

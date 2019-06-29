@@ -29,5 +29,9 @@ bool SkipUntil(Compiler::LexAnalyzer *ptr_lex, const std::string &Delimiter);
 string GetDataTypeFromToken(const Token * ptr_Tok);
 
 bool MoveLexWithLambda(Compiler::LexAnalyzer *ptr_lex, const string &Delimter, bool(*Pred)(Compiler::LexAnalyzer *lex,const string &Delimiter));
+//! move's the token one token index 
+bool MoveAndAssignTokenIndex(Compiler::LexAnalyzer *ptr_Lex, const Token *&ptr_token);
+//! this is used to compare the TokenTypes 
+bool CompareTokenTypes(const Token *ptr_token, const char *Expected);
 
 

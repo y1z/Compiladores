@@ -54,57 +54,10 @@ namespace Compiler {
 			}
 		}
 
-
-		// check to see if the symblo 
-	//if (Cat == SymbolCategory::global_var)
-	//{
-	//	auto IsInserted = m_Symbols.find(Sym);
-	//
-	//	GlobalNode * gNode = IsInserted->second;
-	//
-	//	if (gNode->GetSymbolCategory() == Cat)
-	//	{
-	//		return true;
-	//	}
-	//	else
-	//	{
-	//
-	//	}
-	//
-	//	if (IsInserted != m_Symbols.end())
-	//	{
-	//		return true;
-	//	}
-	//	return false;
-	//}
-	//else if (Cat == SymbolCategory::function)
-	//{
-	//	auto IsInserted = m_Symbols.find(Sym);
-	//
-	//	if (IsInserted != m_Symbols.end())
-	//	{
-	//		return true;
-	//	}
-	//	return false;
-	//}
-	//else
-	//{
-	//	//search all local node's 
-	//	for (auto Node : m_Symbols)
-	//	{
-	//		if (Node.second->Search(Sym))
-	//		{
-	//			return true;
-	//		}
-	//		return false;
-	//	}
-	//}
-
-
 		return false;
 	}// end function
 
-	bool SymbolsTable::AddSymbol(std::string &Symbol, int dim, SymbolCategory Cat, std::string &function, std::string &Tp)
+	bool SymbolsTable::AddSymbol(std::string &Symbol, int dim, SymbolCategory Cat, std::string &function, std::string &Type)
 	{
 		if (!SymbolExists(Symbol, Cat, function))
 		{
@@ -115,7 +68,7 @@ namespace Compiler {
 				m_Symbols[Symbol]->SetSymbol(Symbol.c_str());
 				m_Symbols[Symbol]->SetDimension(dim);
 				m_Symbols[Symbol]->SetSymbolCategory(SymbolCategory::global_var);
-				m_Symbols[Symbol]->SetType(Symbol.c_str());
+				m_Symbols[Symbol]->SetType(Type.c_str());
 				return true;
 			}
 

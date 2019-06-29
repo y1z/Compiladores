@@ -7,11 +7,12 @@ namespace g_Names {
 
 	///Token names  
 	static constexpr const char * t_ID = "ID";
+	static constexpr const char * t_Int = "INT_NUMBER";
 
 	///KeyWords 
 	static constexpr const char * k_Func = "function";
 
-	/// Common Error messages 
+	/// Error messages 
 	static string GlobalScope = "<GLOBAL SCOPE>";
 
 	///Valid Var endings 
@@ -23,6 +24,8 @@ namespace g_Names {
 	/*! a vector that contains all the correct values a var can be */
 	static std::vector<string> AllVarAfter = { Value_i,Value_f,Value_s,Value_b };
 
+	/// Data Types 
+	static constexpr const char * AllTypes = "'<int>|<float>|<string>|<bool>|<void>'";
 	/// Delimiters 
 	 static constexpr const char * d_LineEnd = ";";
 }

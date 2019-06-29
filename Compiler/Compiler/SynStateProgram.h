@@ -11,7 +11,7 @@ namespace Compiler {
 		bool CheckSyntax() override;
 	public:
 		bool isGlobal = true;
-		
+		bool isMainFound = false;
 	};
 
 }
