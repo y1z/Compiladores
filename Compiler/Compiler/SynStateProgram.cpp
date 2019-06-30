@@ -80,7 +80,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			string ErrorDecs = ErrorFuncs::SYN_UNEXPECTED_SYM("main", ptr_Tok->getLex().c_str());
 			mptr_Lex->m_refErrrorsMod->AddSynError(ptr_Tok->getLineNum(), ErrorDecs, "");
 			return false;
-		}
+		}/// asdf
 
 
 	}
