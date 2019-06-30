@@ -11,6 +11,10 @@ Compiler::SynStateVar::SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn
 	m_StateName = "State Var";
 }
 
+Compiler::SynStateVar::SynStateVar(LexAnalyzer * ptr_Lex, SyntaxAnalysis * ptr_Syn, ISynState * ptr_PrevState, SymbolsTable * ptr_Symblos, SemanticAnalysis * ptr_Semantic, const string & FunctionName)
+	: ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic), m_FunctionName(FunctionName)
+{}
+
 Compiler::SynStateVar::~SynStateVar()
 {}
 //! entering here we already seen the keyword 'var' 
@@ -22,12 +26,16 @@ bool Compiler::SynStateVar::CheckSyntax()
 	string TokenTypeStr(TranslateToken(mptr_Token->getType()));
 	//this is where I will keep the name and dim of the vars 
 	auto NameAndDim = std::pair<std::string, int>();
+
+	int LineNumber = 0;
 	// find out if we get an ID 
 	if (!TokenTypeStr.compare(g_Names::t_ID))
 	{
 		NameAndDim.first = mptr_Token->getLex();
 
 		mptr_Lex->AdvanceTokenIndex();
+
+		LineNumber = mptr_Token->getLineNum();
 
 		mptr_Token = mptr_Lex->GetCurrentToken();
 		//for when the var ID is an array
@@ -64,7 +72,7 @@ bool Compiler::SynStateVar::CheckSyntax()
 			m_VarType = mptr_Lex->GetCurrentToken()->getLex();
 			mptr_Lex->AdvanceTokenIndex();
 
-			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, this->m_FunctionName, m_VarType);
+			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, this->m_FunctionName, m_VarType, LineNumber);
 		}
 		else
 		{
@@ -72,8 +80,9 @@ bool Compiler::SynStateVar::CheckSyntax()
 			m_VarType = mptr_Lex->GetCurrentToken()->getLex();
 			mptr_Lex->AdvanceTokenIndex();
 
-			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, g_Names::GlobalScope, m_VarType);
+			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, g_Names::GlobalScope, m_VarType, LineNumber);
 		}
+
 	}
 
 
@@ -149,7 +158,7 @@ int Compiler::SynStateVar::ParseSingle()
 	{
 		MoveAndAssignTokenIndex(mptr_Lex, token);
 
-		TokenType  = TranslateToken(token->getType());
+		TokenType = TranslateToken(token->getType());
 
 		if (IsNumberSequence(token->getLex()) && !TokenType.compare(g_Names::t_Int))
 		{

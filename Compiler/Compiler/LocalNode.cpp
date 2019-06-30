@@ -32,6 +32,11 @@ namespace Compiler {
 		return m_Type;
 	}
 
+	string LocalNode::GetSymbol() const
+	{
+		return m_Symbol;
+	}
+
 	SymbolCategory LocalNode::GetSymbolCategory()
 	{
 		return m_SymbolCategory;
@@ -57,9 +62,51 @@ namespace Compiler {
 		return mptr_NextNode;
 	}
 
+	string LocalNode::TraslateSymbolCategory(SymbolCategory SymCat)
+	{
+		switch (SymCat)
+		{
+		case Compiler::SymbolCategory::unknown:
+			return "<unknown>";
+			break;
+		case Compiler::SymbolCategory::global_var:
+			return "<GLOBAL_VAR>";
+			break;
+		case Compiler::SymbolCategory::local_var:
+			return "<LOCAL_VAR>";
+			break;
+		case Compiler::SymbolCategory::param:
+			return "<PARAM>";
+			break;
+		case Compiler::SymbolCategory::function:
+			return "<FUNCTION>";
+			break;
+		default:
+			break;
+		}
+		return string();
+	}
+
+	string LocalNode::GetDataForCompiler()
+	{
+		string Result = std::to_string(m_LineNum) + '~';
+
+
+		Result += m_Symbol + '~' + this->TraslateSymbolCategory(m_SymbolCategory);
+
+		Result += std::to_string(m_Dimension) + '~' + m_Type + '~' + m_Function;
+
+		return Result;
+	}
+
 	void LocalNode::SetFunctionName(const char * Symblo)
 	{
 		m_Function = Symblo;
+	}
+
+	void LocalNode::SetSymbol(const char * Symblo)
+	{
+		m_Symbol = Symblo;
 	}
 
 	void LocalNode::SetType(const char * TypeName)

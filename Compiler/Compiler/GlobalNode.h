@@ -21,6 +21,13 @@ namespace Compiler {
 		uint32_t GetLineNum();
 		void * GetVal();
 		LocalNode *GetLocalNode();
+
+		string TraslateSymbolCategory(SymbolCategory SymCat);
+
+		string GetDataForCompiler();
+
+		void AddLocalNode(LocalNode *Node);
+
 		//! to see if a symbol already exist 
 		bool Search(const string &Symbol);
 		// all setters 

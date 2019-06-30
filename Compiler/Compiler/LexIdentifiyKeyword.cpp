@@ -19,7 +19,7 @@ bool LexIdentifiyKeyword::StateAction(const char * code, uint32_t & Index, uint3
 	/* get the possible keyword*/
 	while (code[Index] != ' ' && code[Index] != '\0' && !m_refErrrorsMod->IsMaxErrorReached())
 	{
-		if (IsLetter(code[Index]))
+		if (IsLetter(code[Index]) || code[Index] == '_' || IsNumber(code[Index]))
 		{
 			PossibleKeyword += code[Index];
 		}

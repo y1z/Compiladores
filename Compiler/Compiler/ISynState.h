@@ -18,7 +18,7 @@ namespace Compiler {
 	{
 	public:
 		ISynState();
-		ISynState(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic);
+		ISynState(LexAnalyzer *Lex, SyntaxAnalysis *Syn, ISynState *PrevState, SymbolsTable *Symblos, SemanticAnalysis *Semantic);
 		virtual ~ISynState();
 	public:
 		virtual	bool CheckSyntax() = 0;

@@ -33,5 +33,3 @@ bool MoveLexWithLambda(Compiler::LexAnalyzer *ptr_lex, const string &Delimter, b
 bool MoveAndAssignTokenIndex(Compiler::LexAnalyzer *ptr_Lex, const Token *&ptr_token);
 //! this is used to compare the TokenTypes 
 bool CompareTokenTypes(const Token *ptr_token, const char *Expected);
-
-

@@ -11,6 +11,7 @@ namespace Compiler {
 	{
 	public: 
 		SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic);
+		SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic, const string &FunctionName);
 		~SynStateVar();
 	public: // functions 
 		bool CheckSyntax() override;

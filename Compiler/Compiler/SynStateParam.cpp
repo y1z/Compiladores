@@ -11,6 +11,12 @@ Compiler::SynStateParam::SynStateParam(LexAnalyzer * ptr_Lex, SyntaxAnalysis * p
 	m_CategorySym = SymbolCategory::param;
 }
 
+Compiler::SynStateParam::SynStateParam(LexAnalyzer * ptr_Lex, SyntaxAnalysis * ptr_Syn, ISynState * ptr_PrevState, SymbolsTable * ptr_Symblos, SemanticAnalysis * ptr_Semantic, string functionName)
+	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic), m_FuntionName(functionName)
+{
+	mptr_VarState = new SynStateVar(ptr_Lex, ptr_Syn, this, ptr_Symblos, ptr_Semantic, m_FuntionName);
+}
+
 Compiler::SynStateParam::~SynStateParam()
 {
 	delete mptr_VarState;
@@ -26,27 +32,43 @@ bool Compiler::SynStateParam::CheckSyntax()
 	// get ID 
 	if (CompareTokenTypes(Tok, g_Names::t_ID))
 	{
-		std::pair<std::string, int> NameAndDim;
-		NameAndDim.first = Tok->getLex();
+		// making sure i don't get a param twice
+		bool alreadyGot = false;
+		LocalNode Temp;
+
+		Temp.SetSymbol(Tok->getLex().c_str());
 
 		IsValid = mptr_Lex->AdvanceTokenIndex();
 		Tok = mptr_Lex->GetCurrentToken();
 
+		Temp.SetLineNum(Tok->getLineNum());
+
 		if (!Tok->getLex().compare("["))
 		{
-			NameAndDim.second = mptr_VarState->FindDimension();
+			Temp.SetDimension(mptr_VarState->FindDimension());
 			Tok = mptr_Lex->GetCurrentToken();
+			alreadyGot = true;
+			m_Nodes.emplace_back(Temp);
 		}
 		//recursion
 		if (!Tok->getLex().compare(","))
 		{
-			NameAndDim.second = 0;
+			if (alreadyGot == false)
+			{
+				m_Nodes.emplace_back(Temp);
+			}
 			return this->CheckSyntax();
 		}
 
 		if (!Tok->getLex().compare(":"))
 		{
+			m_Nodes.emplace_back(Temp);
 			IsValid = mptr_VarState->CheckForValidType();
+
+			if (IsValid)
+			{
+				m_Type = mptr_Lex->GetCurrentToken()->getLex();
+			}
 			return IsValid;
 		}
 		else
@@ -56,7 +78,19 @@ bool Compiler::SynStateParam::CheckSyntax()
 			return false;
 		}
 	}
-	MoveAndAssignTokenIndex(mptr_Lex, Tok);
 	// making sure they close the parenthesis
-	return false;
+	if (!Tok->getLex().compare(")"))
+	{
+		mptr_Lex->DecreaseTokenIndex();
+		return false;
+	}
+	return MoveAndAssignTokenIndex(mptr_Lex, Tok);
+
+}
+
+std::vector<Compiler::LocalNode> Compiler::SynStateParam::GetNodes()
+{
+	auto Result = m_Nodes;
+
+	return Result;
 }

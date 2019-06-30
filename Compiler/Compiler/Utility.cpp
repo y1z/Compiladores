@@ -218,3 +218,4 @@ bool CompareTokenTypes(const Token * ptr_token, const char * Expected)
 
 	return false;
 }
+

@@ -6,7 +6,7 @@
 #include "SynStateVar.h"
 
 Compiler::SynStateFunction::SynStateFunction(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
-	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, mptr_SymbolsTable, mptr_Semantic)
+	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic)
 {}
 
 Compiler::SynStateFunction::~SynStateFunction()
@@ -30,9 +30,11 @@ bool Compiler::SynStateFunction::CheckSyntax()
 		{
 			// check ID 
 		case('i'):
-			if (!TokenType.compare(g_Names::t_ID))
+			if (!TokenType.compare(g_Names::t_ID) || !Tok->getLex().compare("main"))
 			{
 				m_FunctionName = Tok->getLex();
+				m_NodeArgs.SetSymbol(m_FunctionName.c_str());
+				m_NodeArgs.SetDimension(0);
 			}
 			else
 			{
@@ -45,9 +47,12 @@ bool Compiler::SynStateFunction::CheckSyntax()
 		case('('):
 			if (!Tok->getLex().compare("("))
 			{
-				ISynState* ParamState = new SynStateParam(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic);
+				SynStateParam* ParamState = new SynStateParam(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
 
 				Continue = ParamState->CheckSyntax();
+				m_ParamNodes = ParamState->GetNodes();
+				m_ParamType = ParamState->m_Type;
+
 				delete ParamState;
 			}
 			else
@@ -65,6 +70,12 @@ bool Compiler::SynStateFunction::CheckSyntax()
 			}
 			else
 			{
+				// making sure to register the params 
+				for (auto &Node : m_ParamNodes)
+				{
+					mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetLineNum(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());
+				}
+				// Making the Error
 				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(&ExpectedSequence[SequencePos], Tok->getLex().c_str());
 				mptr_Lex->m_refErrrorsMod->AddSynError(Tok->getLineNum(), ErrorDesc, "");
 				return false;
@@ -76,11 +87,15 @@ bool Compiler::SynStateFunction::CheckSyntax()
 		Continue = mptr_Lex->AdvanceTokenIndex();
 	}
 
-	if (Continue)
+	//! main doe not have a type 
+	if (Continue && m_NodeArgs.GetSymblo().compare("main"))
 	{
 		isValid = CheckFunctionType();
 	}
-
+	else if (Continue && !m_NodeArgs.GetSymblo().compare("main"))
+	{
+		CheckFunctionBlock();
+	}
 	return isValid;
 }
 
@@ -97,13 +112,23 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 		{
 			// checking for type void 
 			if (!token->getLex().compare("void"))
-			{ IsTypeValid = true; }
+			{
+				IsTypeValid = true;
+				m_NodeArgs.SetType("void");
+			}
 			// checking for the rest of the types
 			for (string ValidTypes : g_Names::AllVarAfter)
 			{
 				if (!token->getLex().compare(ValidTypes))
 				{
 					IsTypeValid = true;
+					m_NodeArgs.SetType(ValidTypes.c_str());
+					//add the symbol
+					mptr_SymbolsTable->AddSymbol(m_NodeArgs.GetSymblo(), m_NodeArgs.GetDimension(),
+						SymbolCategory::function, g_Names::GlobalScope,
+						m_NodeArgs.GetType(), m_NodeArgs.GetLineNum());
+
+					break;
 				}
 			}
 		}
@@ -117,6 +142,12 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 
 	if (IsTypeValid)
 	{
+		// making sure to register the params 
+		for (auto &Node : m_ParamNodes)
+		{
+			mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetLineNum(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());
+		}
+
 		return CheckFunctionBlock();
 	}
 
@@ -127,17 +158,65 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 bool Compiler::SynStateFunction::CheckFunctionBlock()
 {
 	isInFunctionBlock = true;
+	bool EndOfFunctionBlock = false;
 	ReadOnlyToken token = nullptr;
+	if (m_FunctionName.compare("main"))
+	{
+		isInFunctionBlock = MoveAndAssignTokenIndex(mptr_Lex, token);
+	}
+	token = mptr_Lex->GetCurrentToken();
 
-	isInFunctionBlock = MoveAndAssignTokenIndex(mptr_Lex, token);
 	if (!token->getLex().compare("{"))
 	{
-		while (isInFunctionBlock)
+		isInFunctionBlock = MoveAndAssignTokenIndex(mptr_Lex, token);
+		while (isInFunctionBlock && !EndOfFunctionBlock)
 		{
+			if (!token->getLex().compare("var"))
+			{
+				ISynState *ptr_VarState = new SynStateVar(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+				ptr_VarState->m_CategorySym = SymbolCategory::local_var;
+				ptr_VarState->CheckSyntax();
+				delete ptr_VarState;
+			}
+			/// TODO FINSH THIS 
+			else	if (!token->getLex().compare("return"))
+			{
+				MoveAndAssignTokenIndex(mptr_Lex, token);
+				if (CompareTokenTypes(token, "INT_NUMBER") || CompareTokenTypes(token, "FLOAT_NUMBER") || CompareTokenTypes(token, "LOGICAL_CONSTANT"))
+				{
+					MoveAndAssignTokenIndex(mptr_Lex, token);
+					if (!token->getLex().compare(g_Names::d_LineEnd))
+					{
+						MoveAndAssignTokenIndex(mptr_Lex, token);
+					}
+
+				}
+
+			}
+			if (!token->getLex().compare("}"))
+			{
+				EndOfFunctionBlock = true;
+
+				MoveAndAssignTokenIndex(mptr_Lex, token);
+				return true;
+			}
 
 
-
+			isInFunctionBlock = MoveAndAssignTokenIndex(mptr_Lex, token);
 		}
+
 	}
+	else
+	{
+		string  ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM("{", token->getLex().c_str());
+		mptr_Lex->m_refErrrorsMod->AddSynError(token->getLineNum(), ErrorDesc, "");
+		return false;
+	}
+
 	return false;
+}
+
+string Compiler::SynStateFunction::GetFunctionName() const
+{
+	return this->m_FunctionName;
 }

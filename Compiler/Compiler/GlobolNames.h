@@ -5,14 +5,14 @@ This file exist so i don't miss spell anything
 */
 namespace g_Names {
 
-	///Token names  
+	///Token Types   
 	static constexpr const char * t_ID = "ID";
 	static constexpr const char * t_Int = "INT_NUMBER";
 
 	///KeyWords 
 	static constexpr const char * k_Func = "function";
 
-	/// Error messages 
+	///  messages 
 	static string GlobalScope = "<GLOBAL SCOPE>";
 
 	///Valid Var endings 

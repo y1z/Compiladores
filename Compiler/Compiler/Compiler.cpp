@@ -16,7 +16,7 @@ cli::array<String^>^ Compiler::Manager::StartDataParsing()
 	if (ptr_Lex != nullptr)
 	{
 		// checks to see if there are any tokes or errors was generated 
-		if (0 < (Manager::ptr_Lex->GetTokenCount() + ptr_Lex->m_refErrrorsMod->GetErrorCount()))
+		if (0 < (Manager::ptr_Lex->GetTokenCount() + ptr_Lex->m_refErrrorsMod->GetErrorCount() + ptr_Table->TotalElementsCount()) )
 		{
 			// the plus 1 is there because i need to reserve a spot for the parser of this data 
 			uint32_t TotalSize = (ptr_Lex->GetTokenCount() + ptr_Lex->m_refErrrorsMod->GetErrorCount() + 1);
@@ -81,6 +81,8 @@ Compiler::Manager::Manager()
 	Manager::ptr_Lex = new LexAnalyzer(ptr_Error);
 	Manager::ptr_Semantic = new SemanticAnalysis();
 	Manager::ptr_Table = new SymbolsTable();
+	/// Need this for errors 
+	Manager::ptr_Table->m_refError = ptr_Error;
 	Manager::ptr_Syntax = new SyntaxAnalysis(ptr_Lex, ptr_Error, ptr_Table, ptr_Semantic);
 }
 
@@ -100,6 +102,7 @@ Compiler::Manager::~Manager()
 //! Entry Point for the Complier 
 cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 {
+	ptr_Table->Reset();
 	// clear all error messages 
 	ptr_Lex->m_refErrrorsMod->clearErrors();
 	// clear all tokens 
@@ -113,6 +116,8 @@ cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 	ptr_Syntax->checkSyntax();
 
 	cli::array<String^> ^CompiltionDetails = Manager::StartDataParsing();
+
+
 
 	return CompiltionDetails;
 }// end function
