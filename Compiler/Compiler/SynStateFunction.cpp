@@ -30,7 +30,7 @@ bool Compiler::SynStateFunction::CheckSyntax()
 		{
 			// check ID 
 		case('i'):
-			if (!TokenType.compare(g_Names::t_ID) || !Tok->getLex().compare("main"))
+			if (!TokenType.compare(GNames::t_ID) || !Tok->getLex().compare("main"))
 			{
 				m_FunctionName = Tok->getLex();
 				m_NodeArgs.SetSymbol(m_FunctionName.c_str());
@@ -38,7 +38,7 @@ bool Compiler::SynStateFunction::CheckSyntax()
 			}
 			else
 			{
-				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(g_Names::t_ID, TokenType.c_str());
+				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(GNames::t_ID, TokenType.c_str());
 				mptr_Lex->m_refErrrorsMod->AddSynError(Tok->getLineNum(), ErrorDesc, "");
 				return false;
 			}
@@ -117,7 +117,7 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 				m_NodeArgs.SetType("void");
 			}
 			// checking for the rest of the types
-			for (string ValidTypes : g_Names::AllVarAfter)
+			for (string ValidTypes : GNames::AllVarAfter)
 			{
 				if (!token->getLex().compare(ValidTypes))
 				{
@@ -125,7 +125,7 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 					m_NodeArgs.SetType(ValidTypes.c_str());
 					//add the symbol
 					mptr_SymbolsTable->AddSymbol(m_NodeArgs.GetSymblo(), m_NodeArgs.GetDimension(),
-						SymbolCategory::function, g_Names::GlobalScope,
+						SymbolCategory::function, GNames::GlobalScope,
 						m_NodeArgs.GetType(), m_NodeArgs.GetLineNum());
 
 					break;
@@ -185,7 +185,7 @@ bool Compiler::SynStateFunction::CheckFunctionBlock()
 				if (CompareTokenTypes(token, "INT_NUMBER") || CompareTokenTypes(token, "FLOAT_NUMBER") || CompareTokenTypes(token, "LOGICAL_CONSTANT"))
 				{
 					MoveAndAssignTokenIndex(mptr_Lex, token);
-					if (!token->getLex().compare(g_Names::d_LineEnd))
+					if (!token->getLex().compare(GNames::d_LineEnd))
 					{
 						MoveAndAssignTokenIndex(mptr_Lex, token);
 					}

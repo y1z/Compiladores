@@ -30,7 +30,7 @@ bool Compiler::SynStateParam::CheckSyntax()
 	MoveAndAssignTokenIndex(mptr_Lex, Tok);
 
 	// get ID 
-	if (CompareTokenTypes(Tok, g_Names::t_ID))
+	if (CompareTokenTypes(Tok, GNames::t_ID))
 	{
 		// making sure i don't get a param twice
 		bool alreadyGot = false;

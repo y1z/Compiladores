@@ -29,7 +29,7 @@ bool Compiler::SynStateVar::CheckSyntax()
 
 	int LineNumber = 0;
 	// find out if we get an ID 
-	if (!TokenTypeStr.compare(g_Names::t_ID))
+	if (!TokenTypeStr.compare(GNames::t_ID))
 	{
 		NameAndDim.first = mptr_Token->getLex();
 
@@ -53,7 +53,7 @@ bool Compiler::SynStateVar::CheckSyntax()
 	}
 	else// received a char that i was not expecting 
 	{
-		string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(g_Names::t_ID, TokenTypeStr.c_str());
+		string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(GNames::t_ID, TokenTypeStr.c_str());
 		mptr_Lex->m_refErrrorsMod->AddSynError(mptr_Token->getLineNum(), ErrorDesc, "");
 		isValid = false;
 	}
@@ -80,7 +80,7 @@ bool Compiler::SynStateVar::CheckSyntax()
 			m_VarType = mptr_Lex->GetCurrentToken()->getLex();
 			mptr_Lex->AdvanceTokenIndex();
 
-			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, g_Names::GlobalScope, m_VarType, LineNumber);
+			mptr_SymbolsTable->AddSymbol(NameAndDim.first, NameAndDim.second, m_CategorySym, GNames::GlobalScope, m_VarType, LineNumber);
 		}
 
 	}
@@ -160,7 +160,7 @@ int Compiler::SynStateVar::ParseSingle()
 
 		TokenType = TranslateToken(token->getType());
 
-		if (IsNumberSequence(token->getLex()) && !TokenType.compare(g_Names::t_Int))
+		if (IsNumberSequence(token->getLex()) && !TokenType.compare(GNames::t_Int))
 		{
 			Result = std::stoi(token->getLex());
 			Result * -1;
@@ -172,7 +172,7 @@ int Compiler::SynStateVar::ParseSingle()
 		MoveAndAssignTokenIndex(mptr_Lex, token);
 		TokenType = TranslateToken(token->getType());
 		//! make sure the value is an int 
-		if (!TokenType.compare(g_Names::t_Int))
+		if (!TokenType.compare(GNames::t_Int))
 		{
 			Result = std::stoi(token->getLex());
 		}
@@ -186,7 +186,7 @@ bool Compiler::SynStateVar::CheckForValidType()
 	mptr_Lex->AdvanceTokenIndex();
 	mptr_Token = mptr_Lex->GetCurrentToken();
 
-	for (string ValidTypes : g_Names::AllVarAfter)
+	for (string ValidTypes : GNames::AllVarAfter)
 	{
 		if (!mptr_Token->getLex().compare(ValidTypes))
 		{
@@ -215,9 +215,9 @@ bool Compiler::SynStateVar::CheckRecursionOrLineEnding()
 			mptr_Lex->AdvanceTokenIndex();
 			mptr_Token = mptr_Lex->GetCurrentToken();
 			// check for when the ';' char is not there
-			if (mptr_Token->getLex().compare(g_Names::d_LineEnd))
+			if (mptr_Token->getLex().compare(GNames::d_LineEnd))
 			{
-				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(g_Names::d_LineEnd, mptr_Token->getLex().c_str());
+				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(GNames::d_LineEnd, mptr_Token->getLex().c_str());
 				this->mptr_Lex->m_refErrrorsMod->AddSynError(mptr_Token->getLineNum(), ErrorDesc, "");
 				isValid = false;
 			}

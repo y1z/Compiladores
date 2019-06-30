@@ -28,7 +28,8 @@ bool Compiler::SynStateProgram::CheckSyntax()
 {
 	bool Continue = true;
 	//words
-	std::map<std::string, int> ValidWord = { { "var",0 },{"main",1} , {g_Names::k_Func,2} };
+	
+	std::map<std::string, int> ValidWord = { { "var",0 },{"main",1} , {GNames::k_Func,2} };
 
 	while (Continue)
 	{
