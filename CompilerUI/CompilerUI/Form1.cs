@@ -175,10 +175,9 @@ namespace CompilerUI
         String[] Output = ComplierDllInstance.compileProgram(MainTextBox.Text + '\0');
 
         // This trasfer the Parsed text to the output Text box (The black one)
-      
         DataParser dataParser = new DataParser();
-        
-        dataParser.ParseCompilerData(Output, ref m_TokenDataView, ref OutputTextBox,IsComplied);
+
+        dataParser.ParseCompilerData(Output, ref m_TokenDataView,ref m_SyntaxResultView, ref OutputTextBox,IsComplied);
 
         IsComplied = true;
       }
@@ -231,6 +230,7 @@ namespace CompilerUI
         {
           isSaveFileSet = true;
         }
+        
         // Change file every time the user change files 
         m_SaveFilePath = SaveFile.FileName;
         stream.Close();

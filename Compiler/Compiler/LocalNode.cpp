@@ -91,8 +91,7 @@ namespace Compiler {
 	{
 		string Result = std::to_string(m_LineNum) + '~';
 
-
-		Result += m_Symbol + '~' + this->TraslateSymbolCategory(m_SymbolCategory);
+		Result += m_Symbol + '~' + this->TraslateSymbolCategory(m_SymbolCategory) + '~';
 
 		Result += std::to_string(m_Dimension) + '~' + m_Type + '~' + m_Function;
 

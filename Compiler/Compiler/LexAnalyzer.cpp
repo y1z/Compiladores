@@ -38,7 +38,6 @@ Compiler::LexAnalyzer::~LexAnalyzer()
 {
 	this->ClearToken();
 	this->m_refErrrorsMod = nullptr;
-
 }
 //! Heres where the Parsing starts
 bool Compiler::LexAnalyzer::ParseSourceCode(const char * srcCode)
@@ -57,6 +56,7 @@ bool Compiler::LexAnalyzer::ParseSourceCode(const char * srcCode)
 
 void Compiler::LexAnalyzer::ClearToken()
 {
+	m_CurrentToken = 0;
 	if (!m_LexTokens.empty())
 	{
 		m_LexTokens.clear();
@@ -65,7 +65,7 @@ void Compiler::LexAnalyzer::ClearToken()
 
 bool Compiler::LexAnalyzer::AdvanceTokenIndex()
 {
-	if ((m_LexTokens.size() - 1) > m_CurrentToken )
+	if ((m_LexTokens.size() - 1) > m_CurrentToken)
 	{
 		++m_CurrentToken;
 		return true;
@@ -86,8 +86,12 @@ bool Compiler::LexAnalyzer::DecreaseTokenIndex()
 
 Token *Compiler::LexAnalyzer::GetCurrentToken()
 {
-	// get a pointer to the variable in the vector 
-	return &m_LexTokens[m_CurrentToken];
+	// get a pointer to the variable in the vector
+	if (m_LexTokens.size() > 0)
+	{
+		return &m_LexTokens[m_CurrentToken];
+	}
+	return nullptr;
 }
 
 Token Compiler::LexAnalyzer::PickToken(std::size_t Index)
@@ -124,9 +128,9 @@ void Compiler::LexAnalyzer::SetTokenIndex(std::size_t Index)
 }
 
 
-std::string Compiler::LexAnalyzer::GetTokenCountString(std::string &Result)
+std::string Compiler::LexAnalyzer::GetTokenCountString()
 {
-	Result = std::to_string(this->m_LexTokens.size());
+	std::string Result = std::to_string(this->m_LexTokens.size());
 
 	return Result;
 }

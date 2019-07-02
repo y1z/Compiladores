@@ -12,7 +12,7 @@ namespace GNames {
 	//! this is the code for parsing Lexical information for the compiler 
 	static constexpr const char * code_Lexical = "#LE_";
 	//! this is the code for parsing Syntactic information for the compiler 
-	static constexpr const char * code_Syntactic = "#SY_";
+	static constexpr const char  code_Syntactic[] = "#SY_";
 	//! this is the code for parsing Semantic information for the compiler 
 	static constexpr const char * code_Semantic = "#SM_";
 
@@ -23,6 +23,11 @@ namespace GNames {
 	static constexpr const char * t_LogConst = "LOGICAL_CONSTANT"; 
 	static constexpr const char * t_ReOp = "RELATIONAL_OPERATOR";
 	static constexpr const char * t_LogOp = "LOGICAL_OPERATOR";
+
+	/// SymbolCategory Translations
+	static constexpr const char * GLO_VAR = "Global Var";
+	static constexpr const char * LO_VAR= "Local Var";
+
 
 	///KeyWords 
 	static constexpr const char * k_Func = "function";

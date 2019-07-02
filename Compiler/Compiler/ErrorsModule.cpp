@@ -27,7 +27,7 @@ void Compiler::ErrorsModule::clearErrors()
 // check if there is less than 30 errors
 bool Compiler::ErrorsModule::addError(ERROR_PHASE phase, int LineNumber, String ^ ErrorDesc, String ^ errorLine)
 {
-	if (m_numError < (MAX_ERRRORS - 1))
+	if (m_numError < (MAX_ERRRORS ))
 	{
 		m_errorArray->SetValue(String::Format("{0} :\t{1} \t{2}\t{3}", phase.ToString(), LineNumber, ErrorDesc, errorLine), m_numError);
 		m_numError++;
@@ -64,7 +64,6 @@ bool Compiler::ErrorsModule::AddSemError(uint32_t LineNumber, const std::string 
 	String^ ErrorLineConverted = gcnew String(OriginalErrorLine.c_str());
 
 	return addError(SemError, LineNumber, ErrorDescConverted, ErrorLineConverted);
-	return false;
 }
 
 int Compiler::ErrorsModule::GetErrorCount()
@@ -83,17 +82,14 @@ bool Compiler::ErrorsModule::IsMaxErrorReached()
 }
 
 
-std::string Compiler::ErrorsModule::GetErrorCountString(std::string &Result)
+std::string Compiler::ErrorsModule::GetErrorCountString()
 {
-	Result = std::to_string(m_numError);
+	std::string Result = std::to_string(m_numError);
 
 	return Result;
 }
 
-//const char * Compiler::ErrorsModule::GetErrorCountString()
-//{
-//	std::string Temp;
-//	Temp = std::to_string(m_numError);
-//	const char * Result = Temp.c_str();
-//	return Result;
-//}
+int Compiler::ErrorsModule::GetMaxError()
+{
+	return MAX_ERRRORS;
+}

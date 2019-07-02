@@ -56,6 +56,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 		// main keyword
 		else	if (StateSelected == 1)
 		{
+			isMainFound = true;
 			mptr_Lex->DecreaseTokenIndex();
 			ISynState * FunctionState = new SynStateFunction(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
 			FunctionState->m_CategorySym = SymbolCategory::function;
@@ -68,7 +69,6 @@ bool Compiler::SynStateProgram::CheckSyntax()
 		//function keyword 
 		else	if (StateSelected == 2)
 		{
-			isMainFound = true;
 			ISynState * FunctionState = new SynStateFunction(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
 			FunctionState->m_CategorySym = SymbolCategory::function;
 
@@ -82,54 +82,6 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			mptr_Lex->m_refErrrorsMod->AddSynError(ptr_Tok->getLineNum(), ErrorDecs, "");
 			return false;
 		}
-
-
 	}
-
-
-
-	//while (Continue)
-	//{
-	//const Token *ptr_Tok = mptr_Lex->GetCurrentToken();
-	//	// check if the token is correct
-	//	if (!ptr_Tok->getLex().compare("var"))
-	//	{
-	//		ISynState * VarState = new SynStateVar(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
-	//		// if not in a function the var is global 
-	//		VarState->m_CategorySym = SymbolCategory::global_var;
-	//		VarState->CheckSyntax();
-	//		MoveAndAssignTokenIndex(mptr_Lex, ptr_Tok);
-	//		delete VarState;
-	//	}
-	//	// this is the function state 
-	//  if (!ptr_Tok->getLex().compare(g_Names::k_Func))
-	//	{
-	//		ISynState * FunctionState = new SynStateFunction(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
-	//		FunctionState->m_CategorySym = SymbolCategory::function;
-	//		FunctionState->CheckSyntax();
-	//		ptr_Tok = mptr_Lex->GetCurrentToken();
-	//		delete FunctionState;
-	//	}
-	//  if (!ptr_Tok->getLex().compare("main"))
-	//	{
-	//		mptr_Lex->DecreaseTokenIndex();
-	//		isMainFound = true;
-	//		ISynState * FunctionState = new SynStateFunction(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
-	//		FunctionState->m_CategorySym = SymbolCategory::function;
-	//		
-	//		FunctionState->CheckSyntax();
-	//		ptr_Tok = mptr_Lex->GetCurrentToken();
-	//		delete FunctionState;
-	//	}
-	//	else
-	//	{
-	//		string ErrorDecs  = ErrorFuncs::SYN_UNEXPECTED_SYM("main", ptr_Tok->getLex().c_str());
-	//		mptr_Lex->m_refErrrorsMod->AddSynError(ptr_Tok->getLineNum(), ErrorDecs, "");
-	//		return false;
-	//	}
-
-	//	Continue = mptr_Lex->AdvanceTokenIndex();
-	//}
-
 	return false;
 }

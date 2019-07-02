@@ -46,17 +46,20 @@ namespace CompilerUI
 
     //! to know which order to do the parse-sing
     /*---------------------------Functions---------------------------*/
-    public bool ParseCompilerData(String[] CompilerData, ref DataGridView DataView, ref TextBox ErrorText, bool isAlreadyCompiled)
+    public bool ParseCompilerData(String[] CompilerData, ref DataGridView DataView, ref DataGridView SynDataView, ref TextBox ErrorText, bool isAlreadyCompiled)
     {
       ScanningForParams(CompilerData);
       // check to see if it's a good idea to clear the DataGridView 
       if (isAlreadyCompiled)
       {
+        SynDataView.Rows.Clear();
+        SynDataView.Refresh();
+
         DataView.Rows.Clear();
         DataView.Refresh();
       }
 
-      ExacuteParams(CompilerData, ref DataView, ref ErrorText);
+      ExacuteParams(CompilerData, ref DataView, ref SynDataView, ref ErrorText);
 
       return true;
     }// end function 
@@ -150,6 +153,7 @@ namespace CompilerUI
         if (Index > Numbers.Length - 1) { break; }
       }
       int.TryParse(JustNumber, out Result);
+
       return Result;
     }// end function 
     /// <summary>
@@ -157,13 +161,12 @@ namespace CompilerUI
     /// </summary>
     /// <param name="CompilerData"></param>
     /// <param name="ErrorText"></param>
-    private void ExacuteParams(String[] CompilerData, ref DataGridView DataView, ref TextBox ErrorText)
+    private void ExacuteParams(String[] CompilerData, ref DataGridView DataView, ref DataGridView SynDataView, ref TextBox ErrorText)
     {
       int IterationCount = 1;
       /*! \todo add the syntactic and semantic parsing later */
       for (int i = 0; i < m_OrderOfParse.Count; ++i)
       {
-
         switch (m_OrderOfParse[i])
         {
           case ParseModes.UNKNOWN:
@@ -175,6 +178,7 @@ namespace CompilerUI
             InsertLex(CompilerData, ref DataView, ref IterationCount, m_ParamArgsCount[i]);
             break;
           case ParseModes.SytaxReading:
+            InsertSyn(CompilerData, ref SynDataView, ref IterationCount, m_ParamArgsCount[i]);
             break;
           case ParseModes.SemanticReading:
             break;
@@ -257,6 +261,80 @@ namespace CompilerUI
         Line = "";
       }// end for 
 
+    }// end function 
+    /// <summary>
+    /// This is where we insert the results of the Syntax State 
+    /// </summary>
+    /// <param name="CompilerData"></param>
+    /// <param name="SynDataView"></param>
+    /// <param name="IterationCount"></param>
+    /// <param name="ParamCount"></param>
+    private void InsertSyn(String[] CompilerData, ref DataGridView SynDataView, ref int IterationCount, int ParamCount)
+    {
+      int CompilerEndPos = IterationCount + ParamCount;
+
+      String NumLine = "";
+      String Name = "";
+      String Category = "";
+      String Lenght = "";
+      String DataType = "";
+      String InFunction = "";
+
+      Byte SynArgCount = 0;
+      for (int i = CompilerEndPos; IterationCount < i; ++IterationCount)
+      {
+        foreach (char chr in CompilerData[IterationCount])
+        {
+
+          if (chr != '~' && SynArgCount % 6 == 0)
+          {
+            NumLine += chr;
+          }
+          else if (chr != '~' && SynArgCount % 6 == 1)
+          {
+            Name += chr;
+          }
+          else if (chr != '~' && SynArgCount % 6 == 2)
+          {
+            Category += chr;
+          }
+          else if (chr != '~' && SynArgCount % 6 == 3)
+          {
+            Lenght += chr;
+          }
+          else if (chr != '~' && SynArgCount % 6 == 4)
+          {
+            DataType += chr;
+          }
+          else if (chr != '~' && SynArgCount % 6 == 5)
+          {
+            InFunction += chr;
+          }
+
+          else { SynArgCount++; }
+        }// end foreach
+
+        SynArgCount = 0;
+        DataGridViewRow dataGridView = new DataGridViewRow();
+
+        dataGridView.CreateCells(SynDataView);
+
+        dataGridView.Cells[0].Value = NumLine;
+        dataGridView.Cells[1].Value = Name;
+        dataGridView.Cells[2].Value = Category;
+        dataGridView.Cells[3].Value = DataType;
+        dataGridView.Cells[4].Value = Lenght;
+        dataGridView.Cells[5].Value = InFunction;
+
+        SynDataView.Rows.Add(dataGridView);
+
+        NumLine = "";
+        Name = "";
+        Category = "";
+        Lenght = "";
+        DataType = "";
+        InFunction = "";
+      }// end for 
     }// end function 
 
     private void InitializeComponent()

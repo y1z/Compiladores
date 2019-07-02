@@ -30,8 +30,12 @@
       {
       this.MainTextBox = new System.Windows.Forms.TextBox();
       this.m_TokenDataView = new System.Windows.Forms.DataGridView();
+      this.Lexim = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.OutputTextBox = new System.Windows.Forms.TextBox();
-      this.dataGridView2 = new System.Windows.Forms.DataGridView();
+      this.m_SyntaxResultView = new System.Windows.Forms.DataGridView();
+      this.LineNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.Data_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,11 +58,8 @@
       this.semanticAnalisisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.lexicalAnalisisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.sintacticAnalisisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.Lexim = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.m_TokenDataView)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_SyntaxResultView)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -68,10 +69,10 @@
       this.MainTextBox.BackColor = System.Drawing.Color.Indigo;
       this.MainTextBox.Font = new System.Drawing.Font("Lucida Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.MainTextBox.ForeColor = System.Drawing.Color.Yellow;
-      this.MainTextBox.Location = new System.Drawing.Point(23, 63);
+      this.MainTextBox.Location = new System.Drawing.Point(23, 45);
       this.MainTextBox.Multiline = true;
       this.MainTextBox.Name = "MainTextBox";
-      this.MainTextBox.Size = new System.Drawing.Size(1667, 577);
+      this.MainTextBox.Size = new System.Drawing.Size(1742, 588);
       this.MainTextBox.TabIndex = 0;
       this.MainTextBox.TextChanged += new System.EventHandler(this.MainTextBox_TextChanged);
       // 
@@ -83,44 +84,78 @@
             this.Type,
             this.Line});
       this.m_TokenDataView.GridColor = System.Drawing.SystemColors.Desktop;
-      this.m_TokenDataView.Location = new System.Drawing.Point(1691, 63);
+      this.m_TokenDataView.Location = new System.Drawing.Point(1771, 63);
       this.m_TokenDataView.Name = "m_TokenDataView";
       this.m_TokenDataView.ReadOnly = true;
       this.m_TokenDataView.RowTemplate.Height = 40;
-      this.m_TokenDataView.Size = new System.Drawing.Size(992, 559);
+      this.m_TokenDataView.Size = new System.Drawing.Size(1191, 559);
       this.m_TokenDataView.TabIndex = 1;
       this.m_TokenDataView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
+      // 
+      // Lexim
+      // 
+      this.Lexim.Frozen = true;
+      this.Lexim.HeaderText = "Lexema";
+      this.Lexim.MinimumWidth = 20;
+      this.Lexim.Name = "Lexim";
+      this.Lexim.ReadOnly = true;
+      // 
+      // Type
+      // 
+      this.Type.Frozen = true;
+      this.Type.HeaderText = "Type";
+      this.Type.MinimumWidth = 20;
+      this.Type.Name = "Type";
+      this.Type.ReadOnly = true;
+      this.Type.Width = 150;
+      // 
+      // Line
+      // 
+      this.Line.HeaderText = "Line";
+      this.Line.MinimumWidth = 20;
+      this.Line.Name = "Line";
+      this.Line.ReadOnly = true;
+      this.Line.Width = 50;
       // 
       // OutputTextBox
       // 
       this.OutputTextBox.BackColor = System.Drawing.SystemColors.ControlText;
       this.OutputTextBox.ForeColor = System.Drawing.SystemColors.HighlightText;
-      this.OutputTextBox.Location = new System.Drawing.Point(23, 646);
+      this.OutputTextBox.Location = new System.Drawing.Point(12, 639);
       this.OutputTextBox.Multiline = true;
       this.OutputTextBox.Name = "OutputTextBox";
       this.OutputTextBox.ReadOnly = true;
       this.OutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.OutputTextBox.Size = new System.Drawing.Size(2692, 300);
+      this.OutputTextBox.Size = new System.Drawing.Size(2950, 352);
       this.OutputTextBox.TabIndex = 2;
       this.OutputTextBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
       // 
-      // dataGridView2
+      // m_SyntaxResultView
       // 
-      this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+      this.m_SyntaxResultView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.m_SyntaxResultView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.LineNum,
             this.Name,
             this.Category,
             this.Data_Type,
             this.Length,
             this.In_Function});
-      this.dataGridView2.GridColor = System.Drawing.SystemColors.Desktop;
-      this.dataGridView2.Location = new System.Drawing.Point(12, 943);
-      this.dataGridView2.Name = "dataGridView2";
-      this.dataGridView2.ReadOnly = true;
-      this.dataGridView2.RowTemplate.Height = 40;
-      this.dataGridView2.Size = new System.Drawing.Size(2617, 236);
-      this.dataGridView2.TabIndex = 3;
-      this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
+      this.m_SyntaxResultView.GridColor = System.Drawing.SystemColors.Desktop;
+      this.m_SyntaxResultView.Location = new System.Drawing.Point(23, 1017);
+      this.m_SyntaxResultView.Name = "m_SyntaxResultView";
+      this.m_SyntaxResultView.ReadOnly = true;
+      this.m_SyntaxResultView.RowTemplate.Height = 40;
+      this.m_SyntaxResultView.Size = new System.Drawing.Size(2939, 370);
+      this.m_SyntaxResultView.TabIndex = 3;
+      this.m_SyntaxResultView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
+      // 
+      // LineNum
+      // 
+      this.LineNum.HeaderText = "LineNum";
+      this.LineNum.MinimumWidth = 50;
+      this.LineNum.Name = "LineNum";
+      this.LineNum.ReadOnly = true;
+      this.LineNum.Width = 200;
       // 
       // Name
       // 
@@ -167,7 +202,7 @@
             this.opcionesToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(2695, 49);
+      this.menuStrip1.Size = new System.Drawing.Size(2969, 49);
       this.menuStrip1.TabIndex = 4;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -287,38 +322,13 @@
       this.sintacticAnalisisToolStripMenuItem.Size = new System.Drawing.Size(359, 46);
       this.sintacticAnalisisToolStripMenuItem.Text = "Sintactic Analisis";
       // 
-      // Lexim
-      // 
-      this.Lexim.Frozen = true;
-      this.Lexim.HeaderText = "Lexema";
-      this.Lexim.MinimumWidth = 20;
-      this.Lexim.Name = "Lexim";
-      this.Lexim.ReadOnly = true;
-      // 
-      // Type
-      // 
-      this.Type.Frozen = true;
-      this.Type.HeaderText = "Type";
-      this.Type.MinimumWidth = 20;
-      this.Type.Name = "Type";
-      this.Type.ReadOnly = true;
-      this.Type.Width = 150;
-      // 
-      // Line
-      // 
-      this.Line.HeaderText = "Line";
-      this.Line.MinimumWidth = 20;
-      this.Line.Name = "Line";
-      this.Line.ReadOnly = true;
-      this.Line.Width = 50;
-      // 
       // CompilerWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoSize = true;
-      this.ClientSize = new System.Drawing.Size(2695, 1179);
-      this.Controls.Add(this.dataGridView2);
+      this.ClientSize = new System.Drawing.Size(2969, 1430);
+      this.Controls.Add(this.m_SyntaxResultView);
       this.Controls.Add(this.OutputTextBox);
       this.Controls.Add(this.m_TokenDataView);
       this.Controls.Add(this.MainTextBox);
@@ -328,7 +338,7 @@
       this.Text = "Compilador";
       this.Load += new System.EventHandler(this.Form1_Load);
       ((System.ComponentModel.ISupportInitialize)(this.m_TokenDataView)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_SyntaxResultView)).EndInit();
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       this.ResumeLayout(false);
@@ -341,7 +351,7 @@
       private System.Windows.Forms.TextBox MainTextBox;
       private System.Windows.Forms.DataGridView m_TokenDataView;
       private System.Windows.Forms.TextBox OutputTextBox;
-      private System.Windows.Forms.DataGridView dataGridView2;
+      private System.Windows.Forms.DataGridView m_SyntaxResultView;
       private System.Windows.Forms.MenuStrip menuStrip1;
       private System.Windows.Forms.ToolStripMenuItem archivoToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem nuevoToolStripMenuItem;
@@ -358,15 +368,16 @@
       private System.Windows.Forms.ToolStripMenuItem semanticAnalisisToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem lexicalAnalisisToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem sintacticAnalisisToolStripMenuItem;
-      private System.Windows.Forms.DataGridViewTextBoxColumn Name;
-      private System.Windows.Forms.DataGridViewTextBoxColumn Category;
-      private System.Windows.Forms.DataGridViewTextBoxColumn Data_Type;
-      private System.Windows.Forms.DataGridViewTextBoxColumn Length;
-      private System.Windows.Forms.DataGridViewTextBoxColumn In_Function;
       private System.Windows.Forms.ToolStripMenuItem abrirToolStripMenuItem;
     private System.Windows.Forms.DataGridViewTextBoxColumn Lexim;
     private System.Windows.Forms.DataGridViewTextBoxColumn Type;
     private System.Windows.Forms.DataGridViewTextBoxColumn Line;
+    private System.Windows.Forms.DataGridViewTextBoxColumn LineNum;
+    private System.Windows.Forms.DataGridViewTextBoxColumn Name;
+    private System.Windows.Forms.DataGridViewTextBoxColumn Category;
+    private System.Windows.Forms.DataGridViewTextBoxColumn Data_Type;
+    private System.Windows.Forms.DataGridViewTextBoxColumn Length;
+    private System.Windows.Forms.DataGridViewTextBoxColumn In_Function;
   }
 }
 

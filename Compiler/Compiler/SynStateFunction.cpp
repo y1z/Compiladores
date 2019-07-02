@@ -11,7 +11,7 @@ Compiler::SynStateFunction::SynStateFunction(LexAnalyzer *ptr_Lex, SyntaxAnalysi
 
 Compiler::SynStateFunction::~SynStateFunction()
 {}
-//! already found the key word "function"
+// already found the key word "function"
 bool Compiler::SynStateFunction::CheckSyntax()
 {
 	bool Continue = mptr_Lex->AdvanceTokenIndex();
@@ -24,6 +24,7 @@ bool Compiler::SynStateFunction::CheckSyntax()
 	while (Continue && SequencePos < ExpectedSequence.size())
 	{
 		ReadOnlyToken Tok = mptr_Lex->GetCurrentToken();
+
 		string TokenType = TranslateToken(Tok->getType());
 
 		switch (ExpectedSequence[SequencePos])
@@ -34,6 +35,7 @@ bool Compiler::SynStateFunction::CheckSyntax()
 			{
 				m_FunctionName = Tok->getLex();
 				m_NodeArgs.SetSymbol(m_FunctionName.c_str());
+				m_NodeArgs.SetLineNum(Tok->getLineNum());
 				m_NodeArgs.SetDimension(0);
 			}
 			else
@@ -73,7 +75,7 @@ bool Compiler::SynStateFunction::CheckSyntax()
 				// making sure to register the params 
 				for (auto &Node : m_ParamNodes)
 				{
-					mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetLineNum(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());
+					mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetDimension(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());
 				}
 				// Making the Error
 				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(&ExpectedSequence[SequencePos], Tok->getLex().c_str());
@@ -127,7 +129,6 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 					mptr_SymbolsTable->AddSymbol(m_NodeArgs.GetSymblo(), m_NodeArgs.GetDimension(),
 						SymbolCategory::function, GNames::GlobalScope,
 						m_NodeArgs.GetType(), m_NodeArgs.GetLineNum());
-
 					break;
 				}
 			}
@@ -145,7 +146,7 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 		// making sure to register the params 
 		for (auto &Node : m_ParamNodes)
 		{
-			mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetLineNum(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());
+			mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetDimension(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());
 		}
 
 		return CheckFunctionBlock();
