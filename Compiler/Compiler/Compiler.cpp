@@ -5,7 +5,6 @@
 #include <string>
 #include <queue>
 
-
 void Compiler::Manager::StartLexAnalysis(String ^ srcCode)
 {
 	// here starts the parsing 

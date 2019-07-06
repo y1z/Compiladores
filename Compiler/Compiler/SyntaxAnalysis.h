@@ -19,7 +19,6 @@ namespace Compiler {
 		void checkSyntax();
 
 	private:// variables 
-
 		LexAnalyzer* mptr_Lex = nullptr;
 		msclr::gcroot<ErrorsModule ^> mref_ErrorMod;
 		SymbolsTable *mptr_Table = nullptr;

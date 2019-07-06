@@ -77,7 +77,6 @@ namespace Compiler {
 
 			else/// making dsure we don't have a local_var with the same name o
 			{
-
 				string ErrorDesc = ErrorFuncs::SYN_ALREADY_DIFINED(Cat, gNode->GetSymbolCategory());
 				string DuplicateSymbol = "Symbol "s + Sym;
 				m_refError->AddSynError(LineNum, ErrorDesc, DuplicateSymbol);

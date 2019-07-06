@@ -20,7 +20,7 @@ Compiler::ISynState::ISynState(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, IS
 
 Compiler::ISynState::~ISynState()
 {
-	PrintToConsole(" State Destructor : {0} ", std::string("Based"));
+	PrintToConsole(" State Exit : {0} ",m_StateName);
 }
 
 //void Compiler::ISynState::InitState(LexAnalyzer * ptr_Lex, SyntaxAnalysis * ptr_Syn, ISynState * ptr_PrevState, SymbolsTable * ptr_Symblos)

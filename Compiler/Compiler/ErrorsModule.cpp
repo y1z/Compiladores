@@ -81,7 +81,6 @@ bool Compiler::ErrorsModule::IsMaxErrorReached()
 	return true;
 }
 
-
 std::string Compiler::ErrorsModule::GetErrorCountString()
 {
 	std::string Result = std::to_string(m_numError);

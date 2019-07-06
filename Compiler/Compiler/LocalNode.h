@@ -28,7 +28,7 @@ namespace Compiler {
 		void	SetFunctionName(const char *Symblo);
 		void	SetSymbol(const char *Symblo);
 		void	SetType(const char *TypeName);
-		void	SetSymbolCategory(SymbolCategory SymbolCategory);
+		void	SetSymbolCategory(SymbolCategory SymCat);
 		void	SetDimension(int32_t Dim);
 		void	SetLineNum(uint32_t Num);
 		void	SetValPtr(void *ptr);
