@@ -76,7 +76,7 @@ bool Compiler::LexAnalyzer::AdvanceTokenIndex()
 bool Compiler::LexAnalyzer::DecreaseTokenIndex()
 {
 
-	if ((m_CurrentToken - 1) >= 0)
+	if (m_CurrentToken != 0 && (m_CurrentToken - 1) > 0)
 	{
 		--m_CurrentToken;
 		return true;
@@ -87,7 +87,7 @@ bool Compiler::LexAnalyzer::DecreaseTokenIndex()
 Token *Compiler::LexAnalyzer::GetCurrentToken()
 {
 	// get a pointer to the variable in the vector
-	if (m_LexTokens.size() > 0)
+	if (m_LexTokens.size() > m_CurrentToken)
 	{
 		return &m_LexTokens[m_CurrentToken];
 	}

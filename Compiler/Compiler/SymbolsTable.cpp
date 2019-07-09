@@ -38,6 +38,17 @@ namespace Compiler {
 			}
 			m_Symbols.clear();
 		}
+		// only delete the local nodes from main node 
+		if (m_MainNode != nullptr)
+		{
+			LocalNode *lNodes = m_MainNode->GetLocalNode();
+			if (lNodes != nullptr)
+			{
+				delete lNodes;
+			}
+
+		}
+
 	}
 
 	bool SymbolsTable::SymbolExists(const std::string & Sym, SymbolCategory Cat, std::string & Function, int LineNum)
@@ -58,6 +69,7 @@ namespace Compiler {
 				m_refError->AddSynError(LineNum, ErrorMessage, Symblo);
 				break;
 			}
+
 			return true;
 		}
 
@@ -67,6 +79,7 @@ namespace Compiler {
 			auto IsInserted = m_Symbols.find(Sym);
 			// get the node that contains the value 
 			GlobalNode * gNode = IsInserted->second;
+			LocalNode * lNode = IsInserted->second->GetLocalNode();
 			/// making sure we don't have to functions/global_vars with the same names 
 			if (gNode->GetSymbolCategory() == Cat)
 			{
@@ -75,8 +88,11 @@ namespace Compiler {
 				return true;
 			}
 
-			else/// making dsure we don't have a local_var with the same name o
+			else/// making sure we don't have a local_var with the same name
 			{
+
+
+
 				string ErrorDesc = ErrorFuncs::SYN_ALREADY_DIFINED(Cat, gNode->GetSymbolCategory());
 				string DuplicateSymbol = "Symbol "s + Sym;
 				m_refError->AddSynError(LineNum, ErrorDesc, DuplicateSymbol);
@@ -84,29 +100,131 @@ namespace Compiler {
 			}
 		}
 
-		if (m_Symbols.find(Function) != m_Symbols.end() || !Function.compare(GNames::k_Main))
+		if (Cat == SymbolCategory::local_var || Cat == SymbolCategory::param)
 		{
-			auto DefinedSymbol = m_Symbols.find(Function);
-			string ErrorDecs{ 0 };
+			this->LocalSymbolsSearch(Sym, Cat, Function, LineNum);
+		}
+		//if (m_Symbols.find(Function) != m_Symbols.end() || !Function.compare(GNames::k_Main))
+		//{
+		//	auto DefinedSymbol = m_Symbols.find(Function);
+		//	string ErrorDecs{ 0 };
+		//	PrintToConsole("Here is the Symbol with a the same name as a function {0}", DefinedSymbol->first);
+		//	switch (Cat)
+		//	{
+		//	case Compiler::SymbolCategory::unknown:
+		//		break;
+		//	case Compiler::SymbolCategory::global_var:
 
-			switch (Cat)
+		//		break;
+		//	case Compiler::SymbolCategory::local_var:
+		//		ErrorDecs = ErrorFuncs::SYN_SAME_NAME(Cat, DefinedSymbol->second->GetSymbolCategory());
+		//		this->m_refError->AddSynError(LineNum, ErrorDecs, "Symbol "s + Sym);
+		//		return true;
+		//		break;
+		//	case Compiler::SymbolCategory::param:
+		//		ErrorDecs = ErrorFuncs::SYN_SAME_NAME(Cat, DefinedSymbol->second->GetSymbolCategory());
+		//		this->m_refError->AddSynError(LineNum, ErrorDecs, "Symbol "s + Sym);
+		//		return true;
+		//		break;
+		//	case Compiler::SymbolCategory::function:
+		//		break;
+		//	}
+		//}
+		return false;
+	}
+
+	bool SymbolsTable::LocalSymbolsSearch(const std::string & Sym, SymbolCategory Cat, std::string & Function, int LineNum)
+	{
+		bool isMainFunc = false;
+		Compiler::GlobalNode* SeachableNodes;
+		if (!Function.compare("main"))
+		{
+			isMainFunc = true;
+			SeachableNodes = m_MainNode;
+		}
+		else
+		{
+			SeachableNodes = m_Symbols.find(Function)->second;
+		}
+
+		if (Cat == SymbolCategory::local_var)
+		{
+			// find the function the local_var belongs to 
+			if (m_Symbols.find(Function) != m_Symbols.end() || isMainFunc == true)
 			{
-			case Compiler::SymbolCategory::unknown:
-				break;
-			case Compiler::SymbolCategory::global_var:
+				LocalNode* lNode = SeachableNodes->GetLocalNode();
+				// go through all nodes use "Result" to find out 
+				std::pair<bool, SymbolCategory> Result = { false,SymbolCategory::unknown };
+				// find out if the symbol is a duplicate 
+				if (lNode != nullptr)
+				{
+					Result = lNode->FindDuplicate(Sym);
 
-				break;
-			case Compiler::SymbolCategory::local_var:
-				ErrorDecs = ErrorFuncs::SYN_SAME_NAME(Cat, DefinedSymbol->second->GetSymbolCategory());
-				this->m_refError->AddSynError(LineNum, ErrorDecs, "Symbol "s + Sym);
-				return true;
-				break;
-			case Compiler::SymbolCategory::param:
-				break;
-			case Compiler::SymbolCategory::function:
-				break;
+					if (Result.first == true)
+					{
+						string ErrorDesc;
+						switch (Result.second)
+						{
+						case Compiler::SymbolCategory::local_var:
+							ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
+							ErrorDesc += " in the same function";
+							this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
+							return true;
+							break;
+						case Compiler::SymbolCategory::param:
+							ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
+							ErrorDesc += " in the same function";
+							this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
+							return true;
+							break;
+						default:
+							PrintToConsole("Something went wrong in the function 'LocalSymbolsSearch' in the symbolTable.cpp");
+							break;
+						}
+					}
+				}
+				return Result.first;
 			}
 		}
+		else if (Cat == SymbolCategory::param)
+		{
+			// find the function the local_var belongs to 
+			if (m_Symbols.find(Function) != m_Symbols.end() || isMainFunc == true)
+			{
+				LocalNode* lNode = SeachableNodes->GetLocalNode();
+				// go through all nodes use "Result" to find out 
+				std::pair<bool, SymbolCategory> Result = { false,SymbolCategory::unknown };
+				// find out if the symbol is a duplicate 
+				if (lNode != nullptr)
+				{
+					Result = lNode->FindDuplicate(Sym);
+					if (Result.first == true)
+					{
+						string ErrorDesc;
+						switch (Result.second)
+						{
+						case Compiler::SymbolCategory::local_var:
+							ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
+							ErrorDesc += " in the same function";
+							this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
+							return true;
+							break;
+						case Compiler::SymbolCategory::param:
+							ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
+							ErrorDesc += " in the same function";
+							this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
+							return true;
+							break;
+						default:
+							PrintToConsole("Something went wrong in the function 'LocalSymbolsSearch' in the symbolTable.cpp");
+							break;
+						}
+					}
+				}
+				return Result.first;
+			}
+		}
+
 		return false;
 	}
 
@@ -144,10 +262,11 @@ namespace Compiler {
 	std::vector<std::string> SymbolsTable::ComplierInfo()
 	{
 		std::vector<string> Result;
-
+		// get all the information from the nodes already formated in a string 
 		for (const auto &Node : this->m_Symbols)
 		{
 			Result.emplace_back(Node.second->GetDataForCompiler());
+
 			LocalNode * Temp = Node.second->GetLocalNode();
 			// getting the data from m_Symbols 
 			while (Temp != nullptr)
@@ -157,7 +276,7 @@ namespace Compiler {
 			}
 
 		}
-
+		//get all data from 'main' node 
 		LocalNode *MainNodes = m_MainNode->GetLocalNode();
 		while (MainNodes != nullptr)
 		{
@@ -188,7 +307,7 @@ namespace Compiler {
 		}
 		return false;
 	}
-	// end function 
+	// 
 	int64_t SymbolsTable::TotalElementsCount()
 	{
 		int64_t Result = 0;
@@ -223,8 +342,6 @@ namespace Compiler {
 				AddSymbolToMain(Symbol, dim, Cat, function, Type, LineNum);
 				return true;
 			}
-
-
 			if (Cat == SymbolCategory::global_var)
 			{
 				m_Symbols[Symbol] = new GlobalNode();
@@ -253,34 +370,7 @@ namespace Compiler {
 				auto IsInserted = m_Symbols.find(function);
 				GlobalNode *gNode = IsInserted->second;
 				LocalNode *lNode = gNode->GetLocalNode();
-				if (m_Symbols.find(function) != m_Symbols.end())
-				{
-					// go through all nodes 
-					while (lNode != nullptr)
-					{
-						if (!lNode->GetSymbol().compare(Symbol))
-						{
-							IsSimbloDuplicate = true;
-						}
-						lNode = lNode->GetLocalNode();
-					}
-					if (IsSimbloDuplicate == false)
-					{
-						LocalNode *ptr_lNode = new LocalNode();
-						ptr_lNode->SetDimension(dim);
-						ptr_lNode->SetFunctionName(function.c_str());
-						ptr_lNode->SetSymbolCategory(Cat);
-						ptr_lNode->SetSymbol(Symbol.c_str());
-						ptr_lNode->SetType(Type.c_str());
-						ptr_lNode->SetLineNum(LineNum);
 
-						gNode->AddLocalNode(ptr_lNode);
-					}
-					else
-					{
-						ErrorFuncs::SYN_ALREADY_IN_SCOPE(Symbol.c_str());
-					}
-				}
 			}
 
 			if (Cat == SymbolCategory::param)

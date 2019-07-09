@@ -4,7 +4,7 @@ namespace Compiler {
 	class SynStateFunctionBlock :
 		public ISynState
 	{
-	public:
+	public:// constructors
 		SynStateFunctionBlock(LexAnalyzer *Lex, 
 			SyntaxAnalysis *Syn, 
 			ISynState *PrevState, 
@@ -15,5 +15,7 @@ namespace Compiler {
 		~SynStateFunctionBlock();
 
 		bool CheckSyntax()override;
+	public:// variables 
+		string m_FunctionName;
 	};
 }

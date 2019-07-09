@@ -10,7 +10,7 @@ namespace ErrorFuncs {
 		Result += Expected;
 		Result += ">' but got: ";
 		Result += WrongLex;
-	
+
 		return Result;
 	}
 
@@ -27,14 +27,14 @@ namespace ErrorFuncs {
 	{
 		string Result{ "" };
 		if (Original == Compiler::SymbolCategory::function) { Result += GNames::k_Func; }
-		else if (Original == Compiler::SymbolCategory::local_var) { Result +="Local Var"; }
+		else if (Original == Compiler::SymbolCategory::local_var) { Result += "Local Var"; }
 		else if (Original == Compiler::SymbolCategory::global_var) { Result += GNames::GLO_VAR; }
 
 		Result += " already defined as ";
 
 		if (Duplacate == Compiler::SymbolCategory::function) { Result += GNames::k_Func; }
 		else if (Duplacate == Compiler::SymbolCategory::local_var) { Result += "Local Var"; }
-		else if (Original == Compiler::SymbolCategory::global_var) { Result += GNames::GLO_VAR; }
+		else if (Original == Compiler::SymbolCategory::param) { Result += GNames::GLO_VAR; }
 		return Result;
 	}
 
@@ -43,13 +43,16 @@ namespace ErrorFuncs {
 		string Result{ "" };
 		if (Original == Compiler::SymbolCategory::function) { Result += GNames::k_Func; }
 		else if (Original == Compiler::SymbolCategory::local_var) { Result += "Local Var"; }
+		else if (Original == Compiler::SymbolCategory::param) { Result += "parameter"; }
 		else if (Original == Compiler::SymbolCategory::global_var) { Result += GNames::GLO_VAR; }
-		 
+
 		Result += " name cannot be the same as a ";
 
 		if (Duplacate == Compiler::SymbolCategory::function) { Result += GNames::k_Func; }
 		else if (Duplacate == Compiler::SymbolCategory::local_var) { Result += "Local Var"; }
-		else if (Original == Compiler::SymbolCategory::global_var) { Result += GNames::GLO_VAR; }
+		else if (Duplacate == Compiler::SymbolCategory::global_var) { Result += GNames::GLO_VAR; }
+		else if (Duplacate == Compiler::SymbolCategory::param) { Result += "param"; }
+
 		return Result;
 	}
 }

@@ -1,18 +1,20 @@
 #include "stdafx.h"
 #include "SemanticAnalysis.h"
 #include "SynStateExpLog.h"
+#include "Token.h"
 
 
 Compiler::SynStateExpLog::SynStateExpLog(
-	LexAnalyzer * Lex, 
-	SyntaxAnalysis * Syn, 
-	ISynState * PrevState, 
-	SymbolsTable * Symblos, 
+	LexAnalyzer * Lex,
+	SyntaxAnalysis * Syn,
+	ISynState * PrevState,
+	SymbolsTable * Symblos,
 	SemanticAnalysis * Semantic,
 	const std::string &FunctionName)
-	:ISynState(Lex, Syn, PrevState, Symblos, Semantic), IsNegation(false), m_ParenthesisLevel(0) 
+	:ISynState(Lex, Syn, PrevState, Symblos, Semantic), IsNegation(false), m_ParenthesisLevel(0)
 {
 	m_StateName = ("Expression Log");
+	m_FunctionName = FunctionName;
 }
 
 Compiler::SynStateExpLog::~SynStateExpLog()
@@ -21,7 +23,7 @@ Compiler::SynStateExpLog::~SynStateExpLog()
 bool Compiler::SynStateExpLog::CheckSyntax()
 {
 	ReadOnlyToken Tok = mptr_Lex->GetCurrentToken();
-	IsNegation = CheckForNagation(Tok);
+	//IsNegation = CheckForNagation(Tok);
 	// move forward if you find a '!' aka negation 
 	(IsNegation) ? MoveAndAssignTokenIndex(mptr_Lex, Tok) : 0;
 
@@ -29,7 +31,7 @@ bool Compiler::SynStateExpLog::CheckSyntax()
 
 	if (Tok != nullptr)
 	{
-		if(CompareTokenTypes(Tok, "RELATIONAL_OPERATOR") 
+		if (CompareTokenTypes(Tok, "RELATIONAL_OPERATOR")
 			|| CompareTokenTypes(Tok, "LOGICAL_OPERATOR")
 			|| CompareTokenTypes(Tok, "ARITHMETIC_OPERATOR")
 			|| CompareTokenTypes(Tok, "DIMENSION_OPERATOR"))
@@ -41,7 +43,7 @@ bool Compiler::SynStateExpLog::CheckSyntax()
 
 	if (m_ParenthesisLevel == 0)
 	{
-		mptr_Semantic->AddExplog(m_ExpressionTokens,)
+		mptr_Semantic->AddExplog(m_ExpressionTokens, m_FunctionName);
 
 		return true;
 	}
@@ -54,7 +56,7 @@ bool Compiler::SynStateExpLog::CheckForFunctionCall()
 	return false;
 }
 
-bool Compiler::SynStateExpLog::CheckForNagation(ReadOnlyToken & Tok)
+bool Compiler::SynStateExpLog::CheckForNagation(const Token * Tok)
 {
 	if (!Tok->getLex().compare("!"))
 	{
@@ -66,13 +68,13 @@ bool Compiler::SynStateExpLog::CheckForNagation(ReadOnlyToken & Tok)
 
 void Compiler::SynStateExpLog::ProcessTerm()
 {
-	ReadOnlyToken Tok = nullptr;
+	const Token* Tok;
 	Tok = mptr_Lex->GetCurrentToken();
 
 	if (!Tok->getLex().compare("("))
 	{
 		this->m_ParenthesisLevel++;
-		MoveAndAssignTokenIndex(mptr_Lex, Tok);
+		//MoveAndAssignTokenIndex(mptr_Lex, Tok);
 		this->CheckSyntax();
 	}
 	//checking for constants

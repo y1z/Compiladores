@@ -1,9 +1,10 @@
 #include "stdafx.h"
+#include "SynStateFunction.h"
 #include "ErrorFunctions.h"
 #include "GlobolNames.h"
-#include "SynStateFunction.h"
 #include "SynStateParam.h"
 #include "SynStateVar.h"
+#include "SynStateFunctionBlock.h"
 
 Compiler::SynStateFunction::SynStateFunction(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
 	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic)
@@ -14,7 +15,19 @@ Compiler::SynStateFunction::~SynStateFunction()
 // already found the key word "function"
 bool Compiler::SynStateFunction::CheckSyntax()
 {
-	bool Continue = mptr_Lex->AdvanceTokenIndex();
+	ReadOnlyToken Tok = mptr_Lex->GetCurrentToken();
+	bool Continue = false;
+	// move forward for anything that NOT the main function 
+	if (Tok->getLex().compare(GNames::k_Main))
+	{
+		mptr_Lex->AdvanceTokenIndex();
+	}
+	// 
+	if (Tok != nullptr)
+	{
+		Continue = true;
+	}
+
 	// check for id and parenthesis
 	string ExpectedSequence = { "i()" };
 	// too keep track of which char I'm using in 'ExpectedSequence'
@@ -23,15 +36,16 @@ bool Compiler::SynStateFunction::CheckSyntax()
 	// check param/param's
 	while (Continue && SequencePos < ExpectedSequence.size())
 	{
-		ReadOnlyToken Tok = mptr_Lex->GetCurrentToken();
+		Tok = mptr_Lex->GetCurrentToken();
 
 		string TokenType = TranslateToken(Tok->getType());
 
 		switch (ExpectedSequence[SequencePos])
 		{
+			
 			// check ID 
 		case('i'):
-			if (!TokenType.compare(GNames::t_ID) || !Tok->getLex().compare("main"))
+			if (CompareTokenTypes(Tok, GNames::t_ID) || !Tok->getLex().compare("main"))
 			{
 				m_FunctionName = Tok->getLex();
 				m_NodeArgs.SetSymbol(m_FunctionName.c_str());
@@ -90,11 +104,11 @@ bool Compiler::SynStateFunction::CheckSyntax()
 	}
 
 	//! main doe not have a type 
-	if (Continue && m_NodeArgs.GetSymblo().compare("main"))
+	if (Continue && m_NodeArgs.GetSymblo().compare(GNames::k_Main))
 	{
 		isValid = CheckFunctionType();
 	}
-	else if (Continue && !m_NodeArgs.GetSymblo().compare("main"))
+	else if (Continue && !m_NodeArgs.GetSymblo().compare(GNames::k_Main))
 	{
 		CheckFunctionBlock();
 	}
@@ -132,8 +146,23 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 					break;
 				}
 			}
+			// when we get an invalid lex after the ':' terminal 
+			if (!IsTypeValid)
+			{
+				string DataTypes = "<void>";
+				for (const auto & Types : GNames::AllVarAfter)
+				{
+					DataTypes += "|<";
+					DataTypes += Types;
+					DataTypes += ">";
+				}
+				/**/
+				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(DataTypes.c_str(), token->getLex().c_str());
+				mptr_Lex->m_refErrrorsMod->AddSynError(token->getLineNum(), ErrorDesc, "");
+			}
+
 		}
-		else
+		else// checking for errors 
 		{
 			string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(":", token->getLex().c_str());
 			mptr_Lex->m_refErrrorsMod->AddSynError(token->getLineNum(), ErrorDesc, "");
@@ -152,69 +181,17 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 		return CheckFunctionBlock();
 	}
 
-
 	return false;
 }
 
 bool Compiler::SynStateFunction::CheckFunctionBlock()
 {
-	isInFunctionBlock = true;
-	bool EndOfFunctionBlock = false;
-	ReadOnlyToken token = nullptr;
-	if (m_FunctionName.compare("main"))
-	{
-		isInFunctionBlock = MoveAndAssignTokenIndex(mptr_Lex, token);
-	}
-	token = mptr_Lex->GetCurrentToken();
+	ISynState * FuncBlock = new SynStateFunctionBlock(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
 
-	if (!token->getLex().compare("{"))
-	{
-		isInFunctionBlock = MoveAndAssignTokenIndex(mptr_Lex, token);
-		while (isInFunctionBlock && !EndOfFunctionBlock)
-		{
-			if (!token->getLex().compare("var"))
-			{
-				ISynState *ptr_VarState = new SynStateVar(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
-				ptr_VarState->m_CategorySym = SymbolCategory::local_var;
-				ptr_VarState->CheckSyntax();
-				delete ptr_VarState;
-			}
-			/// TODO FINSH THIS 
-			else	if (!token->getLex().compare("return"))
-			{
-				MoveAndAssignTokenIndex(mptr_Lex, token);
-				if (CompareTokenTypes(token, "INT_NUMBER") || CompareTokenTypes(token, "FLOAT_NUMBER") || CompareTokenTypes(token, "LOGICAL_CONSTANT"))
-				{
-					MoveAndAssignTokenIndex(mptr_Lex, token);
-					if (!token->getLex().compare(GNames::d_LineEnd))
-					{
-						MoveAndAssignTokenIndex(mptr_Lex, token);
-					}
+	bool result = FuncBlock->CheckSyntax();
 
-				}
-
-			}
-			if (!token->getLex().compare("}"))
-			{
-				EndOfFunctionBlock = true;
-
-				MoveAndAssignTokenIndex(mptr_Lex, token);
-				return true;
-			}
-
-
-			isInFunctionBlock = MoveAndAssignTokenIndex(mptr_Lex, token);
-		}
-
-	}
-	else
-	{
-		string  ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM("{", token->getLex().c_str());
-		mptr_Lex->m_refErrrorsMod->AddSynError(token->getLineNum(), ErrorDesc, "");
-		return false;
-	}
-
-	return false;
+	delete FuncBlock;
+	return result;
 }
 
 string Compiler::SynStateFunction::GetFunctionName() const

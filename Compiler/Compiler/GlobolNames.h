@@ -38,6 +38,7 @@ namespace GNames {
 	///  messages 
 	static string GlobalScope = "<GLOBAL SCOPE>";
 
+	/// Data Types 
 	///Valid Var endings 
 	// all the spellings of the keyword that can come after 'Value' 
 	static constexpr const char * Value_i = "int";
@@ -45,8 +46,8 @@ namespace GNames {
 	static constexpr const char * Value_s = "string";
 	static constexpr const char * Value_b = "bool";
 	/*! a vector that contains all the correct values a var can be */
-	static std::vector<string> AllVarAfter = { Value_i,Value_f,Value_s,Value_b };
-	/// Data Types 
+	static const std::vector<string> AllVarAfter = { Value_i,Value_f,Value_s,Value_b };
+	static const std::vector<string> AllValidFuncTypes = { Value_i,Value_f ,Value_s ,Value_b,"void" };
 	static constexpr const char * AllTypes = "'<int>|<float>|<string>|<bool>|<void>'";
 	/// Delimiters 
 	static constexpr const char * d_LineEnd = ";";

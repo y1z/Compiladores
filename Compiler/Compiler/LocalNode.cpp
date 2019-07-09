@@ -133,6 +133,31 @@ namespace Compiler {
 		mptr_NextNode = ptr;
 	}
 
+	std::pair<bool, SymbolCategory> LocalNode::FindDuplicate(const std::string & Sym)
+	{
+		std::pair<bool, SymbolCategory> result;
+		//check to see we have the same symbol 
+		if (!this->m_Symbol.compare(Sym))
+		{
+			result.first = true;
+			result.second = this->GetSymbolCategory();
+			return result;
+		}
+		// check to see if there is another node 
+		LocalNode *lNode = this->GetLocalNode();
+		if (lNode != nullptr)
+		{
+			return this->FindDuplicate(Sym);
+		}
+		else
+		{
+			result.first = false;
+			result.second = SymbolCategory::unknown;
+
+			return result;
+		}
+	}
+
 	void LocalNode::SetLineNum(uint32_t Num)
 	{
 		this->m_LineNum = Num;

@@ -1,19 +1,21 @@
 #pragma once
 #include "ISynState.h"
 
+class Token;
+
 namespace Compiler {
 
 	class SynStateExpLog : public ISynState
 	{
 	public:
 
-		SynStateExpLog(LexAnalyzer *Lex, 
-			SyntaxAnalysis *Syn, 
-			ISynState *PrevState, 
-			SymbolsTable *Symblos, 
-			SemanticAnalysis *Semantic, 
+		SynStateExpLog(LexAnalyzer *Lex,
+			SyntaxAnalysis *Syn,
+			ISynState *PrevState,
+			SymbolsTable *Symblos,
+			SemanticAnalysis *Semantic,
 			const std::string &FunctionName);
-		
+
 		~SynStateExpLog();
 
 		bool CheckSyntax() override;
@@ -21,7 +23,7 @@ namespace Compiler {
 		//! make sure that it qualifies
 		bool CheckForFunctionCall();
 		// checking for negation
-		bool CheckForNagation(ReadOnlyToken &Tok);
+		bool CheckForNagation(const Token * Tok);
 		//! to know what to check for 
 		void ProcessTerm();
 	private:
@@ -30,6 +32,8 @@ namespace Compiler {
 		// use this to check how many 
 		int32_t m_ParenthesisLevel = 0;
 		//! to give the semanticAnalisis the tokens it needs 
-		std::vector<Token * > m_ExpressionTokens;
+		std::vector<const Token * > m_ExpressionTokens;
+
+		string m_FunctionName;
 	};
 }

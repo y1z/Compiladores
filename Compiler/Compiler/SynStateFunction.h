@@ -1,5 +1,8 @@
 #pragma once
 #include "ISynState.h"
+class SynStateFunctionBlock;
+class SynStateVar;
+
 namespace Compiler {
 	class SynStateFunction : public ISynState
 	{
@@ -21,8 +24,6 @@ namespace Compiler {
 		string m_ParamType;
 		//! this will be used to transfer the values to the symbols table 
 		GlobalNode m_NodeArgs;
-
-		bool isInFunctionBlock = false;
 	};
 
 }

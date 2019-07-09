@@ -57,7 +57,6 @@ bool Compiler::SynStateProgram::CheckSyntax()
 		else	if (StateSelected == 1)
 		{
 			this->isMainFound = true;
-			mptr_Lex->DecreaseTokenIndex();
 			ISynState * FunctionState = new SynStateFunction(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
 			FunctionState->m_CategorySym = SymbolCategory::function;
 			FunctionState->CheckSyntax();
