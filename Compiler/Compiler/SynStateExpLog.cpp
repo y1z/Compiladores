@@ -103,7 +103,7 @@ void Compiler::SynStateExpLog::ProcessTerm()
 			MoveAndAssignTokenIndex(mptr_Lex, Tok);
 			this->CheckSyntax();
 		}
-		//checking for constants
+		//checking for constants 
 		else if (CompareTokenTypes(Tok, "STRING_CONSTANT")
 			|| CompareTokenTypes(Tok, "INT_NUMBER")
 			|| CompareTokenTypes(Tok, "FLOAT_NUMBER")
