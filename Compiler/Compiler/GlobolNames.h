@@ -32,7 +32,8 @@ namespace GNames {
 	///KeyWords 
 	static constexpr const char * k_Func = "function";
 	static constexpr const char * k_Var = "var";
-	static constexpr const char * k_Main= "main"; 
+	static constexpr const char * k_Main = "main";
+	static constexpr const char * k_Return= "Return";
 
 
 	///  messages 

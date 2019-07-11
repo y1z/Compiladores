@@ -15,6 +15,8 @@ namespace Compiler {
 		~SynStateFunctionBlock();
 
 		bool CheckSyntax()override;
+
+	  std::map<string,int> m_StateTrasitions;
 	public:// variables 
 		string m_FunctionName;
 	};

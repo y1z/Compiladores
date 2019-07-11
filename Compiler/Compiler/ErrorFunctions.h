@@ -55,4 +55,16 @@ namespace ErrorFuncs {
 
 		return Result;
 	}
+
+	static string SYN_EXPO_EXPECTED(const std::vector<char> &Parenthesis)
+	{
+		string Result = "Closing parenthesis expected while processing EXP_LOG : ";
+
+		for (const char& chr : Parenthesis)
+		{
+			Result += chr;
+		}
+
+		return Result;
+	}
 }

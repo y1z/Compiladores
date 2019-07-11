@@ -63,14 +63,21 @@ namespace Compiler {
 			case Compiler::SymbolCategory::local_var:
 				ErrorMessage += "Local variable name cannot be the same as a function name ";
 				m_refError->AddSynError(LineNum, ErrorMessage, Symblo);
+				return true;
 				break;
 			case Compiler::SymbolCategory::param:
 				ErrorMessage += "Parameter name cannot be the same as a function name ";
 				m_refError->AddSynError(LineNum, ErrorMessage, Symblo);
+				return true;
 				break;
 			}
 
 			return true;
+		}
+
+		if (Cat == SymbolCategory::local_var || Cat == SymbolCategory::param)
+		{
+			this->LocalSymbolsSearch(Sym, Cat, Function, LineNum);
 		}
 
 		// Check if the symbol already exist 
@@ -90,9 +97,6 @@ namespace Compiler {
 
 			else/// making sure we don't have a local_var with the same name
 			{
-
-
-
 				string ErrorDesc = ErrorFuncs::SYN_ALREADY_DIFINED(Cat, gNode->GetSymbolCategory());
 				string DuplicateSymbol = "Symbol "s + Sym;
 				m_refError->AddSynError(LineNum, ErrorDesc, DuplicateSymbol);
@@ -100,36 +104,6 @@ namespace Compiler {
 			}
 		}
 
-		if (Cat == SymbolCategory::local_var || Cat == SymbolCategory::param)
-		{
-			this->LocalSymbolsSearch(Sym, Cat, Function, LineNum);
-		}
-		//if (m_Symbols.find(Function) != m_Symbols.end() || !Function.compare(GNames::k_Main))
-		//{
-		//	auto DefinedSymbol = m_Symbols.find(Function);
-		//	string ErrorDecs{ 0 };
-		//	PrintToConsole("Here is the Symbol with a the same name as a function {0}", DefinedSymbol->first);
-		//	switch (Cat)
-		//	{
-		//	case Compiler::SymbolCategory::unknown:
-		//		break;
-		//	case Compiler::SymbolCategory::global_var:
-
-		//		break;
-		//	case Compiler::SymbolCategory::local_var:
-		//		ErrorDecs = ErrorFuncs::SYN_SAME_NAME(Cat, DefinedSymbol->second->GetSymbolCategory());
-		//		this->m_refError->AddSynError(LineNum, ErrorDecs, "Symbol "s + Sym);
-		//		return true;
-		//		break;
-		//	case Compiler::SymbolCategory::param:
-		//		ErrorDecs = ErrorFuncs::SYN_SAME_NAME(Cat, DefinedSymbol->second->GetSymbolCategory());
-		//		this->m_refError->AddSynError(LineNum, ErrorDecs, "Symbol "s + Sym);
-		//		return true;
-		//		break;
-		//	case Compiler::SymbolCategory::function:
-		//		break;
-		//	}
-		//}
 		return false;
 	}
 
@@ -369,8 +343,16 @@ namespace Compiler {
 				bool IsSimbloDuplicate = false;
 				auto IsInserted = m_Symbols.find(function);
 				GlobalNode *gNode = IsInserted->second;
-				LocalNode *lNode = gNode->GetLocalNode();
+				LocalNode *ptr_lNode = new LocalNode();
+				ptr_lNode->SetDimension(dim);
+				ptr_lNode->SetFunctionName(function.c_str());
+				ptr_lNode->SetSymbolCategory(Cat);
+				ptr_lNode->SetSymbol(Symbol.c_str());
+				ptr_lNode->SetType(Type.c_str());
+				ptr_lNode->SetLineNum(LineNum);
 
+				gNode->AddLocalNode(ptr_lNode);
+				return true;
 			}
 
 			if (Cat == SymbolCategory::param)

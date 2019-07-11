@@ -30,9 +30,11 @@ namespace Compiler {
 		//! to now if the expression has a '!'
 		bool IsNegation;
 		// use this to check how many 
-		int32_t m_ParenthesisLevel = 0;
+		int32_t m_CountParenthesis = 0;
 		//! to give the semanticAnalisis the tokens it needs 
 		std::vector<const Token * > m_ExpressionTokens;
+
+		std::vector<char > m_Parenthesis;
 
 		string m_FunctionName;
 	};
