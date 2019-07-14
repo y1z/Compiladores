@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LocalNode.h"
+
 namespace Compiler {
 
 	/*!
@@ -14,13 +15,13 @@ namespace Compiler {
 		~GlobalNode();
 	public:// functions
 
-		std::string GetSymblo();
-		std::string GetType();
-		SymbolCategory GetSymbolCategory();
-		int32_t GetDimension();
-		uint32_t GetLineNum();
+		std::string GetSymblo()const ;
+		std::string GetType()const;
+		SymbolCategory GetSymbolCategory()const;
+		int32_t GetDimension()const;
+		uint32_t GetLineNum()const;
 		void * GetVal();
-		LocalNode *GetLocalNode();
+		LocalNode *GetLocalNode()const;
 
 		string TraslateSymbolCategory(SymbolCategory SymCat);
 

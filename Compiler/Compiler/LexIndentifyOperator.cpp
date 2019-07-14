@@ -33,8 +33,8 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 		{
 			std::string Operator;
 			// creates Relational operators
-			std::string CountOfError;
-			PrintToConsole("Error Count {0} ", m_refErrrorsMod->GetErrorCountString(CountOfError));
+		//	std::string CountOfError;
+			PrintToConsole("Error Count {0} ", m_refErrrorsMod->GetErrorCountString());
 			if (Result->second == 0)
 			{
 

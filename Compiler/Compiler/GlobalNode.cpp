@@ -11,27 +11,27 @@ namespace Compiler {
 		if (mptr_LocalNode != nullptr) { delete mptr_LocalNode; }
 	}
 
-	std::string GlobalNode::GetSymblo()
+	std::string GlobalNode::GetSymblo()const
 	{
 		return m_Symbol;
 	}
 
-	std::string GlobalNode::GetType()
+	std::string GlobalNode::GetType() const
 	{
 		return m_Type;
 	}
 
-	SymbolCategory GlobalNode::GetSymbolCategory()
+	SymbolCategory GlobalNode::GetSymbolCategory()const
 	{
 		return m_SymbolCategory;
 	}
 
-	int32_t GlobalNode::GetDimension()
+	int32_t GlobalNode::GetDimension()const
 	{
 		return m_Dimension;
 	}
 
-	uint32_t GlobalNode::GetLineNum()
+	uint32_t GlobalNode::GetLineNum()const
 	{
 		return this->m_LineNum;
 	}
@@ -41,7 +41,7 @@ namespace Compiler {
 		return mptr_Val;
 	}
 
-	LocalNode * GlobalNode::GetLocalNode()
+	LocalNode * GlobalNode::GetLocalNode()const
 	{
 		return mptr_LocalNode;
 	}
@@ -75,7 +75,7 @@ namespace Compiler {
 	{
 		string Result = std::to_string(m_LineNum) + '~';
 
-		Result += m_Symbol + '~' + this->TraslateSymbolCategory(m_SymbolCategory);
+		Result += m_Symbol + '~' + this->TraslateSymbolCategory(m_SymbolCategory) + '~';
 
 		Result += std::to_string(m_Dimension) + '~' + m_Type + '~' + "<GLOBAL SCOPE>";
 

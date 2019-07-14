@@ -41,7 +41,7 @@ namespace Compiler {
 		// gets the total size of the container of tokens 
 		std::size_t GetTokenCount();
 		// converts the total number of tokens to a string 
-		std::string GetTokenCountString(std::string& Result);
+		std::string GetTokenCountString();
 		//! reruns the container of tokens 
 		std::vector<Token>& GetTokenContainer();
 

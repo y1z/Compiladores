@@ -68,10 +68,6 @@ bool LexIdentifiyKeyword::CheckKeywordExecptions(std::string &Keyword, uint32_t 
 {
 	if (Keyword == "true" || Keyword == "false")
 	{
-		Token tok(Keyword, Compiler::LOGICAL_CONSTANT, LineNumber);
-		String^  ConvertedKeyword = gcnew String(Keyword.c_str());
-		Console::WriteLine("KeyWord is : {0} ", ConvertedKeyword);
-		Tokens.emplace_back(tok);
 		return true;
 	}
 

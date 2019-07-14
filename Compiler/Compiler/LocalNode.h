@@ -1,5 +1,6 @@
+#include <map>
+#include <tuple>
 namespace Compiler {
-
 	/*!
 	\brief this class contains the following values 
 	local_vars
@@ -28,11 +29,14 @@ namespace Compiler {
 		void	SetFunctionName(const char *Symblo);
 		void	SetSymbol(const char *Symblo);
 		void	SetType(const char *TypeName);
-		void	SetSymbolCategory(SymbolCategory SymbolCategory);
+		void	SetSymbolCategory(SymbolCategory SymCat);
 		void	SetDimension(int32_t Dim);
 		void	SetLineNum(uint32_t Num);
 		void	SetValPtr(void *ptr);
 		void	SetLocalNode(LocalNode *ptr);
+
+		//! search and find-out if there is a duplicate and the type 
+		std::pair<bool, SymbolCategory> FindDuplicate(const std::string &Sym);
 	private:// variables 
 		//! holds the symbol
 		string m_Function;

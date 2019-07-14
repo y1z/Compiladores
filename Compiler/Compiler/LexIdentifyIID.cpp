@@ -32,10 +32,14 @@ bool LexIdentifyIID::StateAction(const char * code, uint32_t & Index, uint32_t &
 			Index++;
 		}
 
-		if (PossibleID[PossibleID.size() - 1] == '_')
+
+		if (!PossibleID.empty())
 		{
-			m_refErrrorsMod->AddLexError(LineNumber, INVALID_ID_ENDING, PossibleID);
-			return true;
+			if (PossibleID[PossibleID.size() - 1] == '_')
+			{
+				m_refErrrorsMod->AddLexError(LineNumber, INVALID_ID_ENDING, PossibleID);
+				return true;
+			}
 		}
 
 		if (CheckForValidSequence(PossibleID, Index) && !PossibleID.empty())

@@ -91,8 +91,7 @@ namespace Compiler {
 	{
 		string Result = std::to_string(m_LineNum) + '~';
 
-
-		Result += m_Symbol + '~' + this->TraslateSymbolCategory(m_SymbolCategory);
+		Result += m_Symbol + '~' + this->TraslateSymbolCategory(m_SymbolCategory) + '~';
 
 		Result += std::to_string(m_Dimension) + '~' + m_Type + '~' + m_Function;
 
@@ -132,6 +131,31 @@ namespace Compiler {
 	void LocalNode::SetLocalNode(LocalNode * ptr)
 	{
 		mptr_NextNode = ptr;
+	}
+
+	std::pair<bool, SymbolCategory> LocalNode::FindDuplicate(const std::string & Sym)
+	{
+		std::pair<bool, SymbolCategory> result;
+		//check to see we have the same symbol 
+		if (!this->m_Symbol.compare(Sym))
+		{
+			result.first = true;
+			result.second = this->GetSymbolCategory();
+			return result;
+		}
+		// check to see if there is another node 
+		LocalNode *lNode = this->GetLocalNode();
+		if (lNode != nullptr)
+		{
+			return lNode->FindDuplicate(Sym);
+		}
+		else
+		{
+			result.first = false;
+			result.second = SymbolCategory::unknown;
+
+			return result;
+		}
 	}
 
 	void LocalNode::SetLineNum(uint32_t Num)

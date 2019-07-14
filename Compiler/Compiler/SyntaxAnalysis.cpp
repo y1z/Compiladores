@@ -23,11 +23,7 @@ Compiler::SyntaxAnalysis::~SyntaxAnalysis()
 
 void Compiler::SyntaxAnalysis::checkSyntax()
 {
-	ISynState* ptr_Program = new SynStateProgram(mptr_Lex,this,nullptr,mptr_Table,mptr_Semantic);
+  ISynState* ptr_Program = new SynStateProgram(mptr_Lex,this,nullptr,mptr_Table,mptr_Semantic);
 	ptr_Program->CheckSyntax();
-	//ISyntaxState *ptr_Program = new SyntaxState_Program();
-	//ptr_Program->InitState(mptr_Lex, this, nullptr, mptr_Table);
-	//ptr_Program->CheckSyntax();
 	delete ptr_Program;
 }
-
