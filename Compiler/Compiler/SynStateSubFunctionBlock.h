@@ -20,7 +20,7 @@ namespace Compiler {
 		bool CheckSyntax();
 	private:// variables 
 		string m_FunctionName;
-		std::vector<std::pair<string, int>> m_StateTransition;
+		std::vector<std::pair<string, int>> m_StateTransitions;
 	};
 
 }

@@ -17,7 +17,7 @@ SynStateSubFunctionBlock(LexAnalyzer * Lex, SyntaxAnalysis * Syn, ISynState * Pr
 {
 	m_StateName = " Sub Function Block State ";
 
-	m_StateTransition = { {GNames::t_ID,0}, {GNames::k_Return,1},{GNames::k_Else,2}, {GNames::k_While,3} };
+	m_StateTransitions = { {GNames::t_ID,0}, {GNames::k_Return,1},{GNames::k_Else,2}, {GNames::k_While,3} };
 }
 
 

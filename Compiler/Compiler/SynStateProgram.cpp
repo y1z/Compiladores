@@ -83,5 +83,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 
 
 		}/// asdf
+		return false;
+	}
 	return false;
 }
