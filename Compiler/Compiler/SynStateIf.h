@@ -5,7 +5,6 @@ namespace Compiler {
 		public ISynState
 	{
 	public:
-		SynStateIf();
 		SynStateIf(LexAnalyzer *Lex, SyntaxAnalysis *Syn, 
 			ISynState *PrevState, 
 			SymbolsTable *Symblos, 

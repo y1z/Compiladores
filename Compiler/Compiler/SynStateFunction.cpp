@@ -8,7 +8,9 @@
 
 Compiler::SynStateFunction::SynStateFunction(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
 	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic)
-{}
+{
+	m_StateName = " Function State ";
+}
 
 Compiler::SynStateFunction::~SynStateFunction()
 {}
@@ -173,7 +175,7 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 	if (IsTypeValid)
 	{
 		// making sure to register the params 
-		for (auto &Node : m_ParamNodes)
+		for (auto Node : m_ParamNodes)
 		{
 			mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetDimension(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());
 		}

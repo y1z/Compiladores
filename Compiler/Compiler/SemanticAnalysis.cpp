@@ -8,7 +8,12 @@ Compiler::SemanticAnalysis::~SemanticAnalysis()
 {}
 
 void Compiler::SemanticAnalysis::AddExplog(std::vector<const Token*> &Expression, const std::string &FunctionName)
-{}
+{
+	for (auto tok : Expression)
+	{
+		m_ExpressionTokens[FunctionName].emplace_back(tok);
+	}
+}
 
 void Compiler::SemanticAnalysis::CheckExpressions()
 {}

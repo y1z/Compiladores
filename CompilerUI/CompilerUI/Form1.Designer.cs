@@ -21,7 +21,7 @@
       }
 
       #region Windows Form Designer generated code
-
+    
       /// <summary>
       /// Required method for Designer support - do not modify
       /// the contents of this method with the code editor.
@@ -67,11 +67,12 @@
       // 
       this.MainTextBox.AcceptsTab = true;
       this.MainTextBox.BackColor = System.Drawing.Color.Indigo;
-      this.MainTextBox.Font = new System.Drawing.Font("Lucida Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.MainTextBox.Font = new System.Drawing.Font("Lucida Console", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.MainTextBox.ForeColor = System.Drawing.Color.Yellow;
       this.MainTextBox.Location = new System.Drawing.Point(23, 45);
       this.MainTextBox.Multiline = true;
       this.MainTextBox.Name = "MainTextBox";
+      this.MainTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
       this.MainTextBox.Size = new System.Drawing.Size(1742, 588);
       this.MainTextBox.TabIndex = 0;
       this.MainTextBox.TextChanged += new System.EventHandler(this.MainTextBox_TextChanged);
@@ -334,7 +335,7 @@
       this.Controls.Add(this.MainTextBox);
       this.Controls.Add(this.menuStrip1);
       this.MainMenuStrip = this.menuStrip1;
-      //this.Name = "CompilerWindow";
+    //  this.Name = "CompilerWindow";
       this.Text = "Compilador";
       this.Load += new System.EventHandler(this.Form1_Load);
       ((System.ComponentModel.ISupportInitialize)(this.m_TokenDataView)).EndInit();

@@ -147,7 +147,7 @@ namespace Compiler {
 		LocalNode *lNode = this->GetLocalNode();
 		if (lNode != nullptr)
 		{
-			return this->FindDuplicate(Sym);
+			return lNode->FindDuplicate(Sym);
 		}
 		else
 		{

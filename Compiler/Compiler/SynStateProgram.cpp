@@ -9,7 +9,7 @@
 Compiler::SynStateProgram::SynStateProgram(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
 	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic)
 {
-	m_StateName = "Syn State : Program";
+	m_StateName = " State Program ";
 }
 
 Compiler::SynStateProgram::~SynStateProgram()

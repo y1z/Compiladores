@@ -20,20 +20,23 @@ namespace GNames {
 	static constexpr const char * t_ID = "ID";
 	static constexpr const char * t_Int = "INT_NUMBER";
 	static constexpr const char * t_Float = "FLOAT_NUMBER";
-	static constexpr const char * t_LogConst = "LOGICAL_CONSTANT"; 
+	static constexpr const char * t_LogConst = "LOGICAL_CONSTANT";
 	static constexpr const char * t_ReOp = "RELATIONAL_OPERATOR";
 	static constexpr const char * t_LogOp = "LOGICAL_OPERATOR";
 
 	/// SymbolCategory Translations
 	static constexpr const char * GLO_VAR = "Global Var";
-	static constexpr const char * LO_VAR= "Local Var";
+	static constexpr const char * LO_VAR = "Local Var";
 
 
 	///KeyWords 
 	static constexpr const char * k_Func = "function";
 	static constexpr const char * k_Var = "var";
+	static constexpr const char * k_While = "while";
+	static constexpr const char * k_Else = "else";
 	static constexpr const char * k_Main = "main";
-	static constexpr const char * k_Return= "Return";
+	static constexpr const char * k_Return = "Return";
+	static constexpr const char * k_Print = "print";
 
 
 	///  messages 

@@ -5,15 +5,17 @@
 #include "SynStateFunctionBlock.h"
 #include "SynStateExpLog.h"
 #include "SynStateIf.h"
+#include "SynStateAssigned.h"
+#include "SynStatePrint.h"
+
+#include "SynStateSubFunctionBlock.h"
 
 namespace Compiler {
-
-
 
 	SynStateFunctionBlock::SynStateFunctionBlock(LexAnalyzer * Lex, SyntaxAnalysis * Syn, ISynState * PrevState, SymbolsTable * Symblos, SemanticAnalysis * Semantic, const std::string & Str)
 		:ISynState(Lex, Syn, PrevState, Symblos, Semantic), m_FunctionName(Str)
 	{
-		m_StateName = ("FunctionBlock");
+		m_StateName = ("FunctionBlock State");
 	}
 
 	SynStateFunctionBlock::~SynStateFunctionBlock()
@@ -31,7 +33,7 @@ namespace Compiler {
 
 		token = mptr_Lex->GetCurrentToken();
 
-		m_StateTrasitions = { {"{",0} ,{GNames::k_Var,1} ,{GNames::k_Return,2}  };
+		m_StateTrasitions = { {"{",0} ,{GNames::k_Var,1} ,{GNames::k_Return,2} };
 
 		if (!token->getLex().compare("{"))
 		{
@@ -39,7 +41,7 @@ namespace Compiler {
 			// go through the function block 
 			while (!EndOfFunctionBlock && token != nullptr)
 			{
-				/// implament later 
+				/// implement later 
 				//auto Transition = m_StateTrasitions.find(token->getLex());
 				if (!token->getLex().compare("var"))
 				{
@@ -51,9 +53,11 @@ namespace Compiler {
 				// recursion 
 				else if (!token->getLex().compare("{"))
 				{
-					ISynState *ptr_FunctionBlock = new SynStateFunctionBlock(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+					ISynState *ptr_FunctionBlock = new SynStateSubFunctionBlock(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+
 					ptr_FunctionBlock->CheckSyntax();
 
+					mptr_Lex->DecreaseTokenIndex();
 					delete ptr_FunctionBlock;
 				}
 				else if (!token->getLex().compare("if"))
@@ -63,20 +67,22 @@ namespace Compiler {
 					MoveAndAssignTokenIndex(mptr_Lex, token);
 					IfState->CheckSyntax();
 
-				//MoveAndAssignTokenIndex(mptr_Lex, token);
-				//
-				//ISynState *ptr_Expresstion = new SynStateExpLog(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
-				//ptr_Expresstion->CheckSyntax();
-				//MoveAndAssignTokenIndex(mptr_Lex, token);
-				//if (!token->getLex().compare(";"))
-				//{
-				//
-				//}
-				//
-					//delete ptr_Expresstion;
-					token = mptr_Lex->GetCurrentToken();
+					mptr_Lex->DecreaseTokenIndex();
 
 					delete IfState;
+				}
+				// checking for assigned state 
+				else if (CompareTokenTypes(token, GNames::t_ID))
+				{
+					MoveAndAssignTokenIndex(mptr_Lex, token);
+
+					if (!token->getLex().compare("=") || !token->getLex().compare("["))
+					{
+						ISynState * AssigedState = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+						AssigedState->CheckSyntax();
+						delete AssigedState;
+					}
+
 				}
 				/// TODO FINSH THIS 
 				else	if (!token->getLex().compare("return"))
@@ -85,17 +91,28 @@ namespace Compiler {
 
 					ISynState *ptr_Expresstion = new SynStateExpLog(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
 					ptr_Expresstion->CheckSyntax();
-					//if (CompareTokenTypes(token, "INT_NUMBER") || CompareTokenTypes(token, "FLOAT_NUMBER") || CompareTokenTypes(token, "LOGICAL_CONSTANT"))
-					//{
-					//	MoveAndAssignTokenIndex(mptr_Lex, token);
-					//	if (!token->getLex().compare(GNames::d_LineEnd))
-					//	{
-					//		MoveAndAssignTokenIndex(mptr_Lex, token);
-					//	}
-					//	
-					//}
-					delete ptr_Expresstion;
+
+					token = mptr_Lex->GetCurrentToken();
+					if (!token->getLex().compare(";"))
+					{
+						delete ptr_Expresstion;
+					}
+					else
+					{
+						string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM(";", token->getLex().c_str());
+						mptr_Lex->m_refErrrorsMod->AddSynError(token->getLineNum(), ErrorDesc, "");
+						delete ptr_Expresstion;
+					}
 				}
+				else if (!token->getLex().compare(GNames::k_Print))
+				{
+					ISynState *StatePrint = new SynStatePrint(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
+					MoveAndAssignTokenIndex(mptr_Lex, token);
+					StatePrint->CheckSyntax();
+					mptr_Lex->DecreaseTokenIndex();
+					delete StatePrint;
+				}
+
 				// check for the end of a  function block
 				else if (!token->getLex().compare("}"))
 				{

@@ -8,12 +8,14 @@
 Compiler::SynStateVar::SynStateVar(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
 	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic)
 {
-	m_StateName = "State Var";
+	m_StateName = " State Var";
 }
 
 Compiler::SynStateVar::SynStateVar(LexAnalyzer * ptr_Lex, SyntaxAnalysis * ptr_Syn, ISynState * ptr_PrevState, SymbolsTable * ptr_Symblos, SemanticAnalysis * ptr_Semantic, const string & FunctionName)
 	: ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic), m_FunctionName(FunctionName)
-{}
+{
+	m_StateName = " State Var";
+}
 
 Compiler::SynStateVar::~SynStateVar()
 {}

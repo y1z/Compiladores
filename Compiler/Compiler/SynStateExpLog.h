@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ISynState.h"
 
 class Token;
@@ -14,9 +15,11 @@ namespace Compiler {
 			ISynState *PrevState,
 			SymbolsTable *Symblos,
 			SemanticAnalysis *Semantic,
-			const std::string &FunctionName);
+			const std::string &FunctionName,
+			const string &Delimiter = ")");
 
 		~SynStateExpLog();
+
 
 		bool CheckSyntax() override;
 	private:
@@ -29,6 +32,8 @@ namespace Compiler {
 	private:
 		//! to now if the expression has a '!'
 		bool IsNegation;
+
+	  bool IsDone;
 		// use this to check how many 
 		int32_t m_CountParenthesis = 0;
 		//! to give the semanticAnalisis the tokens it needs 
@@ -37,5 +42,7 @@ namespace Compiler {
 		std::vector<char > m_Parenthesis;
 
 		string m_FunctionName;
+		//! used to determine when to stop the logical expression 
+		string m_Delimiter;
 	};
 }

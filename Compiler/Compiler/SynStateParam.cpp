@@ -7,7 +7,7 @@ Compiler::SynStateParam::SynStateParam(LexAnalyzer * ptr_Lex, SyntaxAnalysis * p
 	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic)
 {
 	mptr_VarState = new SynStateVar(ptr_Lex, ptr_Syn, this, ptr_Symblos, ptr_Semantic);
-	m_StateName = "SynState : Param ";
+	m_StateName = " State Param ";
 	m_CategorySym = SymbolCategory::param;
 }
 
@@ -15,6 +15,8 @@ Compiler::SynStateParam::SynStateParam(LexAnalyzer * ptr_Lex, SyntaxAnalysis * p
 	:ISynState(ptr_Lex, ptr_Syn, ptr_PrevState, ptr_Symblos, ptr_Semantic), m_FuntionName(functionName)
 {
 	mptr_VarState = new SynStateVar(ptr_Lex, ptr_Syn, this, ptr_Symblos, ptr_Semantic, m_FuntionName);
+	m_StateName = " State Param ";
+	m_CategorySym = SymbolCategory::param;
 }
 
 Compiler::SynStateParam::~SynStateParam()

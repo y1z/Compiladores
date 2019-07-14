@@ -21,6 +21,10 @@ namespace Compiler {
 		bool AddSymbol(std::string &Symbol, int dim, SymbolCategory Cat, std::string &function, std::string &Type, int LineNum);
 		//! checking so see if an symbol already exist 
 		bool SymbolExists(const std::string &Sym, SymbolCategory Cat, std::string &Function, int LineNum);
+		//!  check if a local var has the same name as a function 
+		bool IsFunctionAlreadyLocalVar(const std::string &Sym, SymbolCategory Cat,int LineNum);
+		//! find out which combination of the error massage to send 
+		void SameNameSymbolDeduction(const std::string &Sym, SymbolCategory Copyed, SymbolCategory Original, int LineNum);
 		// ! check to see if there are duplicates of some vars 
 		bool LocalSymbolsSearch(const std::string &Sym, SymbolCategory Cat, std::string &Function, int LineNum);
 		//! convert the enum SymbolCategory to an equivalent string
@@ -29,9 +33,6 @@ namespace Compiler {
 		std::map<std::string, Compiler::GlobalNode*> GetSymbolsTable() const;
 		//! returns all the data from the nodes formated in a manner that makes it easyer to parse 
 		std::vector<std::string> ComplierInfo();
-
-
-
 	private:
 		//! add a symbol 
 		bool AddSymbolToMain(std::string &Symbol, int dim, SymbolCategory Cat, std::string &function, std::string &Type, int LineNum);
