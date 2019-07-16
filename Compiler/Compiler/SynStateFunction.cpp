@@ -174,7 +174,7 @@ bool Compiler::SynStateFunction::CheckFunctionType()
 
 	if (IsTypeValid)
 	{
-		// making sure to register the params 
+		// making sure to register the paramters 
 		for (auto Node : m_ParamNodes)
 		{
 			mptr_SymbolsTable->AddSymbol(Node.GetSymbol(), Node.GetDimension(), SymbolCategory::param, m_FunctionName, m_ParamType, Node.GetLineNum());

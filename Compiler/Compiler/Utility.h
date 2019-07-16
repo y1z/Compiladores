@@ -1,6 +1,5 @@
 #pragma once
 #include "ILexerState.h"
-#include <functional>
 #include <string>
 #include "Token.h"
 /*! return an ascii representation */

@@ -12,7 +12,6 @@ namespace Compiler {
 	class SyntaxAnalysis
 	{
 	public:// constructor 
-		SyntaxAnalysis();
 		SyntaxAnalysis(LexAnalyzer* ptr_Lex, ErrorsModule ^Error, SymbolsTable *ptr_Table,SemanticAnalysis *ptr_Sematico);
 		~SyntaxAnalysis();
 	public:// functions 

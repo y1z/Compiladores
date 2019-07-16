@@ -4,7 +4,6 @@
 #include "SynStateExpLog.h"
 #include "Token.h"
 
-
 Compiler::SynStateExpLog::SynStateExpLog(
 	LexAnalyzer * Lex,
 	SyntaxAnalysis * Syn,
@@ -23,10 +22,10 @@ Compiler::SynStateExpLog::SynStateExpLog(
 Compiler::SynStateExpLog::~SynStateExpLog()
 {}
 
-
 bool Compiler::SynStateExpLog::CheckSyntax()
 {
 	ReadOnlyToken Tok = mptr_Lex->GetCurrentToken();
+
 	auto checkForNegation = [&](ReadOnlyToken &token)
 	{
 		IsNegation = CheckForNagation(token);

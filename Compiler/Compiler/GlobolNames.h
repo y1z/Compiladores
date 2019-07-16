@@ -12,9 +12,10 @@ namespace GNames {
 	//! this is the code for parsing Lexical information for the compiler 
 	static constexpr const char * code_Lexical = "#LE_";
 	//! this is the code for parsing Syntactic information for the compiler 
-	static constexpr const char  code_Syntactic[] = "#SY_";
+	static constexpr const char  *code_Syntactic = "#SY_";
 	//! this is the code for parsing Semantic information for the compiler 
 	static constexpr const char * code_Semantic = "#SM_";
+
 
 	///Token Types   
 	static constexpr const char * t_ID = "ID";
@@ -35,9 +36,12 @@ namespace GNames {
 	static constexpr const char * k_While = "while";
 	static constexpr const char * k_Else = "else";
 	static constexpr const char * k_Main = "main";
-	static constexpr const char * k_Return = "Return";
+	static constexpr const char * k_Return = "return";
 	static constexpr const char * k_Print = "print";
-
+	static constexpr const char * k_If = "if";
+	static constexpr const char * k_Inc = "inc";
+	static constexpr const char * k_Dec = "dec";
+	static constexpr const char * k_For = "for";
 
 	///  messages 
 	static string GlobalScope = "<GLOBAL SCOPE>";

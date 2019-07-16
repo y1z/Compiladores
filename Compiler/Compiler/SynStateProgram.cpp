@@ -4,6 +4,7 @@
 #include "SynStateFunction.h"
 #include "GlobolNames.h"
 #include "ErrorFunctions.h"
+#include "StateTransitionEnums.h"
 
 
 Compiler::SynStateProgram::SynStateProgram(LexAnalyzer *ptr_Lex, SyntaxAnalysis *ptr_Syn, ISynState *ptr_PrevState, SymbolsTable *ptr_Symblos, SemanticAnalysis *ptr_Semantic)
@@ -29,11 +30,15 @@ bool Compiler::SynStateProgram::CheckSyntax()
 	bool Continue = true;
 	//words
 
-	std::map<std::string, int> ValidWord = { { GNames::k_Var,0 },{GNames::k_Main,1} , {GNames::k_Func,2} };
+	std::map<std::string, SynStateTransition> ValidWord = {
+		{ GNames::k_Var,SynStateTransition::Var},
+		{GNames::k_Main,SynStateTransition::Main} ,
+		{GNames::k_Func,SynStateTransition::Function} };
 
 	while (Continue)
 	{
-		int StateSelected = -1;
+		SynStateTransition StateSelected = (SynStateTransition::Unknown);
+
 		const Token *ptr_Tok = mptr_Lex->GetCurrentToken();
 
 		if (ValidWord.find(ptr_Tok->getLex()) != ValidWord.end())
@@ -42,7 +47,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			StateSelected = Temp->second;
 		}
 
-		if (StateSelected == 0)
+		if (StateSelected == SynStateTransition::Var)
 		{			//var keyword
 			ISynState * VarState = new SynStateVar(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
 			// if not in a function the var is global 
@@ -54,7 +59,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			mptr_Lex->DecreaseTokenIndex();
 		}
 		// main keyword
-		else	if (StateSelected == 1)
+		else	if (StateSelected == SynStateTransition::Main)
 		{
 			this->isMainFound = true;
 			ISynState * FunctionState = new SynStateFunction(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
@@ -66,7 +71,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			delete FunctionState;
 		}
 		//function keyword 
-		else	if (StateSelected == 2)
+		else	if (StateSelected == SynStateTransition::Function)
 		{
 			ISynState * FunctionState = new SynStateFunction(this->mptr_Lex, this->mptr_Syn, this, this->mptr_SymbolsTable, this->mptr_Semantic);
 			FunctionState->m_CategorySym = SymbolCategory::function;
@@ -75,7 +80,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			ptr_Tok = mptr_Lex->GetCurrentToken();
 			delete FunctionState;
 		}
-		else if (StateSelected == -1)
+		else if (StateSelected == SynStateTransition::Unknown)
 		{
 			string ErrorDecs = ErrorFuncs::SYN_UNEXPECTED_SYM("main", ptr_Tok->getLex().c_str());
 			mptr_Lex->m_refErrrorsMod->AddSynError(ptr_Tok->getLineNum(), ErrorDecs, "");

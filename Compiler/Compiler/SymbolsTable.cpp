@@ -108,11 +108,8 @@ namespace Compiler {
 
 		if (Cat == SymbolCategory::function)
 		{
-			bool isError = IsFunctionAlreadyLocalVar(Sym, Cat, LineNum);
-			if (isError)
-			{
-				return true;
-			}
+			// just registers the error if it occurred 
+			IsFunctionAlreadyLocalVar(Sym, Cat, LineNum);
 		}
 
 		return false;
@@ -128,12 +125,11 @@ namespace Compiler {
 			if (LNode != nullptr)
 			{
 				auto PossibleDuplacate = LNode->FindDuplicate(Sym);
-
+				// duplicate must still be added 
 				if (PossibleDuplacate.first == true && PossibleDuplacate.second == SymbolCategory::local_var)
 				{
 					string ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Cat, SymbolCategory::local_var);
 					m_refError->AddSynError(LineNum, ErrorDesc, " Symbol :\t"s + Sym);
-					return true;
 				}
 			}
 		}
@@ -174,7 +170,10 @@ namespace Compiler {
 		}
 		else
 		{
-			SearchableNodes = m_Symbols.find(Function)->second;
+			if (m_Symbols.find(Function) != m_Symbols.end())
+			{
+				SearchableNodes = m_Symbols.find(Function)->second;
+			}
 		}
 
 		if (SearchableNodes != nullptr)
@@ -194,29 +193,7 @@ namespace Compiler {
 
 						if (Result.first == true)
 						{
-
 							SameNameSymbolDeduction(Sym, Cat, Result.second, LineNum);
-							//	string ErrorDesc;
-							//	switch (Result.second)
-							//	{
-							//	case Compiler::SymbolCategory::local_var:
-							//		ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
-							//		ErrorDesc += " in the same function";
-							//		this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
-							//
-							//
-							//		return true;
-							//		break;
-							//	case Compiler::SymbolCategory::param:
-							//		ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
-							//		ErrorDesc += " in the same function";
-							//		this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
-							//		return true;
-							//		break;
-							//	default:
-							//		PrintToConsole("Something went wrong in the function 'LocalSymbolsSearch' in the symbolTable.cpp");
-							//		break;
-								//}
 						}
 					}
 					return Result.first;
@@ -236,27 +213,7 @@ namespace Compiler {
 						Result = lNode->FindDuplicate(Sym);
 						if (Result.first == true)
 						{
-
 							SameNameSymbolDeduction(Sym, Cat, Result.second, LineNum);
-							//string ErrorDesc;
-							//switch (Result.second)
-							//{
-							//case Compiler::SymbolCategory::local_var:
-							//	ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
-							//	ErrorDesc += " in the same function";
-							//	this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
-							//	return true;
-							//	break;
-							//case Compiler::SymbolCategory::param:
-							//	ErrorDesc = ErrorFuncs::SYN_SAME_NAME(Result.second, Cat);
-							//	ErrorDesc += " in the same function";
-							//	this->m_refError->AddSynError(LineNum, ErrorDesc, "\t Symbol "s + Sym);
-							//	return true;
-							//	break;
-							//default:
-							//	PrintToConsole("Something went wrong in the function 'LocalSymbolsSearch' in the symbolTable.cpp");
-							//	break;
-							//	}
 						}
 					}
 					return Result.first;

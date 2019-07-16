@@ -9,7 +9,8 @@
 #include "SynStateAssigned.h"
 #include "SynStatePrint.h"
 
-#include <memory>
+#include "SynStateWhile.h"
+#include "SynStateFor.h"
 
 Compiler::SynStateSubFunctionBlock::
 SynStateSubFunctionBlock(LexAnalyzer * Lex, SyntaxAnalysis * Syn, ISynState * PrevState, SymbolsTable * Symblos, SemanticAnalysis * Semantic, const string & FunctionName)
@@ -17,7 +18,15 @@ SynStateSubFunctionBlock(LexAnalyzer * Lex, SyntaxAnalysis * Syn, ISynState * Pr
 {
 	m_StateName = " Sub Function Block State ";
 
-	m_StateTransition = { {GNames::t_ID,0}, {GNames::k_Return,1},{GNames::k_Else,2}, {GNames::k_While,3} };
+	m_StateTransition = { {GNames::t_ID,SynStateTransition::ID}
+		, {GNames::k_Return,SynStateTransition::Return}
+		, {GNames::k_If, SynStateTransition::If}
+		, {GNames::k_While,SynStateTransition::While}
+		,{GNames::k_For,SynStateTransition::For}
+		, {}
+	};
+
+
 }
 
 
@@ -33,7 +42,7 @@ CheckSyntax()
 
 	while (!IsDone)
 	{
-		int State = -1;
+		int8_t State = -1;
 		MoveAndAssignTokenIndex(mptr_Lex, token);
 
 		if (CompareTokenTypes(token, GNames::t_ID))
@@ -61,7 +70,7 @@ CheckSyntax()
 			MoveAndAssignTokenIndex(mptr_Lex, token);
 			IfState->CheckSyntax();
 
-			mptr_Lex->DecreaseTokenIndex();
+			///	mptr_Lex->DecreaseTokenIndex();
 
 			delete IfState;
 		}
@@ -92,6 +101,43 @@ CheckSyntax()
 			mptr_Lex->DecreaseTokenIndex();
 			delete StatePrint;
 		}
+		// checking for the if statement 
+		else if (!token->getLex().compare("if"))
+		{
+			ISynState * IfState = new SynStateIf(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+
+			MoveAndAssignTokenIndex(mptr_Lex, token);
+			IfState->CheckSyntax();
+
+			delete IfState;
+		}
+		else if (!token->getLex().compare("while"))
+		{
+			ISynState * WhileLoop = new SynStateWhile(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
+			MoveAndAssignTokenIndex(mptr_Lex, token);
+			WhileLoop->CheckSyntax();
+			delete WhileLoop;
+		}
+		else if (!token->getLex().compare("for"))
+		{
+			ISynState * ForLoop = new SynStateFor(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
+			MoveAndAssignTokenIndex(mptr_Lex, token);
+			ForLoop->CheckSyntax();
+			delete ForLoop;
+		}
+		else if (CompareTokenTypes(token,GNames::t_ID))
+		{
+			MoveAndAssignTokenIndex(mptr_Lex, token);
+
+			if (!token->getLex().compare("=") || !token->getLex().compare("["))
+			{
+				ISynState * AssigedState = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+				AssigedState->CheckSyntax();
+				delete AssigedState;
+			}
+
+		}
+
 		else if (!token->getLex().compare("{"))
 		{
 			ISynState *ptr_FunctionBlock = new SynStateSubFunctionBlock(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
@@ -117,4 +163,27 @@ CheckSyntax()
 	}
 
 	return false;
+}
+
+int8_t
+Compiler::SynStateSubFunctionBlock::CheckTransition(const Token* token)
+{
+	SynStateTransition Result = SynStateTransition::Unknown;
+
+	if(CompareTokenTypes(token,GNames::t_ID))
+	{
+		Result = SynStateTransition::ID;
+		return static_cast<int8_t>(Result);
+	}
+
+	for(const auto &State : m_StateTransition)
+	{
+		if(!token->getLex().compare(State.first))
+		{
+			Result = State.second;
+			break;
+		}
+	}
+
+	return static_cast<int8_t>(Result);
 }
