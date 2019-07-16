@@ -3,11 +3,6 @@
 #include "SynStateProgram.h"
 
 
-Compiler::SyntaxAnalysis::SyntaxAnalysis()
-{
-
-}
-
 Compiler::SyntaxAnalysis::SyntaxAnalysis(LexAnalyzer * ptr_Lex, ErrorsModule ^ Error, SymbolsTable * ptr_Table, SemanticAnalysis *ptr_Sematico)
 {
 	this->mptr_Lex = ptr_Lex;
@@ -18,7 +13,7 @@ Compiler::SyntaxAnalysis::SyntaxAnalysis(LexAnalyzer * ptr_Lex, ErrorsModule ^ E
 
 Compiler::SyntaxAnalysis::~SyntaxAnalysis()
 {
-
+	
 }
 
 void Compiler::SyntaxAnalysis::checkSyntax()

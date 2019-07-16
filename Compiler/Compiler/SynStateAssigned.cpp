@@ -27,6 +27,12 @@ namespace Compiler {
 		{
 			MoveAndAssignTokenIndex(mptr_Lex, Tok);
 		}
+		else
+		{
+			string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM("'=' | '['",Tok->getLex().c_str());
+			mptr_Lex->m_refErrrorsMod->AddSynError(Tok->getLineNum(), ErrorDesc, "");
+			return false;
+		}
 		// checking for regular assignment
 		ISynState *ExpLog = new SynStateExpLog(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
 
@@ -35,7 +41,7 @@ namespace Compiler {
 		delete ExpLog;
 
 		Tok = mptr_Lex->GetCurrentToken();
-		if (Tok->getLex().compare(";"))
+		if (!Tok->getLex().compare(";"))
 		{
 			return true;
 		}

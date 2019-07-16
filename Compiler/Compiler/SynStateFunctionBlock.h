@@ -1,5 +1,8 @@
 #pragma once
 #include "ISynState.h"
+
+#include "StateTransitionEnums.h"
+
 namespace Compiler {
 	class SynStateFunctionBlock :
 		public ISynState
@@ -14,9 +17,12 @@ namespace Compiler {
 
 		~SynStateFunctionBlock();
 
+		void SelecState(SynStateTransition &State);
+
 		bool CheckSyntax()override;
 
-	  std::map<string,int> m_StateTrasitions;
+
+	  std::map<string, SynStateTransition> m_StateTrasitions;
 	public:// variables 
 		string m_FunctionName;
 	};
