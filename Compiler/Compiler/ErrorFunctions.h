@@ -67,4 +67,11 @@ namespace ErrorFuncs {
 
 		return Result;
 	}
+
+	static string SYN_PROGRAM_FINISHED( const char* UnExpected)
+	{
+		string Result = "Error: <PROGRAM> state finished processing. No more tokens expected, but got ";
+		Result += UnExpected;
+		return Result;
+	}
 }

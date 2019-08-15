@@ -1,14 +1,21 @@
 #include "stdafx.h"
 #include "SynStateAssigned.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 #include "SynStateExpLog.h"
 
 namespace Compiler {
 
-	SynStateAssigned::SynStateAssigned(LexAnalyzer * Lex, SyntaxAnalysis * Syn, ISynState * PrevState, SymbolsTable * Symblos, SemanticAnalysis * Semantic, const string & FunctionName)
+	SynStateAssigned::SynStateAssigned
+	(
+		LexAnalyzer * Lex, SyntaxAnalysis * Syn,
+		ISynState * PrevState, SymbolsTable * Symblos, SemanticAnalysis * Semantic,
+		const string & FunctionName, const Token *token)
+
 		:ISynState(Lex, Syn, PrevState, Symblos, Semantic), m_FunctionName(FunctionName)
 	{
 		m_StateName = ("Assigned State");
+		m_IdToken = token;
 		IsDone = false;
 	}
 
@@ -29,12 +36,12 @@ namespace Compiler {
 		}
 		else
 		{
-			string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM("'=' | '['",Tok->getLex().c_str());
+			string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM("'=' | '['", Tok->getLex().c_str());
 			mptr_Lex->m_refErrrorsMod->AddSynError(Tok->getLineNum(), ErrorDesc, "");
 			return false;
 		}
 		// checking for regular assignment
-		ISynState *ExpLog = new SynStateExpLog(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
+		ISynState *ExpLog = new SynStateExpLog(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName, m_IdToken);
 
 		ExpLog->CheckSyntax();
 
@@ -76,7 +83,7 @@ namespace Compiler {
 		}
 
 
-		return false;
+		return true;
 	}
 
 }

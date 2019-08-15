@@ -3,6 +3,7 @@
 #include "SynStateVar.h"
 #include "SynStateFunction.h"
 #include "GlobolNames.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 #include "StateTransitionEnums.h"
 
@@ -16,26 +17,18 @@ Compiler::SynStateProgram::SynStateProgram(LexAnalyzer *ptr_Lex, SyntaxAnalysis 
 Compiler::SynStateProgram::~SynStateProgram()
 {
 	PrintToConsole("State Destructor: {0}", std::string("State Program"));
-	if (!isMainFound)
-	{
-		string ErrorDesc = "Error: expected '<main>', but EOF was reached";
-		const Token *Temp = mptr_Lex->GetCurrentToken();
-
-		mptr_Lex->m_refErrrorsMod->AddSynError(Temp->getLineNum(), ErrorDesc, "");
-	}
 }
 
 bool Compiler::SynStateProgram::CheckSyntax()
 {
-	bool Continue = true;
-	//words
 
 	std::map<std::string, SynStateTransition> ValidWord = {
 		{ GNames::k_Var,SynStateTransition::Var},
 		{GNames::k_Main,SynStateTransition::Main} ,
 		{GNames::k_Func,SynStateTransition::Function} };
 
-	while (Continue)
+	bool KeepGoing = true;
+	while (KeepGoing)
 	{
 		SynStateTransition StateSelected = (SynStateTransition::Unknown);
 
@@ -55,7 +48,7 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			VarState->CheckSyntax();
 			MoveAndAssignTokenIndex(mptr_Lex, ptr_Tok);
 			delete VarState;
-			Continue = mptr_Lex->AdvanceTokenIndex();
+			KeepGoing = mptr_Lex->AdvanceTokenIndex();
 			mptr_Lex->DecreaseTokenIndex();
 		}
 		// main keyword
@@ -66,9 +59,10 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			FunctionState->m_CategorySym = SymbolCategory::function;
 			FunctionState->CheckSyntax();
 
-			Continue = mptr_Lex->AdvanceTokenIndex();
+			KeepGoing = mptr_Lex->AdvanceTokenIndex();
 			ptr_Tok = mptr_Lex->GetCurrentToken();
 			delete FunctionState;
+			return true;
 		}
 		//function keyword 
 		else	if (StateSelected == SynStateTransition::Function)
@@ -79,16 +73,20 @@ bool Compiler::SynStateProgram::CheckSyntax()
 			FunctionState->CheckSyntax();
 			ptr_Tok = mptr_Lex->GetCurrentToken();
 			delete FunctionState;
+			continue;
 		}
 		else if (StateSelected == SynStateTransition::Unknown)
 		{
-			string ErrorDecs = ErrorFuncs::SYN_UNEXPECTED_SYM("main", ptr_Tok->getLex().c_str());
-			mptr_Lex->m_refErrrorsMod->AddSynError(ptr_Tok->getLineNum(), ErrorDecs, "");
-			return false;
+			if(isMainFound == false)
+			{
+				Token *tok = mptr_Lex->GetCurrentToken();
+				string ErrorDesc = ErrorFuncs::SYN_UNEXPECTED_SYM("main", tok->getLex().c_str());
+				mptr_Lex->m_refErrrorsMod->AddSynError(tok->getLineNum(), ErrorDesc, "");
+				return false;
+			}
 
+		}
 
-		}/// asdf
-		return false;
 	}
-	return false;
+	return isMainFound;
 }

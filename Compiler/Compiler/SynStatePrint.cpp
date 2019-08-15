@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SynStatePrint.h"
 #include "SynStateExpLog.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 
 Compiler::SynStatePrint::SynStatePrint(LexAnalyzer * Lex, SyntaxAnalysis * Syn, ISynState * PrevState, SymbolsTable * Symblos, SemanticAnalysis * Semantic, string FunctionName)

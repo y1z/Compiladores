@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SynStateIncremenAndDecrement.h"
 #include "ErrorFunctions.h"
+#include "Utility.h"
 #include "GlobolNames.h"
 
 namespace Compiler {

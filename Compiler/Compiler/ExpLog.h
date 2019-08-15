@@ -1,15 +1,15 @@
 #pragma once
-class ExpLogTree;
+class ExpLogTreeNode;
 
-//TODO : add member 'ExpLogTree *m_Node'
 namespace Compiler {
+	/*! the start of the tree */
 	class ExpLog
 	{
 	public:
 		ExpLog();
 		~ExpLog();
 		
-		ExpLogTree *mptr_Node;
+		ExpLogTreeNode *mptr_RootNode;
 	};
 
 }

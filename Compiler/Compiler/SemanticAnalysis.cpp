@@ -1,24 +1,36 @@
 #include "stdafx.h"
 #include "SemanticAnalysis.h"
 
-Compiler::SemanticAnalysis::SemanticAnalysis()
-{}
+namespace Compiler {
 
-Compiler::SemanticAnalysis::~SemanticAnalysis()
-{}
+	SemanticAnalysis::SemanticAnalysis()
+	{}
 
-void Compiler::SemanticAnalysis::AddExplog(std::vector<const Token*> &Expression, const std::string &FunctionName)
-{
-	for (auto tok : Expression)
+	SemanticAnalysis::~SemanticAnalysis()
+	{}
+
+	void SemanticAnalysis::AddExplog(ExpLogData &Data)
 	{
-		m_ExpressionTokens[FunctionName].emplace_back(tok);
+		m_Expression.emplace_back(Data);
 	}
-}
 
-void Compiler::SemanticAnalysis::CheckExpressions()
-{}
+	void SemanticAnalysis::CheckExpressions()
+	{
 
-std::map<const string, std::vector<const Token*>> Compiler::SemanticAnalysis::GetExpresionContainer() const
-{
-	return m_ExpressionTokens;
+		for(auto Expersion : m_Expression)
+		{
+			SemanticExpLog SemanTicLog(Expersion);
+			m_Expression.push_back(SemanTicLog);
+		}
+		
+
+
+	}
+
+	std::vector<SemanticExpLog> SemanticAnalysis::GetExpresionContainer() const
+	{
+		return m_Expression;
+	}
+
+
 }

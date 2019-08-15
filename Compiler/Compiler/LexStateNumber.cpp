@@ -11,7 +11,11 @@ LexStateNumber::~LexStateNumber()
 
 bool LexStateNumber::StateAction(const char * code, uint32_t & Index, uint32_t & LineNumber, std::vector<Token>& Tokens, std::map<std::string, std::string>* Keywords)
 {
+	// empty place for symbol '-'
 	std::string Numbuffer = "";
+
+	CheckForSign(code[Index], Index);;
+
 	if (!m_refErrrorsMod->IsMaxErrorReached())
 	{
 
@@ -39,6 +43,7 @@ bool LexStateNumber::StateAction(const char * code, uint32_t & Index, uint32_t &
 		{
 			if (CheckForValidFloat(Numbuffer, LineNumber, Index))
 			{
+				Numbuffer = m_PossibleMinusSign + Numbuffer;
 				Token tok(Numbuffer, Compiler::FLOAT_NUMBER, LineNumber);
 
 				PrintToConsole(" Here is a float : [{0}] ", Numbuffer);
@@ -47,6 +52,7 @@ bool LexStateNumber::StateAction(const char * code, uint32_t & Index, uint32_t &
 			}
 			else
 			{
+				Numbuffer = m_PossibleMinusSign + Numbuffer;
 				PrintToConsole("Here is a Invalid Number : [{0}] ", Numbuffer);
 				std::string ErrorMessage(INVALID_FLOAT);
 				ErrorMessage += "needs Digit after point\t";
@@ -60,6 +66,7 @@ bool LexStateNumber::StateAction(const char * code, uint32_t & Index, uint32_t &
 		}
 		else
 		{
+			Numbuffer = m_PossibleMinusSign + Numbuffer;
 			Token tok(Numbuffer, Compiler::INT_NUMBER, LineNumber);
 			PrintToConsole(" Here is a int : [{0}] ", Numbuffer);
 			Tokens.emplace_back(tok);
@@ -123,4 +130,17 @@ bool LexStateNumber::CheckForValidFloat(std::string & PossibleFloat, uint32_t Li
 	}
 
 	return isValidFloat;
+}
+
+void LexStateNumber::CheckForSign(char PossibleSign, uint32_t &Index)
+{
+	if (PossibleSign == '-')
+	{
+		m_PossibleMinusSign += '-';
+		Index++;
+	}
+	else
+	{
+		m_PossibleMinusSign = "";
+	}
 }

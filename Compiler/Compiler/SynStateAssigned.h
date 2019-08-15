@@ -8,7 +8,7 @@ namespace Compiler {
 		SynStateAssigned(
 			LexAnalyzer *Lex, SyntaxAnalysis *Syn, 
 			ISynState *PrevState, SymbolsTable *Symblos, 
-			SemanticAnalysis *Semantic, const string &FunctionName);
+			SemanticAnalysis *Semantic, const string &FunctionName, const Token *token);
 		~SynStateAssigned();
 
 	public:
@@ -18,6 +18,7 @@ namespace Compiler {
 		bool CheckArray();
 
 		string	m_FunctionName;
+		const Token * m_IdToken = nullptr;
 		bool IsDone;
 	};
 

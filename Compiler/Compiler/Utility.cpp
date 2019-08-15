@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include <string>
 #include "Utility.h"
+#include "Token.h"
 
 
 wchar_t ConvertChar(char character)
@@ -96,7 +96,7 @@ const char * TranslateToken(Compiler::Token_Type token_type)
 		break;
 	}
 
-	return "UNDEFINED";
+	return "ERROR";
 }
 
 void IgnoreNewLineChar(const char* code, uint32_t & Index, uint32_t &LineNumber)
@@ -125,6 +125,24 @@ void PrintToConsole(const char Format[], const std::string & Message)
 	System::String ^MessageString = gcnew String(Message.c_str());
 	System::String ^FormatString = gcnew String(Format);
 	Console::WriteLine(FormatString, MessageString);
+}
+
+void PrintToConsole(const char Format[], int Count, bool ^Result)
+{
+	string StrCount = std::to_string(Count);
+	System::String ^MessageString = gcnew String(StrCount.c_str());
+
+	System::String ^FormatString = gcnew String(Format);
+	if (*Result == true)
+	{
+		System::String ^AddtionalInfo = " Passed ";
+		Console::WriteLine(FormatString, MessageString, AddtionalInfo);
+	}
+	else
+	{
+		System::String ^AddtionalInfo = " Did Not Pass ";
+		Console::WriteLine(FormatString, MessageString, AddtionalInfo);
+	}
 }
 
 bool CheckToStopLexAnalisis(msclr::gcroot<Compiler::ErrorsModule^> m_refErrrorsMod)

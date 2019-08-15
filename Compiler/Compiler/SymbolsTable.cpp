@@ -1,13 +1,11 @@
 #include "stdafx.h"
 #include "SymbolsTable.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 
 using namespace std::string_literals;
 
 namespace Compiler {
-
-
-
 	SymbolsTable::SymbolsTable()
 	{
 		m_MainNode = new GlobalNode();

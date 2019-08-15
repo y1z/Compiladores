@@ -100,6 +100,7 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 	{
 		ILexerState * StringChecker = new LexStringChecker();
 		StringChecker->m_refErrrorsMod = this->m_refErrrorsMod;
+
 		if (StringChecker->StateAction(code, Index, LineNumber, Tokens, Keywords))
 		{
 			isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
@@ -110,15 +111,48 @@ void LexStateFinder::ChangeState(const char * code, uint32_t & Index, uint32_t &
 	}//----------------
 	else if (SelectedState == 2)
 	{
-		ILexerState * OperatorState = new LexIndentifyOperator();
-		OperatorState->m_refErrrorsMod = this->m_refErrrorsMod;
-		if (OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+		// check for numbers like -1 
+		if (code[Index] != '-')
 		{
-			isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+			ILexerState * OperatorState = new LexIndentifyOperator();
+			OperatorState->m_refErrrorsMod = this->m_refErrrorsMod;
+
+			if (OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+			{
+				isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+			}
+			delete OperatorState;
+			OperatorState = nullptr;
+		}
+		else
+		{
+			if (IsNumber(code[Index + 1]))
+			{
+				ILexerState * NumberState = new LexStateNumber();
+				NumberState->m_refErrrorsMod = this->m_refErrrorsMod;
+
+				if (NumberState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+				{
+					isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+				}
+
+				delete NumberState;
+			}
+			else
+			{
+				ILexerState * OperatorState = new LexIndentifyOperator();
+				OperatorState->m_refErrrorsMod = this->m_refErrrorsMod;
+
+				if (OperatorState->StateAction(code, Index, LineNumber, Tokens, Keywords))
+				{
+					isKeepGoing = CheckToStopLexAnalisis(m_refErrrorsMod);
+				}
+				delete OperatorState;
+				OperatorState = nullptr;
+			}
+
 		}
 
-		delete OperatorState;
-		OperatorState = nullptr;
 	}//--------------
 	else if (SelectedState == 3)
 	{

@@ -1,7 +1,9 @@
 #pragma once
 #include "ILexerState.h"
 #include <string>
-#include "Token.h"
+class Token;
+
+using std::string;
 /*! return an ascii representation */
 wchar_t ConvertChar(char character);
 /*! does not Advance the Index */
@@ -18,6 +20,8 @@ void IgnoreNewLineChar(const char* code, uint32_t & Index, uint32_t &LineNumber)
 void PrintToConsole(const std::string &Message);
 /*! sends a formated message to the console (can only have one {0}) inside the format)*/
 void PrintToConsole(const char Format[], const std::string &Message);
+/*! sends a formated message to the console with an int and a bool */
+void PrintToConsole(const char Format[], int Count, bool ^Result);
 /*! how im going to stop the lex analiser*/
 bool CheckToStopLexAnalisis(msclr::gcroot<Compiler::ErrorsModule ^> m_refErrrorsMod);
 //! this is to check a bunch of numbers 

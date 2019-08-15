@@ -13,7 +13,7 @@ namespace Compiler {
 		GLOBAL,
 		LEX_ANALYZER,
 		SYN_ANALYZER,
-		SEM_ANALYZER,
+		SEM_ANALYZER, 
 		CODE_GENERATION
 	};
 

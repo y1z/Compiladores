@@ -3,6 +3,7 @@
 #include "LexAnalyzer.h"
 #include "SyntaxAnalysis.h"
 #include "SymbolsTable.h"
+#include "Utility.h"
 
 Compiler::ISynState::ISynState()
 {

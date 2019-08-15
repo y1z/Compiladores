@@ -16,8 +16,10 @@ using System.Management;
 
 namespace CompilerUI
 {
+
   public partial class CompilerWindow : Form
   {
+
     /*---------------------------Constructors---------------------------*/
     public CompilerWindow()
     {

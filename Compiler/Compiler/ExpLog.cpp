@@ -3,7 +3,9 @@
 namespace Compiler {
 
 	ExpLog::ExpLog()
-	{}
+	{
+		mptr_RootNode = nullptr;
+	}
 
 
 	ExpLog::~ExpLog()

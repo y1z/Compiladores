@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SynStateElse.h"
 #include "SynStateSubFunctionBlock.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 namespace Compiler {
 

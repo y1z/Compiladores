@@ -1,22 +1,44 @@
 #include "stdafx.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 #include "SemanticAnalysis.h"
 #include "SynStateExpLog.h"
 #include "Token.h"
 
-Compiler::SynStateExpLog::SynStateExpLog(
+using namespace std::string_literals;
+
+Compiler::SynStateExpLog::SynStateExpLog
+(
 	LexAnalyzer * Lex,
 	SyntaxAnalysis * Syn,
 	ISynState * PrevState,
 	SymbolsTable * Symblos,
 	SemanticAnalysis * Semantic,
 	const std::string &FunctionName,
-	const string &Delimiter)
+	const string &Delimiter
+)
 	:ISynState(Lex, Syn, PrevState, Symblos, Semantic), IsNegation(false), m_CountParenthesis(0), m_Delimiter(Delimiter)
 {
 	m_StateName = ("Expression Log State");
 	m_FunctionName = FunctionName;
+
+	Token *Temp = Lex->GetCurrentToken();
+
+	m_Data.m_LineNum = Temp->getLineNum();
+	m_Data.m_FunctionName = m_FunctionName;
+
 	IsDone = false;
+}
+
+Compiler::SynStateExpLog::SynStateExpLog(LexAnalyzer * Lex, SyntaxAnalysis * Syn,
+	ISynState * PrevState, SymbolsTable * Symblos,
+	SemanticAnalysis * Semantic, const std::string & FunctionName,
+	const Token * tokenFromAssigedState)
+	:ISynState(Lex, Syn, PrevState, Symblos, Semantic), IsNegation(false), m_CountParenthesis(0), m_FunctionName(FunctionName)
+{
+	m_Data.mptr_tokens.emplace_back(tokenFromAssigedState);
+	m_Data.m_LineNum = tokenFromAssigedState->getLineNum();
+	m_Data.m_FunctionName = FunctionName;
 }
 
 Compiler::SynStateExpLog::~SynStateExpLog()
@@ -50,7 +72,10 @@ bool Compiler::SynStateExpLog::CheckSyntax()
 				|| CompareTokenTypes(Tok, "ARITHMETIC_OPERATOR")
 				|| CompareTokenTypes(Tok, "DIMENSION_OPERATOR"))
 			{
-				m_ExpressionTokens.push_back(Tok);
+				m_Data.m_SymbolsToCheck = "~"s + Tok->getLex();
+				m_Data.m_IndexSymbolToUpdate.emplace_back(m_Data.mptr_tokens.size());
+				m_Data.mptr_tokens.emplace_back(Tok);
+
 				MoveAndAssignTokenIndex(mptr_Lex, Tok);
 				checkForNegation(Tok);
 				Tok = mptr_Lex->GetCurrentToken();
@@ -69,10 +94,10 @@ bool Compiler::SynStateExpLog::CheckSyntax()
 			//check if all parenthesis are close 
 			else if (m_CountParenthesis == 0)
 			{
-				if (!m_ExpressionTokens.empty())
+				if (!m_Data.mptr_tokens.empty())
 				{
-					mptr_Semantic->AddExplog(m_ExpressionTokens, m_FunctionName);
-					m_ExpressionTokens.clear();
+					mptr_Semantic->AddExplog(m_Data);
+					m_Data.mptr_tokens.clear();
 				}
 				IsDone = true;
 				return true;
@@ -89,10 +114,10 @@ bool Compiler::SynStateExpLog::CheckSyntax()
 	}
 	else
 	{
-		if (!m_ExpressionTokens.empty())
+		if (!m_Data.mptr_tokens.empty())
 		{
-			mptr_Semantic->AddExplog(m_ExpressionTokens, m_FunctionName);
-			m_ExpressionTokens.clear();
+			mptr_Semantic->AddExplog(m_Data);
+			m_Data.mptr_tokens.clear();
 		}
 		return true;
 	}
@@ -144,7 +169,7 @@ bool Compiler::SynStateExpLog::CheckForNagation(const Token * Tok)
 {
 	if (!Tok->getLex().compare("!"))
 	{
-		m_ExpressionTokens.emplace_back(Tok);
+		m_Data.mptr_tokens.emplace_back(Tok);
 		return true;
 	}
 	return false;
@@ -161,7 +186,7 @@ void Compiler::SynStateExpLog::ProcessTerm()
 		{
 			this->m_CountParenthesis++;
 			this->m_Parenthesis.emplace_back('(');
-			m_ExpressionTokens.emplace_back(Tok);
+			m_Data.mptr_tokens.emplace_back(Tok);
 			MoveAndAssignTokenIndex(mptr_Lex, Tok);
 			this->CheckSyntax();
 		}
@@ -171,14 +196,14 @@ void Compiler::SynStateExpLog::ProcessTerm()
 			|| CompareTokenTypes(Tok, "FLOAT_NUMBER")
 			|| CompareTokenTypes(Tok, "LOGICAL_CONSTANT"))
 		{
-			m_ExpressionTokens.emplace_back(Tok);
+			m_Data.mptr_tokens.emplace_back(Tok);
 			MoveAndAssignTokenIndex(mptr_Lex, Tok);
 			CheckSyntax();
 		}
 		//
 		else if (CompareTokenTypes(Tok, "ID"))
 		{
-			m_ExpressionTokens.emplace_back(Tok);
+			m_Data.mptr_tokens.emplace_back(Tok);
 			if (CheckForFunctionCall())
 			{
 				return;
@@ -196,14 +221,10 @@ void Compiler::SynStateExpLog::ProcessTerm()
 			{
 				this->m_Parenthesis.emplace_back(')');
 				this->m_CountParenthesis--;
-				m_ExpressionTokens.emplace_back(Tok);
+				m_Data.mptr_tokens.emplace_back(Tok);
 				MoveAndAssignTokenIndex(mptr_Lex, Tok);
 				this->CheckSyntax();
 			}
-
 		}
-
 	}
-
-
 }

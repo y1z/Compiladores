@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ErrorFunctions.h"
+#include "Utility.h"
 #include "GlobolNames.h"
 #include "SynStateParam.h"
 

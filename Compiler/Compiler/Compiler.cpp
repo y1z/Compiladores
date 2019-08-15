@@ -2,6 +2,8 @@
 #include "Compiler.h"
 #include "GlobolNames.h"
 #include "Utility.h"
+#include "TestingClass.h"
+#include <assert.h>
 #include <string>
 #include <queue>
 
@@ -143,6 +145,13 @@ Compiler::Manager::~Manager()
 //! Entry Point for the Complier 
 cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 {
+	// esto es para la clase de arquitectura 
+	TestingClass^ mref_test = gcnew TestingClass();
+
+	mref_test->RunTests();
+	mref_test->CheckAllTest();
+
+
 	ptr_Table->Reset();
 	// clear all error messages 
 	ptr_Lex->m_refErrrorsMod->clearErrors();
@@ -158,6 +167,8 @@ cli::array<String^>^ Compiler::Manager::compileProgram(String ^ srcCode)
 	{
 		ptr_Syntax->checkSyntax();
 	}
+
+	ptr_Semantic->CheckExpressions();
 
 	cli::array<String^> ^CompiltionDetails = Manager::StartDataParsing();
 

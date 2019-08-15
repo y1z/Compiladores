@@ -3,7 +3,6 @@
 
 using namespace System;
 
-
 namespace Compiler {
 	// all possible token
 	enum Token_Type

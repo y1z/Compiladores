@@ -4,6 +4,7 @@
 #include  "SynStateExpLog.h"
 #include "SynStateIncremenAndDecrement.h"
 #include "SynStateSubFunctionBlock.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 
 using namespace std::string_literals;
@@ -43,8 +44,8 @@ namespace Compiler {
 				case('a'):// checking for assignment 
 					if (CompareTokenTypes(token, GNames::t_ID))
 					{
+						State = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName,token);
 						MoveAndAssignTokenIndex(mptr_Lex, token);
-						State = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
 						State->CheckSyntax();
 						delete State;
 						mptr_Lex->DecreaseTokenIndex();

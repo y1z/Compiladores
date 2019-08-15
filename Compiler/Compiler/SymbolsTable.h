@@ -39,8 +39,6 @@ namespace Compiler {
 	public:
 		//! sum of all the Global and local nodes 
 		int64_t TotalElementsCount();
-		//std::string getSymbolType();// needs more param's
-		//std::string getSymbolScope();// needs more param's
 		//! this is for making error reports 
 		msclr::gcroot<ErrorsModule^> m_refError;
 	private: // variables 

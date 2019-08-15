@@ -108,14 +108,14 @@ int32_t Compiler::SynStateVar::FindDimension()
 		// find out what the number is 
 		if (ExpectedSequnce[SequencePos] == 'n')
 		{
-			if (!mptr_Lex->GetCurrentToken()->getLex().compare("-"))
+			
+			if (!CompareTokenTypes(mptr_Token, "INT_NUMBER"))
 			{
 				mptr_Lex->AdvanceTokenIndex();
 				mptr_Token = mptr_Lex->GetCurrentToken();
 
 				Result = std::stoi(mptr_Token->getLex());
 
-				Result = Result * -1;
 				mptr_Lex->AdvanceTokenIndex();
 				SequencePos++;
 			}

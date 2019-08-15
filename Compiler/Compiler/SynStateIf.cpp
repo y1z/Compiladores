@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 #include "SynStateIf.h"
 #include "SynStateExpLog.h"

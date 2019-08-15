@@ -1,8 +1,9 @@
 #pragma once
 namespace Compiler {
 	/*! the type of operator the node contains*/
-	enum class ExpressionNodeType
+	enum class ExpressionTreeNodeType
 	{
+		NONE,
 		Arithmetic,
 		Logical,
 		Relational
@@ -17,7 +18,7 @@ namespace Compiler {
 	public:
 		
 	private:
-		ExpressionNodeType m_NodeType;
+		ExpressionTreeNodeType m_NodeType;
 
 		ExpLogTreeNode *m_LeftNode;
 		ExpLogTreeNode *m_RightNode;

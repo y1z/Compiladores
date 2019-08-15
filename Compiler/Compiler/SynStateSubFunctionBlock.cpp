@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SynStateSubFunctionBlock.h"
+#include "Utility.h"
 #include "ErrorFunctions.h"
 #include "GlobolNames.h"
 #include "SynStateVar.h"
@@ -52,10 +53,11 @@ CheckSyntax()
 
 		if (State == 0)
 		{
+			Token * Temp_token = mptr_Lex->GetCurrentToken();
 			MoveAndAssignTokenIndex(mptr_Lex, token);
 			if (!token->getLex().compare("=") || !token->getLex().compare("["))
 			{
-				ISynState * ptr_Exp = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName);
+				ISynState * ptr_Exp = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, m_FunctionName, Temp_token);
 
 				ptr_Exp->CheckSyntax();
 
@@ -127,11 +129,12 @@ CheckSyntax()
 		}
 		else if (CompareTokenTypes(token,GNames::t_ID))
 		{
+			ReadOnlyToken Temp_token = mptr_Lex->GetCurrentToken();
 			MoveAndAssignTokenIndex(mptr_Lex, token);
 
 			if (!token->getLex().compare("=") || !token->getLex().compare("["))
 			{
-				ISynState * AssigedState = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+				ISynState * AssigedState = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName, Temp_token);
 				AssigedState->CheckSyntax();
 				delete AssigedState;
 			}

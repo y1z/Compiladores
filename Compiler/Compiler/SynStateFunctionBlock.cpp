@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ErrorFunctions.h"
+#include "Utility.h"
 #include "GlobolNames.h"
 #include "SynStateVar.h"
 #include "SynStateFunctionBlock.h"
@@ -121,11 +122,12 @@ namespace Compiler {
 				// checking for assigned state 
 				else if (SelectedState == SynStateTransition::ID)
 				{
+					Token * Temp_token = mptr_Lex->GetCurrentToken();
 					MoveAndAssignTokenIndex(mptr_Lex, token);
 
 					if (!token->getLex().compare("=") || !token->getLex().compare("["))
 					{
-						ISynState * AssigedState = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName);
+						ISynState * AssigedState = new SynStateAssigned(mptr_Lex, mptr_Syn, this, mptr_SymbolsTable, mptr_Semantic, this->m_FunctionName, Temp_token);
 						AssigedState->CheckSyntax();
 						delete AssigedState;
 					}

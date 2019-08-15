@@ -27,6 +27,7 @@ bool LexIndentifyOperator::StateAction(const char * code, uint32_t & Index, uint
 
 
 	auto Result = Operators.find(code[Index]);
+
 	if (!m_refErrrorsMod->IsMaxErrorReached())
 	{
 		if (Operators.end() != Result)
